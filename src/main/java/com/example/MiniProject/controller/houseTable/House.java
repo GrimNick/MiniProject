@@ -14,10 +14,10 @@ import java.math.BigDecimal;
 import java.math.BigInteger;
 
 import lombok.Data;
-@Data bbbbbbbbbbbbb
+@Data
 @Entity
 @Table(name = "House")
-public class House {aaaaaa
+public class House {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "house_id")
