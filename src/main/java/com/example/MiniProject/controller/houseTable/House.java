@@ -14,7 +14,7 @@ import java.math.BigDecimal;
 import java.math.BigInteger;
 
 import lombok.Data;
-@Data
+@Data bbbbbbbbbbbbb
 @Entity
 @Table(name = "House")
 public class House {
