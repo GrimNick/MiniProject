@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Display Page</title>
+</head>
+<body>
+<h2>Display Page</h2>
+
+<!-- Display selected property type -->
+<p th:text="'Selected Property Type: ' + ${selectedPropertyType}"></p>
+
+<!-- Display budget -->
+<p th:text="'Budget: ' + ${budget}"></p>
+
+<!-- Display location -->
+<p th:text="'Location: ' + ${location}"></p>
+
+<!-- Display area -->
+<p th:text="'Area: ' + ${ropani} + ' Ropani, ' + ${aana} + ' Aana, ' + ${paisa} + ' Paisa, ' + ${daam} + ' Daam'"></p>
+
+<!-- Add additional content as needed -->
+</body>
+</html>

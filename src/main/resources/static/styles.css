@@ -1,0 +1,21 @@
+package com.example.demo.myController;
+
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+
+@Controller
+public class MyController {
+
+    @RequestMapping("/")
+    public String home() {
+        return "index";
+    }
+
+    @PostMapping("/submit")
+    public String submitData(String propertyType) {
+        System.out.println("Selected Property Type: " + propertyType);
+        // Add logic to process the selected property type in the backend
+        return "result"; // Assuming you have a result.html template
+    }
+}
