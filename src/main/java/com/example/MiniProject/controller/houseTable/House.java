@@ -17,7 +17,7 @@ import lombok.Data;
 @Data
 @Entity
 @Table(name = "House")
-public class House {
+public class House {aaaaaaaaaa
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "house_id")
