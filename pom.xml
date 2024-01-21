@@ -13,9 +13,9 @@
 	<version>0.0.1-SNAPSHOT</version>
 	<name>MiniProject</name>
 	<description>mini project for Everest Engineering College</description>
-	<properties>
+	<users>
 		<java.version>17</java.version>
-	</properties>
+	</users>
 	<dependencies>
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
