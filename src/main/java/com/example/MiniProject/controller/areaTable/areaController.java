@@ -18,7 +18,7 @@ public class areaController {
         this.areaService = areaService;
     }
 
-    @PostMapping("/properties")
+    @PostMapping("/area")
     public ResponseEntity<String> addHouse(@RequestBody area area) {
          System.out.println(area.toString());
 
@@ -32,7 +32,7 @@ public class areaController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Internal Server Error");
         }
     }
-    @PutMapping("/properties/{id}")
+    @PutMapping("/area/{id}")
     public ResponseEntity<String> updateHouse(@PathVariable Long id, @RequestBody area updatedArea) {
         try {
             area existingArea = areaService.getPropertiesById(id);
@@ -54,7 +54,7 @@ public class areaController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Internal Server Error");
         }
     }
-    @DeleteMapping("/properties/{id}")
+    @DeleteMapping("/area/{id}")
     public ResponseEntity<String> deleteHouse(@PathVariable Long id) {
         try {
             areaService.deletePropertiesById(id);

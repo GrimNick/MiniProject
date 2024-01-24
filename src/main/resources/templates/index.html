@@ -1,12 +1,207 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="/css/styles.css">
+    <link rel="stylesheet" href="/static/styles.css">
     <title>Property Type Selector</title>
+
+    <!-- Your Leaflet and other dependencies remain unchanged -->
+    <title>OSM with Leaflet</title>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+    <link rel="stylesheet" href="https://unpkg.com/leaflet-control-geocoder/dist/Control.Geocoder.css" />
+    <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+    <script src="https://unpkg.com/leaflet-control-geocoder/dist/Control.Geocoder.js"></script>
 </head>
 <body>
+<div id="map" style="height: 400px;"></div>
+<button onclick="clearMarker()">Clear Marker</button>
+<button onclick="sendData()">Send Data to Backend</button>
+
+<div id="coordinates-box">Coordinates: </div>
+<form id="imageUploadForm">
+    <label for="image">Select Image:</label>
+    <input type="file" id="image" name="image" accept="image/*">
+    <br>
+    <button type="button" onclick="uploadImage()">Upload Image</button>
+</form>
+<div id="imageContainer"></div>
+<button type="button" onclick="getImageById(3)">Get Image by ID 3</button>
+
+<script>
+    var map = L.map('map').setView([28.3949, 84.1240], 13);
+    var marker;
+
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        attribution: '© OpenStreetMap contributors'
+    }).addTo(map);
+
+    var geocoder = L.Control.Geocoder.nominatim();
+    var control = L.Control.geocoder({
+        geocoder: geocoder,
+        defaultMarkGeocode: false
+    }).on('markgeocode', function (e) {
+        var bbox = e.geocode.bbox;
+        var poly = L.polygon([
+            bbox.getSouthEast(),
+            bbox.getNorthEast(),
+            bbox.getNorthWest(),
+            bbox.getSouthWest()
+        ]).addTo(map);
+        map.fitBounds(poly.getBounds());
+    }).addTo(map);
+
+    map.on('click', function (e) {
+        var coordinates = e.latlng;
+        updateMarker(coordinates);
+    });
+
+    function updateMarker(coordinates) {
+        if (marker) {
+            // Remove the existing marker
+            map.removeLayer(marker);
+        }
+
+        // Add a new marker at the specified coordinates
+        marker = L.marker(coordinates).addTo(map);
+        marker.bindPopup("Marker at " + coordinates.lat.toFixed(4) + "° N, " + coordinates.lng.toFixed(4) + "° E");
+
+        // Update the coordinates box
+        document.getElementById('coordinates-box').textContent = "Coordinates: " + coordinates.lat.toFixed(4) + "° N, " + coordinates.lng.toFixed(4) + "° E";
+    }
+function sendData() {
+            // Check if the marker exists
+            if (marker) {
+                // Extract the marker's latitude and longitude
+                var latitude = marker.getLatLng().lat.toFixed(4);
+                var longitude = marker.getLatLng().lng.toFixed(4);
+
+                // Create JSON data
+                var dataToSend = {
+                    latitude: latitude,
+                    longitude: longitude
+                };
+
+                // Make a fetch request to the Spring Boot backend
+                fetch('http://localhost:8080/coordinates', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(dataToSend),
+                })
+                .then(response => console.log(response))
+                .then(data => {
+                    console.log('Response from backend:', data);
+
+                    // Handle the response as needed
+                })
+                .catch(error => {
+                    console.log('Error:', error);
+                    // Handle errors
+                });
+            } else {
+                console.log('No marker to send data.');
+            }
+        }
+    function clearMarker() {
+        if (marker) {
+            // Remove the existing marker
+            map.removeLayer(marker);
+            marker = null;
+
+            // Clear the coordinates box
+            document.getElementById('coordinates-box').textContent = "Coordinates: ";
+        }
+
+
+    }
+        function uploadImage() {
+            // Get the selected file input element
+            const inputElement = document.getElementById('image');
+            const file = inputElement.files[0];
+
+            // Check if a file is selected
+            if (file) {
+                // Read the file as a Data URL
+                const reader = new FileReader();
+                reader.onloadend = function () {
+                    // Extract the Base64-encoded content
+                    const base64Content = reader.result.split(',')[1];
+
+                    // Create a JSON object with the image data
+                    const imageData = {
+                        image: base64Content
+                    };
+
+                    // Send the JSON object to the backend
+                    fetch('http://localhost:8080/properties', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify(imageData)
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+                        console.log('Response from backend:', data);
+                        // Handle the response as needed
+                    })
+                    .catch(error => {
+                        console.error('Error:', error);
+                        // Handle errors
+                    });
+                };
+
+                reader.readAsDataURL(file);
+            } else {
+                // Handle the case where no file is selected
+                console.error('No file selected');
+            }
+        }
+
+        function getImageById(id) {
+            // Make a GET request to retrieve image data for a specific ID
+            fetch(`http://localhost:8080/properties/${id}`, {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            })
+            .then(response => response.json())
+            .then(data => {
+                // Assuming the response contains a property named 'image' with Base64-encoded content
+                const base64Content = data.image;
+
+                // Display the image in the frontend
+                displayImage(base64Content);
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                // Handle errors
+            });
+        }
+
+        function displayImage(base64Content) {
+            // Create an image element
+            const imageElement = document.createElement('img');
+
+            // Set the 'src' attribute with the Base64 content
+            imageElement.src = `data:image.png;base64,${base64Content}`;
+
+            // Set any additional attributes or styles as needed
+            // imageElement.setAttribute('width', '300');
+            // imageElement.setAttribute('height', '200');
+
+            // Append the image element to the container in the HTML
+            const imageContainer = document.getElementById('imageContainer');
+            imageContainer.innerHTML = '';
+            imageContainer.appendChild(imageElement);
+        }
+
+</script>
+
 <div class="container">
     <h1>Property Type Selector</h1>
     <form th:action="@{/submit}" method="post">

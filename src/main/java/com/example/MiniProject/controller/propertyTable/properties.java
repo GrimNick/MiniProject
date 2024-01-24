@@ -1,13 +1,7 @@
 package com.example.MiniProject.controller.propertyTable;
 
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-
-import jakarta.persistence.Column;
+import jakarta.persistence.*;
 
 import lombok.Data;
 @Data
@@ -41,6 +35,10 @@ public class properties {
     @Column(name = "description", length = 100)
     private String description;
 
+    @Lob
+    @Column(name = "image", columnDefinition="LONGBLOB")
+    private byte[] image;
+
 //    @Column(name = "house_owner", length = 255)
 //    private String house_owner;
 
@@ -51,16 +49,6 @@ public class properties {
     //created_at ***** timestamp baki
     //updated_at ***** timestamp baki
 
-//    @Column(name = "ropani")
-//    private float ropani;
-//    @Column(name = "aana")
-//    private float aana;
-//
-//    @Column(name = "paisa")
-//    private float paisa;
-//
-//    @Column(name = "daam")
-//    private float daam;
 
 
     public properties() {
@@ -70,7 +58,8 @@ public class properties {
     public properties(int seller_id, int location_id,
                       int coordinate_id, int area_id,
                       String title, int type,
-                      String description, float price) {
+                      String description, float price,
+                      byte[] image) {
         this.seller_id = seller_id;
         this.location_id = location_id;
         this.price = price;
@@ -79,7 +68,30 @@ public class properties {
         this.title = title;
         this.type = type;
         this.description = description;
+        this.image = image;
+
     }
+
+    private boolean isPNGImage(byte[] imageData) {
+        return (imageData.length >= 8 &&
+                imageData[0] == (byte) 0x89 &&
+                imageData[1] == 'P' &&
+                imageData[2] == 'N' &&
+                imageData[3] == 'G' &&
+                imageData[4] == (byte) 0x0D &&
+                imageData[5] == (byte) 0x0A &&
+                imageData[6] == (byte) 0x1A &&
+                imageData[7] == (byte) 0x0A);
+    }
+
+    // Method to check if the byte array represents a JPEG image
+    private boolean isJPEGImage(byte[] imageData) {
+        return (imageData.length >= 3 &&
+                imageData[0] == (byte) 0xFF &&
+                imageData[1] == (byte) 0xD8 &&
+                imageData[2] == (byte) 0xFF);
+    }
+
 
 
 
