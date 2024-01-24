@@ -66,5 +66,11 @@ public class PropertiesController {
         }
     }
 
+    @GetMapping("/properties/{id}")
+    public properties getPropertyById(@PathVariable Long id) {
+        return propertiesService.getPropertiesById(id);
+    }
+
+
 
 }
