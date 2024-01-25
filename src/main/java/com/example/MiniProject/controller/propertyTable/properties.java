@@ -1,6 +1,11 @@
 package com.example.MiniProject.controller.propertyTable;
+import com.example.MiniProject.controller.usersTable.users;
+import com.example.MiniProject.controller.locationsTable.locations;
+import com.example.MiniProject.controller.coordinatesTable.coordinates;
+import com.example.MiniProject.controller.areaTable.area;
 
 
+import com.example.MiniProject.controller.RolesTable.roles;
 import jakarta.persistence.*;
 
 import lombok.Data;
@@ -13,18 +18,22 @@ public class properties {
     @Column(name = "id")
     private Long id;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "seller_id", referencedColumnName = "id")
+    private users user;
 
-    @Column(name = "seller_id")
-    private int seller_id;
 
-    @Column(name = "location_id")
-    private int location_id;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "location_id", referencedColumnName = "id")
+    private locations location;
 
-    @Column(name = "coordinate_id")
-    private int coordinate_id;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "coordinate_id", referencedColumnName = "id")
+    private coordinates coordinate;
 
-    @Column(name = "area_id")
-    private int area_id;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "area_id", referencedColumnName = "id")
+    private area _area;
 
     @Column(name = "title", length = 30)
     private String title;
@@ -56,16 +65,16 @@ public class properties {
         // You can leave it empty or initialize some default values if needed
     }
 
-    public properties(int seller_id, int location_id,
-                      int coordinate_id, int area_id,
+    public properties(users seller_id, locations location_id,
+                      coordinates coordinate_id, area area_id,
                       String title, int type,
                       String description, float price,
                       byte[] image) {
-        this.seller_id = seller_id;
-        this.location_id = location_id;
+        this.user = seller_id;
+        this.location = location_id;
         this.price = price;
-        this.coordinate_id=coordinate_id;
-        this.area_id=area_id;
+        this.coordinate=coordinate_id;
+        this._area=area_id;
         this.title = title;
         this.type = type;
         this.description = description;
