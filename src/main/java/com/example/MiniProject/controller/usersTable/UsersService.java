@@ -23,6 +23,15 @@ public class UsersService {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Internal Server Error");
         }
     }
+
+    public boolean isEmailAvailable(String email) {
+        // Check if a user with the given email exists
+        users user = usersRepository.findByEmail(email);
+        // If the user is null, the email is available
+        System.out.println(user == null);
+        return user == null;
+    }
+
     public users getPropertiesById(Long id) {
         return usersRepository.findById(id).orElse(null);
     }

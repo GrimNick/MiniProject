@@ -32,6 +32,47 @@
           outline: none;
         }
 
+        input[type=number] {
+           width: 100%;
+            padding: 15px;
+             margin: 5px 0 22px 0;
+            display: inline-block;
+            border: none;
+            background: #f1f1f1;
+        }
+
+        input[type=number]:focus {
+             background-color: #ddd;
+             outline: none;
+        }
+
+        select {
+            width: 100%;
+            padding: 15px;
+            margin: 5px 0 22px 0;
+            display: inline-block;
+            border: none;
+            background: #f1f1f1;
+        }
+
+        select:focus {
+            background-color: #ddd;
+            outline: none;
+        }
+        input[type=radio] {
+            margin: 5px 0 22px 0;
+        }
+
+        label.radio {
+             display: inline-block;
+             margin-right: 10px;
+        }
+
+        input[type=radio]:checked + label::before {
+                color: #04AA6D; /* Color when radio button is checked */
+                font-size: 20px;
+        }
+
 
         button {
           background-color: #04AA6D;
@@ -128,7 +169,28 @@
             padding: 20px;
             margin-top: 20px;
             text-align: left;
+            width: 300px;
 
+        }
+        .container-box-main {
+            border: 1px solid #ccc;
+            display:flex;
+            gap:10px;
+            flex-direction: row;
+            padding: 20px;
+            margin-top: 20px;
+            text-align: left;
+        }
+
+        .display-property-box{
+            border: 1px solid #ccc;
+            display:flex;
+            flex-direction: column;
+            padding: 20px;
+            gap: 10px;
+            margin-top: 20px;
+            text-align: left;
+            width:100%;
         }
 
         .container {
@@ -150,86 +212,155 @@
         .area-input {
             /* Add styles for the area input if needed */
         }
+
+        .card-container {
+    display: flex;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+        /* Image container */
+        .img-container {
+            width: 150px; /* Adjust width as needed */
+        }
+
+        .img-container img {
+            width: 100%;
+            height: auto;
+        }
+
+        /* Card info */
+        .card-info {
+            flex: 1;
+            padding: 15px;
+        }
+
+        .card-info h5 {
+            margin: 0;
+            font-size: 18px;
+            font-weight: bold;
+        }
+
+        .card-info p {
+            margin: 10px 0;
+        }
+
+        /* Property info */
+        .property-info {
+            display: flex;
+        }
+
+        .property-info span {
+            margin-right: 15px;
+            display: flex;
+            align-items: center;
+        }
+
+        .property-info span i {
+            margin-right: 5px;
+        }
+
+        .property-info span p {
+            margin: 0;
+        }
+
+
     </style>
 </head>
 
 <body>
 
 <div class="navbar">
-    <div class="logo">Ghar Jagga </div>
+    <div class="logo">Ghar Jagga</div>
     <button onclick="showSignupForm()">Sign Up</button>
 </div>
 
 <div id="signUpForm" class="container">
-        <h2>Sign Up</h2>
+    <h2>Sign Up</h2>
 
-        <label for="email"><b>Email</b></label>
-        <input type="text" placeholder="Enter Email" name="email" id="email" required>
+    <label for="email"><b>Email</b></label>
+    <input type="text" placeholder="Enter Email" name="email" id="email" required>
 
-        <label for="psw"><b>Password</b></label>
-        <input type="password" placeholder="Enter Password" name="psw" id="psw" required>
+    <label for="phone"><b>Phone</b></label>
+    <input type="number" placeholder="Enter Phone Number" name="phone" id="phone" required>
+    <b></b>
+    <label for="role_id"><b>Select a Role</b></label>
+    <select name="role_id" id="role_id" required>
+        <option value="0" disabled selected>Select your role</option>
+        <option value="1">Buyer</option>
+        <option value="2">Seller</option>
+        <option value="3">Admin</option>
+    </select>
+    <b></b>
+    <label for="psw"><b>Password</b></label>
+    <input type="password" placeholder="Enter Password" name="psw" id="psw" required>
 
-        <label for="psw-repeat"><b>Repeat Password</b></label>
-        <input type="password" placeholder="Repeat Password" name="psw-repeat" id="psw-repeat" required>
+    <label for="psw-repeat"><b>Repeat Password</b></label>
+    <input type="password" placeholder="Repeat Password" name="psw-repeat" id="psw-repeat" required>
 
-        <label>
-            <input type="checkbox" checked="checked" name="remember" style="margin-bottom:15px"> Remember me
-        </label>
+    <label>
+        <input type="checkbox" checked="checked" name="remember" style="margin-bottom:15px"> Remember me
+    </label>
 
-        <p>By creating an account you agree to our <a href="#" style="color:dodgerblue">Terms & Privacy</a>.</p>
+    <p>By creating an account you agree to our <a href="#" style="color:dodgerblue">Terms & Privacy</a>.</p>
 
-        <div class="clearfix">
-            <button type="button" class="cancelbtn" onclick="hideSignUpForm()">Cancel</button>
-            <button type="submit" class="signupbtn" onclick="hideSignUpForm()">Sign Up</button>
-        </div>
+    <div class="clearfix">
+        <button type="button" class="cancelbtn" onclick="hideSignUpForm()">Cancel</button>
+        <button type="submit" class="signupbtn" onclick="checkAndSignUp()">Sign Up</button>
+    </div>
 
 </div>
 <div id="backgroundOverlay">
-<div class="container-box">
-        <h1>Property Type Selector</h1>
-        <form th:action="@{/submit}" method="post">
-            <div class="radio-group">
-                <input type="radio" id="land" name="propertyType" value="land">
-                <label for="land">Land</label>
-                <input type="radio" id="roles" name="propertyType" value="roles">
-                <label for="roles">House</label>
-                <input type="radio" id="both" name="propertyType" value="both">
-                <label for="both">Both</label>
-            </div>
-            <div class="numeric-input">
-                <label for="budget">Budget:</label>
-                <input type="text" id="budget" name="budget" pattern="[0-9]+" title="Please enter a numeric value">
-            </div>
-            <div class="dropdown-input">
-                <label for="location">Location:</label>
-                <select id="location" name="location">
-                    <option value="city">City</option>
-                    <option value="suburb">Suburb</option>
-                    <option value="countryside">Countryside</option>
-                </select>
-            </div>
-            <div class="area-input">
-                <label for="ropani">Ropani:</label>
-                <input type="number" id="ropani" name="ropani" min="0" step="1">
-                <label for="aana">Aana:</label>
-                <input type="number" id="aana" name="aana" min="0" step="1">
-                <label for="paisa">Paisa:</label>
-                <input type="number" id="paisa" name="paisa" min="0" step="1">
-                <label for="daam">Daam:</label>
-                <input type="number" id="daam" name="daam" min="0" step="1">
-            </div>
-            <button type="submit">Submit</button>
-        </form>
-</div>
+    <div class="container-box-main">
+        <div class="container-box">
+            <h1>Property Type Selector</h1>
+            <form th:action="@{/submit}" method="post">
+                <div class="radio-group">
+                    <input type="radio" id="land" name="propertyType" value="land">
+                    <label for="land">Land</label>
+                    <input type="radio" id="roles" name="propertyType" value="roles">
+                    <label for="roles">House</label>
+                    <input type="radio" id="both" name="propertyType" value="both">
+                    <label for="both">Both</label>
+                </div>
+                <div class="numeric-input">
+                    <label for="budget">Budget:</label>
+                    <input type="text" id="budget" name="budget" pattern="[0-9]+" title="Please enter a numeric value">
+                </div>
+                <div class="dropdown-input">
+                    <label for="location">Location:</label>
+                    <select id="location" name="location">
+                        <option value="city">City</option>
+                        <option value="suburb">Suburb</option>
+                        <option value="countryside">Countryside</option>
+                    </select>
+                </div>
+                <div class="area-input">
+                    <label for="ropani">Ropani:</label>
+                    <input type="number" id="ropani" name="ropani" min="0" step="1">
+                    <label for="aana">Aana:</label>
+                    <input type="number" id="aana" name="aana" min="0" step="1">
+                    <label for="paisa">Paisa:</label>
+                    <input type="number" id="paisa" name="paisa" min="0" step="1">
+                    <label for="daam">Daam:</label>
+                    <input type="number" id="daam" name="daam" min="0" step="1">
+                </div>
+                <button type="submit">Submit</button>
+            </form>
+        </div>
+        <div id="propertyContainer" class="display-property-box">
+        </div>
 
 
+    </div>
 </div>
 <script>
     // Function to show the signup form
     function showSignupForm() {
         var signUpForm = document.getElementById("signUpForm");
         signUpForm.style.display = "block";
-        document.getElementById("backgroundOverlay").classList.add("blur"); // Add 'blur' class to background overlay
+        document.getElementById("backgroundOverlay").classList.add("blur");
 
     }
 
@@ -239,6 +370,130 @@
         signUpForm.style.display = "none";
         document.getElementById("backgroundOverlay").classList.remove("blur"); // Remove 'blur' class from background overlay
     }
+
+    function checkAndSignUp() {
+    var email = document.getElementById("email").value.trim();;
+    var phone = document.getElementById("phone").value;
+    var role_id = document.getElementById("role_id").value;
+    var password = document.getElementById("psw").value;
+    var repeatPassword = document.getElementById("psw-repeat").value;
+
+    // Check if password and repeat password match
+    if (password !== repeatPassword) {
+        alert("Passwords do not match");
+        return;
+    }
+
+        // Make AJAX request to backend to check if email is already in use
+    var email = document.getElementById("email").value; // Get the email from the input field
+    var xhr = new XMLHttpRequest();
+    xhr.open("POST", "/check-email", true);
+    xhr.setRequestHeader("Content-Type", "application/json");
+    xhr.onreadystatechange = function() {
+        if (xhr.readyState === 4) {
+            if (xhr.status === 200) {
+                var response = JSON.parse(xhr.responseText);
+                if (response.available) {
+                    submitForm();
+                } else {
+                    // If email is not available, display error message
+                    document.getElementById("email").setCustomValidity("Email already in use");
+                    document.getElementById("email").reportValidity();
+                }
+            } else {
+                // Handle other status codes or errors if needed
+                console.error("Error checking email availability");
+            }
+        }
+    };
+    xhr.send(JSON.stringify({ email: email }));
+    }
+
+function submitForm() {
+    var formData = {
+        email: document.getElementById("email").value,
+        name: document.getElementById("name").value, // Add name field
+        phone: document.getElementById("phone").value,
+        password: document.getElementById("psw").value,
+        role: { id: document.getElementById("role_id").value } // Add role object
+    };
+
+    var xhr = new XMLHttpRequest();
+    xhr.open("POST", "/users", true);
+    xhr.setRequestHeader("Content-Type", "application/json");
+    xhr.onreadystatechange = function() {
+        if (xhr.readyState === 4) {
+            if (xhr.status === 200) {
+                // Handle successful form submission
+                alert("User created successfully!");
+                // Optionally, redirect to another page or perform other actions
+            } else {
+                // Handle form submission errors
+                console.error("Error creating user:", xhr.responseText);
+                alert("Error creating user. Please try again later.");
+            }
+        }
+    };
+    xhr.send(JSON.stringify(formData));
+}
+
+function fetchAllProperties() {
+    const url = 'http://localhost:8080/properties';
+
+    fetch(url)
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
+            }
+            return response.json();
+        })
+        .then(data => {
+            // Call a function to handle the fetched properties data
+            handlePropertiesData(data);
+        })
+        .catch(error => {
+            console.error('There was a problem with the fetch operation:', error);
+        });
+}
+function handlePropertiesData(propertiesData) {
+    // Get the container where the properties will be displayed
+    const propertyContainer = document.getElementById("propertyContainer");
+
+    // Iterate over the propertiesData array
+    propertiesData.forEach(property => {
+        // Create a new card element
+        const card = document.createElement("div");
+        card.classList.add("card-container");
+
+        // Create and populate the card content
+        card.innerHTML = `
+
+            <div class="img-container">
+                <img src="${property.image}" alt="${property.title}">
+            </div>
+            <div class="card-info">
+                <h5>${property.title}</h5>
+                <p>${property.description}</p>
+                <div class="property-info">
+                    <span><i></i><p>${property.price}</p></span>
+                    <span><i></i><p>${property.location}</p></span>
+                    <span><i></i><p>${property._area}</p></span>
+                </div>
+            </div>
+
+        `;
+
+                card.addEventListener("click", () => {
+            // Redirect to the details page with property ID
+            window.location.href = `/property-details?id=${property.id}`;
+        });
+
+
+        // Append the card to the property container
+        propertyContainer.appendChild(card);
+    });
+}
+    window.onload = fetchAllProperties;
 
 </script>
 

@@ -6,6 +6,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import java.util.HashMap;
+import java.util.Map;
 
 @RestController
 public class UsersController {
@@ -32,6 +34,16 @@ public class UsersController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Internal Server Error");
         }
     }
+    @PostMapping("/check-email")
+    public ResponseEntity<Map<String, Boolean>> checkEmailAvailability(@RequestBody Map<String, String> requestBody) {
+        String email = requestBody.get("email");
+        Map<String, Boolean> response = new HashMap<>();
+        response.put("available", usersService.isEmailAvailable(email));
+        return ResponseEntity.ok().body(response);
+    }
+
+
+
     @PutMapping("/users/{id}")
     public ResponseEntity<String> updateHouse(@PathVariable Long id, @RequestBody users updatedUsers) {
         try {

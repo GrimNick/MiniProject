@@ -13,9 +13,11 @@ public class roles {
     private Long id;
 
    //Make names :
-    //Seller:
-    //Buyer:
-    //Admin
+    //Buyer:1
+
+    //Seller:2
+
+    //Admin:3
     @Column(name = "name", length = 15)
     private String name;
 

@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Property Details</title>
+</head>
+<body>
+<div id="propertyDetails">
+    <!-- Property details will be displayed here -->
+</div>
+
+<script>
+    // Function to fetch property details by ID
+    function fetchPropertyDetails(id) {
+        fetch(`/property-details/${id}`)
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                return response.json();
+            })
+            .then(property => {
+                // Update HTML content with property details
+                document.getElementById('propertyDetails').innerHTML = `
+                    <h2>${property.title}</h2>
+                    <p>Description: ${property.description}</p>
+                    <p>Price: ${property.price}</p>
+                    <!-- Add more details as needed -->
+                `;
+            })
+            .catch(error => {
+                console.error('Error fetching property details:', error);
+            });
+    }
+
+    // Function to extract query parameter from URL
+    function getUrlParameter(name) {
+        name = name.replace(/[\[]/, '\\[').replace(/[\]]/, '\\]');
+        var regex = new RegExp('[\\?&]' + name + '=([^&#]*)');
+        var results = regex.exec(location.search);
+        return results === null ? '' : decodeURIComponent(results[1].replace(/\+/g, ' '));
+    }
+
+    // Fetch the property ID from the URL
+    var propertyId = getUrlParameter('id');
+    window.onload = fetchPropertyDetails(propertyId);
+
+</script>
+</body>
+</html>

@@ -21,6 +21,12 @@ public class homeController {
     public String signUpForm() {
         return "signUp"; // Return the name of your signup.html file
     }
+    @GetMapping("/property-details")
+    public String getPropertyDetailsPage() {
+        return "property-details"; // Return the name of your signup.html file
+    }
+
+
 
 
 //    @PostMapping("/submit")

@@ -53,7 +53,7 @@ public class properties {
 //    private String house_owner;
 
     @Column(name = "price")
-    private float price;
+    private double price;
 
     //images ********* baki
     //created_at ***** timestamp baki
@@ -68,7 +68,7 @@ public class properties {
     public properties(users seller_id, locations location_id,
                       coordinates coordinate_id, area area_id,
                       String title, int type,
-                      String description, float price,
+                      String description, double price,
                       byte[] image) {
         this.user = seller_id;
         this.location = location_id;
@@ -101,7 +101,93 @@ public class properties {
                 imageData[1] == (byte) 0xD8 &&
                 imageData[2] == (byte) 0xFF);
     }
+    public Long getId() {
+        return id;
+    }
 
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public String getPropertyName() {
+        return title;
+    }
+
+    public void setPropertyName(String propertyName) {
+        this.title = propertyName;
+    }
+
+    public users getUser() {
+        return user;
+    }
+
+    public void setUser(users user) {
+        this.user = user;
+    }
+
+    public locations getLocation() {
+        return location;
+    }
+
+    public void setLocation(locations location) {
+        this.location = location;
+    }
+
+    public coordinates getCoordinate() {
+        return coordinate;
+    }
+
+    public void setCoordinate(coordinates coordinate) {
+        this.coordinate = coordinate;
+    }
+
+    public area getArea() {
+        return _area;
+    }
+
+    public void setArea(area _area) {
+        this._area = _area;
+    }
+
+    public String getTitle() {
+        return title;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
+    public int getType() {
+        return type;
+    }
+
+    public void setType(int type) {
+        this.type = type;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public byte[] getImage() {
+        return image;
+    }
+
+    public void setImage(byte[] image) {
+        this.image = image;
+    }
+
+    public double getPrice() {
+        return price;
+    }
+
+    public void setPrice(double price) {
+        this.price = price;
+    }
 
 
 
