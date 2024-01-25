@@ -42,6 +42,16 @@ public class UsersController {
         return ResponseEntity.ok().body(response);
     }
 
+    @PostMapping("/check-signin")
+    public SignInResponse checkSignIn(@RequestBody SignInRequest request) {
+        // Implement logic to check if email and password match in the database
+        boolean valid = UsersService.checkSignIn(request.getEmail(), request.getPassword());
+
+        // Return response indicating if sign-in is valid
+        return new SignInResponse(valid);
+    }
+
+
 
 
     @PutMapping("/users/{id}")

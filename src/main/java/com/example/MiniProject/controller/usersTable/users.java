@@ -31,7 +31,7 @@ public class users {
 
     //This unique doesnt seem to be setting
     //uniqueness. Prolly dmbs has no unique attribute.
-    @Column(name = "email", length = 50, unique = true)
+    @Column(name = "email", length = 100, unique = true)
     private String email;
 
     //Don't think address of individuals is necessary

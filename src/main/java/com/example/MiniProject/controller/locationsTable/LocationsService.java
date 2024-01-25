@@ -4,6 +4,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import java.util.Optional;
+
 @Service
 public class LocationsService {
 
@@ -12,6 +14,11 @@ public class LocationsService {
     @Autowired
     public LocationsService(LocationsRepository locationsRepository) {
         this.locationsRepository = locationsRepository;
+    }
+
+    public LocationsService() {
+        this.locationsRepository = null; // Or initialize it with a new instance, depending on your logic
+
     }
 
     public ResponseEntity<String> saveProperties(locations locations) {
@@ -25,6 +32,9 @@ public class LocationsService {
     }
     public locations getPropertiesById(Long id) {
         return locationsRepository.findById(id).orElse(null);
+    }
+    public Optional<locations> getLocationById(Long id) {
+        return locationsRepository.findById(id);
     }
 
     public void deletePropertiesById(Long id) {

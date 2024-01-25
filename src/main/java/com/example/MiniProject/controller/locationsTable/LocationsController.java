@@ -65,5 +65,23 @@ public class LocationsController {
         }
     }
 
+    @GetMapping("/location-details/{id}")
+    public ResponseEntity<LocationDTO> getLocationDetails(@PathVariable Long id) {
+        LocationsService locationService = new LocationsService(); // Instantiate LocationService
+        return locationService.getLocationById(id)
+                .map(location -> new ResponseEntity<>(convertToDTO(location), HttpStatus.OK))
+                .orElse(new ResponseEntity<>(HttpStatus.NOT_FOUND));
+    }
+
+    private LocationDTO convertToDTO(locations location) {
+        LocationDTO dto = new LocationDTO();
+        dto.setId(location.getId());
+        dto.setAddress(location.getAddress());
+        dto.setCountry(location.getCountry());
+        return dto;
+    }
+
+
+
 
 }
