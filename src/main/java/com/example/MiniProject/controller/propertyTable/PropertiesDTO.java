@@ -1,21 +1,16 @@
 package com.example.MiniProject.controller.propertyTable;
 
-
-import com.example.MiniProject.controller.areaTable.area;
-import com.example.MiniProject.controller.areaTable.area;
-import com.example.MiniProject.controller.coordinatesTable.coordinates;
-import com.example.MiniProject.controller.coordinatesTable.coordinates;
-import com.example.MiniProject.controller.locationsTable.locations;
-import com.example.MiniProject.controller.locationsTable.locations;
-import com.example.MiniProject.controller.usersTable.users;
-import com.example.MiniProject.controller.usersTable.users;
+import com.example.MiniProject.controller.areaTable.AreaDTO;
+import com.example.MiniProject.controller.coordinatesTable.CoordinateDTO;
+import com.example.MiniProject.controller.locationsTable.LocationDTO;
+import com.example.MiniProject.controller.usersTable.UserDTO;
 
 public class PropertiesDTO {
     private Long id;
-    private users user;
-    private locations location;
-    private coordinates coordinate;
-    private area _area;
+    private UserDTO user;
+    private LocationDTO location;
+    private CoordinateDTO coordinate;
+    private AreaDTO area;
     private String title;
     private int type;
     private String description;
@@ -33,39 +28,39 @@ public class PropertiesDTO {
     }
 
     // Getter and setter methods for user
-    public users getUser() {
+    public UserDTO getUser() {
         return user;
     }
 
-    public void setUser(users user) {
+    public void setUser(UserDTO user) {
         this.user = user;
     }
 
     // Getter and setter methods for location
-    public locations getLocation() {
+    public LocationDTO getLocation() {
         return location;
     }
 
-    public void setLocation(locations location) {
+    public void setLocation(LocationDTO location) {
         this.location = location;
     }
 
     // Getter and setter methods for coordinate
-    public coordinates getCoordinate() {
+    public CoordinateDTO getCoordinate() {
         return coordinate;
     }
 
-    public void setCoordinate(coordinates coordinate) {
+    public void setCoordinate(CoordinateDTO coordinate) {
         this.coordinate = coordinate;
     }
 
-    // Getter and setter methods for _area
-    public area getArea() {
-        return _area;
+    // Getter and setter methods for area
+    public AreaDTO getArea() {
+        return area;
     }
 
-    public void setArea(area _area) {
-        this._area = _area;
+    public void setArea(AreaDTO area) {
+        this.area = area;
     }
 
     // Getter and setter methods for title

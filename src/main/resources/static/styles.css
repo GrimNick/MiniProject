@@ -1,0 +1,257 @@
+body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+
+        }
+
+        * {
+          box-sizing: border-box;
+        }
+
+        input[type=text], input[type=password] {
+          width: 100%;
+          padding: 15px;
+          margin: 5px 0 22px 0;
+          display: inline-block;
+          border: none;
+          background: #f1f1f1;
+        }
+
+        input[type=text]:focus, input[type=password]:focus {
+          background-color: #ddd;
+          outline: none;
+        }
+
+        input[type=number] {
+           width: 100%;
+            padding: 15px;
+             margin: 5px 0 22px 0;
+            display: inline-block;
+            border: none;
+            background: #f1f1f1;
+        }
+
+        input[type=number]:focus {
+             background-color: #ddd;
+             outline: none;
+        }
+
+        select {
+            width: 100%;
+            padding: 15px;
+            margin: 5px 0 22px 0;
+            display: inline-block;
+            border: none;
+            background: #f1f1f1;
+        }
+
+        select:focus {
+            background-color: #ddd;
+            outline: none;
+        }
+        input[type=radio] {
+            margin: 5px 0 22px 0;
+        }
+
+        label.radio {
+             display: inline-block;
+             margin-right: 10px;
+        }
+
+        input[type=radio]:checked + label::before {
+                color: #04AA6D; /* Color when radio button is checked */
+                font-size: 20px;
+        }
+
+
+        button {
+          background-color: #04AA6D;
+          color: white;
+          padding: 14px 20px;
+          margin: 8px 0;
+          border: none;
+          cursor: pointer;
+          width: 100%;
+          opacity: 0.9;
+        }
+
+        button:hover {
+          opacity: 1;
+        }
+
+        .cancelbtn {
+          width: auto;
+          padding: 14px 20px;
+          background-color: #f44336;
+        }
+        .cancelbtn, .signupbtn {
+          float: left;
+          width: 50%;
+        }
+
+
+        .container {
+            display: none; /* Initially hide the container */
+            position: fixed; /* Position the container relative to the viewport */
+            top: 50%; /* Center vertically */
+            left: 50%; /* Center horizontally */
+            transform: translate(-50%, -50%); /* Center the container */
+            width: 300px;
+            padding: 20px;
+            background-color: #FFFC9B;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            z-index: 9999;
+            filter:blur(0px);
+        }
+        .blur {
+            filter: blur(5px); /* Apply blur effect */
+            pointer-events: none; /* Disable pointer events */
+            transition: filter 2s ease; /* Add smooth transition */
+
+        }
+
+
+        hr {
+          border: 1px solid #f1f1f1;
+          margin-bottom: 25px;
+        }
+
+        .clearfix::after {
+          content: "";
+          clear: both;
+          display: table;
+        }
+
+        @media screen and (max-width: 300px) {
+          .cancelbtn, .signupbtn {
+            width: 100%;
+          }
+        }
+
+
+        .navbar {
+            background-color: #333;
+            padding: 10px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            color: white;
+            font-size: 24px;
+            font-weight: bold;
+        }
+
+        .signing-btn {
+            background-color: #4CAF50;
+            color: white;
+            padding: 10px 20px;
+            text-decoration: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+
+        .container-box {
+            border: 1px solid #ccc;
+            padding: 20px;
+            margin-top: 20px;
+            text-align: left;
+            width: 300px;
+
+        }
+        .container-box-main {
+            border: 1px solid #ccc;
+            display:flex;
+            gap:10px;
+            flex-direction: row;
+            padding: 20px;
+            margin-top: 20px;
+            text-align: left;
+        }
+
+        .display-property-box{
+            border: 1px solid #ccc;
+            display:flex;
+            flex-direction: column;
+            padding: 20px;
+            gap: 10px;
+            margin-top: 20px;
+            text-align: left;
+            width:100%;
+        }
+
+        .container {
+            text-align: left;
+        }
+
+        .radio-group {
+            /* Add styles for the radio group if needed */
+        }
+
+        .numeric-input {
+            /* Add styles for the numeric input if needed */
+        }
+
+        .dropdown-input {
+            /* Add styles for the dropdown input if needed */
+        }
+
+        .area-input {
+            /* Add styles for the area input if needed */
+        }
+
+        .card-container {
+    display: flex;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+        /* Image container */
+        .img-container {
+            width: 150px; /* Adjust width as needed */
+        }
+
+        .img-container img {
+            width: 100%;
+            height: auto;
+        }
+
+        /* Card info */
+        .card-info {
+            flex: 1;
+            padding: 15px;
+        }
+
+        .card-info h5 {
+            margin: 0;
+            font-size: 18px;
+            font-weight: bold;
+        }
+
+        .card-info p {
+            margin: 10px 0;
+        }
+
+        /* Property info */
+        .property-info {
+            display: flex;
+        }
+
+        .property-info span {
+            margin-right: 15px;
+            display: flex;
+            align-items: center;
+        }
+
+        .property-info span i {
+            margin-right: 5px;
+        }
+
+        .property-info span p {
+            margin: 0;
+        }

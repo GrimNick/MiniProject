@@ -80,7 +80,7 @@ public class PropertiesController {
         for (PropertiesDTO dto : propertiesDTOList) {
             properties prop = new properties();
             prop.setId(dto.getId());
-            prop.setPropertyName(dto.getPropertyName());
+            prop.setTitle(dto.getPropertyName());
 
             // Set user (foreign key)
             if (dto.getUser() != null) {
@@ -101,7 +101,7 @@ public class PropertiesController {
             // Set coordinate (foreign key)
             if (dto.getCoordinate() != null) {
                 coordinates coordinate = new coordinates();
-                coordinate.setId(dto.getCoordinate().getId());
+                coordinate.setId((dto.getCoordinate()).getId());
                 // Set other coordinate properties if needed
                 prop.setCoordinate(coordinate);
             }
@@ -129,10 +129,10 @@ public class PropertiesController {
     }
 
     @GetMapping("/property-details/{id}")
-    public ResponseEntity<properties> getPropertyById(@PathVariable Long id) {
-        properties property = propertiesService.getPropertiesById(id);
-        if (property != null) {
-            return ResponseEntity.ok(property);
+    public ResponseEntity<?> getPropertyDetails(@PathVariable Long id) {
+        PropertiesDTO propertyDTO = propertiesService.getPropertiesDTOById(id);
+        if (propertyDTO != null) {
+            return ResponseEntity.ok(propertyDTO);
         } else {
             return ResponseEntity.notFound().build();
         }

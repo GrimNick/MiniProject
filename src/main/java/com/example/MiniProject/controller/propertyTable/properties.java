@@ -1,4 +1,6 @@
 package com.example.MiniProject.controller.propertyTable;
+import com.example.MiniProject.controller.areaTable.AreaDTO;
+import com.example.MiniProject.controller.coordinatesTable.CoordinateDTO;
 import com.example.MiniProject.controller.usersTable.users;
 import com.example.MiniProject.controller.locationsTable.locations;
 import com.example.MiniProject.controller.coordinatesTable.coordinates;
@@ -109,14 +111,6 @@ public class properties {
         this.id = id;
     }
 
-    public String getPropertyName() {
-        return title;
-    }
-
-    public void setPropertyName(String propertyName) {
-        this.title = propertyName;
-    }
-
     public users getUser() {
         return user;
     }
@@ -145,8 +139,8 @@ public class properties {
         return _area;
     }
 
-    public void setArea(area _area) {
-        this._area = _area;
+    public void setArea(area area) {
+        this._area = area;
     }
 
     public String getTitle() {
