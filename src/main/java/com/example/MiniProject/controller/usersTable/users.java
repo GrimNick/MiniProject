@@ -1,6 +1,7 @@
 package com.example.MiniProject.controller.usersTable;
 
 
+import com.example.MiniProject.controller.RolesTable.roles;
 import jakarta.persistence.*;
 import lombok.Data;
 @Data
@@ -12,8 +13,10 @@ public class users {
     @Column(name = "id")
     private Long id;
 
-    @Column(name = "role_id")
-    private int role_id;
+    //FOREGIGNGNGN KEY implemented finally
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "role_id", referencedColumnName = "id")
+    private roles role;
 
     @Column(name = "phone")
     private Long phone;
@@ -37,10 +40,10 @@ public class users {
         // You can leave it empty or initialize some default values if needed
     }
 
-    public users(int role_id, Long phone,
+    public users(roles role_id, Long phone,
                  String name, String password,
                  String email) {
-        this.role_id = role_id;
+        this.role = role_id;
         this.phone = phone;
         this.name = name;
         this.password=password;

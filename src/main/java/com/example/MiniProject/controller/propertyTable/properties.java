@@ -13,6 +13,7 @@ public class properties {
     @Column(name = "id")
     private Long id;
 
+
     @Column(name = "seller_id")
     private int seller_id;
 
@@ -36,7 +37,7 @@ public class properties {
     private String description;
 
     @Lob
-    @Column(name = "image", columnDefinition="LONGBLOB")
+    @Column(name = "images", columnDefinition="LONGBLOB")
     private byte[] image;
 
 //    @Column(name = "house_owner", length = 255)
