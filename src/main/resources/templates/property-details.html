@@ -3,7 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="/static/styles.css">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+    <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
 
     <style>
         body {
@@ -270,50 +271,69 @@
     <title>Property Details</title>
 </head>
 <body>
+<div id="map" style="height: 400px;"></div>
+
 <div id="propertyDetails">
     <!-- Property details will be displayed here -->
 </div>
 
 <script>
-    // Function to fetch property details by ID
-    function fetchPropertyDetails(id) {
-        fetch(`/property-details/${id}`)
-            .then(response => {
-                if (!response.ok) {
-                    throw new Error('Network response was not ok');
-                }
-                return response.json();
-            })
-            .then(property => {
-                // Update HTML content with property details and associated entities
-                document.getElementById('propertyDetails').innerHTML = `
+    var map = L.map('map').setView([28.3949, 84.1240], 18);
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        attribution: '© OpenStreetMap contributors'
+    }).addTo(map);
 
-                    <h2>${property.title}</h2>
-                    <p>Description: ${property.description}</p>
-                    <p>Price: ${property.price}</p>
-                    <p>User: ${property.user.name}</p>
-                    <p>Location: ${property.location.address}, ${property.location.country}</p>
-                    <p>Coordinate: Latitude - ${property.coordinate.latitude}, Longitude - ${property.coordinate.longitude}</p>
-                    <p>Area: Ropani - ${property.area.ropani}, Aana - ${property.area.aana}, Paisa - ${property.area.paisa}, Daam - ${property.area.daam}</p>
-                    <!-- Add more details as needed -->
-                `;
-            })
-            .catch(error => {
-                console.error('Error fetching property details:', error);
-            });
+// Function to fetch property details by ID
+function fetchPropertyDetails(id) {
+    fetch(`/property-details/${id}`)
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
+            }
+            return response.json();
+        })
+        .then(property => {
+            // Update HTML content with property details and associated entities
+                                var coordinates = [property.coordinate.latitude, property.coordinate.longitude];
+                updateMarker(coordinates);
+                map.panTo(coordinates);
+
+            document.getElementById('propertyDetails').innerHTML = `
+
+                <h2>${property.title}</h2>
+                <p>Description: ${property.description}</p>
+                <p>Price: ${property.price}</p>
+                <p>User: ${property.user.name}</p>
+                <p>Location: ${property.location.address}, ${property.location.country}</p>
+                <p>Coordinate: Latitude - ${property.coordinate.latitude}, Longitude - ${property.coordinate.longitude}</p>
+                <p>Area: Ropani - ${property.area.ropani}, Aana - ${property.area.aana}, Paisa - ${property.area.paisa}, Daam - ${property.area.daam}</p>
+                <!-- Add more details as needed -->
+            `;
+        })
+        .catch(error => {
+            console.error('Error fetching property details:', error);
+        });
+}
+
+    function updateMarker(coordinates) {
+        var marker = L.marker(coordinates).addTo(map);
+        marker.bindPopup("Property Location");
     }
 
-    // Function to extract query parameter from URL
-    function getUrlParameter(name) {
-        name = name.replace(/[\[]/, '\\[').replace(/[\]]/, '\\]');
-        var regex = new RegExp('[\\?&]' + name + '=([^&#]*)');
-        var results = regex.exec(location.search);
-        return results === null ? '' : decodeURIComponent(results[1].replace(/\+/g, ' '));
-    }
 
-    // Fetch the property ID from the URL
-    var propertyId = getUrlParameter('id');
-    window.onload = fetchPropertyDetails(propertyId);
+// Function to extract query parameter from URL
+function getUrlParameter(name) {
+    name = name.replace(/[\[]/, '\\[').replace(/[\]]/, '\\]');
+    var regex = new RegExp('[\\?&]' + name + '=([^&#]*)');
+    var results = regex.exec(location.search);
+    return results === null ? '' : decodeURIComponent(results[1].replace(/\+/g, ' '));
+}
+
+
+// Fetch the property ID from the URL
+var propertyId = getUrlParameter('id');
+window.onload = fetchPropertyDetails(propertyId);
+
 
 </script>
 </body>

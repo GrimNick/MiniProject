@@ -438,6 +438,7 @@ function submitForm() {
         }
     };
     xhr.send(JSON.stringify(formData));
+    hideSignUpForm();
 }
 function fetchAllProperties() {
     const url = 'http://localhost:8080/properties';
