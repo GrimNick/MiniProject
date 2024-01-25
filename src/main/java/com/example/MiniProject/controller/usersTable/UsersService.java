@@ -4,6 +4,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import java.util.Optional;
+
 @Service
 public class UsersService {
 
@@ -24,13 +26,6 @@ public class UsersService {
         }
     }
 
-    public boolean isEmailAvailable(String email) {
-        // Check if a user with the given email exists
-        users user = usersRepository.findByEmail(email);
-        // If the user is null, the email is available
-        System.out.println(user == null);
-        return user == null;
-    }
 
     public users getPropertiesById(Long id) {
         return usersRepository.findById(id).orElse(null);
@@ -40,4 +35,8 @@ public class UsersService {
         usersRepository.deleteById(id);
     }
 
+    public boolean isEmailAvailable(String email) {
+        Optional<users> user = usersRepository.findByEmail(email);
+        return user.isEmpty();
+    }
 }

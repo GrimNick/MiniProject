@@ -282,6 +282,9 @@
     <label for="email"><b>Email</b></label>
     <input type="text" placeholder="Enter Email" name="email" id="email" required>
 
+    <label for="name"><b>Name</b></label>
+    <input type="text" placeholder="Enter Name" name="email" id="name" required>
+
     <label for="phone"><b>Phone</b></label>
     <input type="number" placeholder="Enter Phone Number" name="phone" id="phone" required>
     <b></b>
@@ -412,10 +415,10 @@
 function submitForm() {
     var formData = {
         email: document.getElementById("email").value,
-        name: document.getElementById("name").value, // Add name field
+        name: document.getElementById("name").value,
         phone: document.getElementById("phone").value,
         password: document.getElementById("psw").value,
-        role: { id: document.getElementById("role_id").value } // Add role object
+        role: { id: document.getElementById("role_id").value }
     };
 
     var xhr = new XMLHttpRequest();
@@ -436,7 +439,6 @@ function submitForm() {
     };
     xhr.send(JSON.stringify(formData));
 }
-
 function fetchAllProperties() {
     const url = 'http://localhost:8080/properties';
 
@@ -448,51 +450,71 @@ function fetchAllProperties() {
             return response.json();
         })
         .then(data => {
-            // Call a function to handle the fetched properties data
-            handlePropertiesData(data);
+            // Extract property IDs from fetched data
+            const propertyIds = data.map(property => property.id);
+
+            // Fetch property details along with children values of foreign keys
+            fetchPropertyDetails(propertyIds);
         })
         .catch(error => {
             console.error('There was a problem with the fetch operation:', error);
         });
 }
-function handlePropertiesData(propertiesData) {
+
+function fetchPropertyDetails(propertyIds) {
+    // Iterate over property IDs and fetch details for each property
+    propertyIds.forEach(id => {
+        fetch(`/property-details/${id}`)
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                return response.json();
+            })
+            .then(property => {
+                // Call a function to handle the fetched property data
+                handlePropertyData(property);
+            })
+            .catch(error => {
+                console.error('Error fetching property details:', error);
+            });
+    });
+}
+function handlePropertyData(property) {
     // Get the container where the properties will be displayed
     const propertyContainer = document.getElementById("propertyContainer");
 
-    // Iterate over the propertiesData array
-    propertiesData.forEach(property => {
-        // Create a new card element
-        const card = document.createElement("div");
-        card.classList.add("card-container");
+    // Create a new card element
+    const card = document.createElement("div");
+    card.classList.add("card-container");
 
-        // Create and populate the card content
-        card.innerHTML = `
-
-            <div class="img-container">
-                <img src="${property.image}" alt="${property.title}">
+    // Create and populate the card content
+    card.innerHTML = `
+        <div class="img-container">
+            <img src="${property.image}" alt="${property.title}">
+        </div>
+        <div class="card-info">
+            <h5>${property.title}</h5>
+            <p>${property.description}</p>
+            <div class="property-info">
+                <span><i></i><p>${property.price}</p></span>
+                <span><i></i><p>${property.location.address}, ${property.location.country}</p></span>
+                <span><i></i><p>Ropani: ${property.area.ropani}, Aana: ${property.area.aana}, Paisa: ${property.area.paisa}, Daam: ${property.area.daam}</p></span>
             </div>
-            <div class="card-info">
-                <h5>${property.title}</h5>
-                <p>${property.description}</p>
-                <div class="property-info">
-                    <span><i></i><p>${property.price}</p></span>
-                    <span><i></i><p>${property.location}</p></span>
-                    <span><i></i><p>${property._area}</p></span>
-                </div>
-            </div>
+        </div>
+    `;
 
-        `;
+    card.addEventListener("click", () => {
+        // Redirect to the details page with property ID
+        window.location.href = `/property-details?id=${property.id}`;
+    });
 
-                card.addEventListener("click", () => {
-            // Redirect to the details page with property ID
-            window.location.href = `/property-details?id=${property.id}`;
-        });
-
+    // Append the card to the property container
+    propertyContainer.appendChild(card);
+}
 
         // Append the card to the property container
-        propertyContainer.appendChild(card);
-    });
-}
+
     window.onload = fetchAllProperties;
 
 </script>
