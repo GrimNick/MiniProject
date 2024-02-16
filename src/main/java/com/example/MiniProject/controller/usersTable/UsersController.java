@@ -1,5 +1,7 @@
 package com.example.MiniProject.controller.usersTable;
 
+import com.example.MiniProject.controller.SignInRequest;
+import com.example.MiniProject.controller.SignInResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -8,6 +10,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 
 @RestController
 public class UsersController {
@@ -42,6 +45,20 @@ public class UsersController {
         return ResponseEntity.ok().body(response);
     }
 
+    @PostMapping("/verify-credentials")
+    public ResponseEntity<?> verifyCredentials(@RequestBody SignInRequest signInRequest) {
+        Optional<UserDTO> userOptional = usersService.getUserByEmail(signInRequest.getEmail());
+
+        if (userOptional.isPresent()) {
+            UserDTO user = userOptional.get();
+            System.out.println(usersService.verifyPassword("c","12"));
+            if (usersService.verifyPassword(signInRequest.getEmail(), signInRequest.getPassword())) {
+
+                return ResponseEntity.ok(new SignInResponse(true, user.getId()));
+            }
+        }
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(new SignInResponse(false, null));
+    }
 
 
 
@@ -78,6 +95,17 @@ public class UsersController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Internal Server Error");
         }
     }
+
+    @GetMapping("/user-details/{id}")
+    public ResponseEntity<?> getUsersDetails(@PathVariable Long id) {
+        UserDTO userDTO = usersService.getUserDTOById(id);
+        if (userDTO != null) {
+            return ResponseEntity.ok(userDTO);
+        } else {
+            return ResponseEntity.notFound().build();
+        }
+    }
+
 
 
 }

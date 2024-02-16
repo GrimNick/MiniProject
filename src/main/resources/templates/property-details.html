@@ -55,6 +55,59 @@
             background: #f1f1f1;
         }
 
+        .navbar {
+            background-color: #333;
+            padding: 10px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+.logo {
+            color: white;
+            font-size: 24px;
+            font-weight: bold;
+        }
+
+.buttonsInNav{
+            display: flex;
+            align-items: center;
+            width: 400px; /* Set fixed width */
+            height: 40px; /* Set fixed height */
+
+        }
+
+.user-name,
+        .user-role {
+       background-color: #04AA6D;
+          color: white;
+          padding: 14px 20px;
+          margin: 8px 0;
+          border: 1px solid #ccc;
+          width: 100%;
+          opacity: 0.9;
+        }
+
+        .signout-btn{
+            background-color: red;
+          color: white;
+          padding: 14px 20px;
+          margin: 8px 0;
+          border: 1px solid #ccc;
+          width: 100%;
+          opacity: 0.9;
+        }
+
+        .sell-btn{
+            background-color: red;
+          color: white;
+          padding: 14px 20px;
+          margin: 8px 0;
+          border: 1px solid #ccc;
+          width: 100%;
+          opacity: 0.9;
+        }
+
         select:focus {
             background-color: #ddd;
             outline: none;
@@ -74,12 +127,13 @@
         }
 
 
-        button {
+
+         button {
           background-color: #04AA6D;
           color: white;
           padding: 14px 20px;
           margin: 8px 0;
-          border: none;
+          border: 1px solid #ccc;
           cursor: pointer;
           width: 100%;
           opacity: 0.9;
@@ -271,6 +325,83 @@
     <title>Property Details</title>
 </head>
 <body>
+
+<div class="navbar">
+    <div class="logo">Ghar Jagga</div>
+
+    <div class="buttonsInNav">
+        <div id="user-name" class="user-name">User Name</div>
+        <div id="role" class="user-role">User Role</div>
+
+        <button id="signup-btn" onclick="showSignupForm()">Sign Up</button>
+        <button id="signin-btn" onclick="showSigninForm()">Sign In</button>
+        <button id="signout-btn" onclick="Signout()">Sign Out</button>
+        <button id="sell-btn" onclick="sellPage()">Want to Sell?</button>
+
+    </div>
+</div>
+
+<div id="signUpForm" class="container">
+    <h2>Sign Up</h2>
+
+    <label for="email"><b>Email</b></label>
+    <input type="text" placeholder="Enter Email" name="email" id="email" required>
+
+    <label for="name"><b>Name</b></label>
+    <input type="text" placeholder="Enter Name" name="email" id="name" required>
+
+    <label for="phone"><b>Phone</b></label>
+    <input type="number" placeholder="Enter Phone Number" name="phone" id="phone" required>
+    <b></b>
+    <label for="role_id"><b>Select a Role</b></label>
+    <select name="role_id" id="role_id" onchange="checkRole()" required>
+        <option value="0" disabled selected>Select your role</option>
+        <option value="1">Buyer</option>
+        <option value="2">Seller</option>
+        <option value="3">Admin</option>
+    </select>
+    <b></b>
+    <label for="secretCode" id="secretCodeLabel" style="display: none;"><b>Enter Secret Code:</b></label>
+    <input type="password" id="secretCode" name="secretCode" placeholder="Enter Secret Code" style="display: none;">
+    <b></b>
+    <label id="sellerEmailLabel" style="display: none; font-size: 12px; color: gray;">Don't have a seller code? Email us at <a href="mailto:gharjagga@gmail.com">gharjagga@gmail.com</a></label>
+    <b></b>
+    <b></b>
+    <label for="psw"><b>Password</b></label>
+    <input type="password" placeholder="Enter Password" name="psw" id="psw" required>
+
+    <label for="psw-repeat"><b>Repeat Password</b></label>
+    <input type="password" placeholder="Repeat Password" name="psw-repeat" id="psw-repeat" required>
+
+    <label>
+        <input type="checkbox" checked="checked" name="remember" style="margin-bottom:15px"> Remember me
+    </label>
+
+    <p>By creating an account you agree to our <a href="#" style="color:dodgerblue">Terms & Privacy</a>.</p>
+
+    <div class="clearfix">
+        <button type="button" class="cancelbtn" onclick="hideSignUpForm()">Cancel</button>
+        <button type="submit" class="signupbtn" onclick="checkAndSignUp()">Sign Up</button>
+    </div>
+</div>
+
+<div id="signInForm" class="container">
+    <h2>Sign In</h2>
+
+    <label for="signInemail"><b>Email</b></label>
+    <input type="text" placeholder="Enter Email" name="email" id="signInemail" required>
+
+    <label for="signInpsw"><b>Password</b></label>
+    <input type="password" placeholder="Enter Password" name="psw" id="signInpsw" required>
+
+
+    <div class="clearfix">
+        <button type="button" class="cancelbtn" onclick="hideSignInForm()">Cancel</button>
+        <button type="submit" class="signupbtn" onclick="checkAndSignIn()">Sign In</button>
+    </div>
+</div>
+
+
 <div id="map" style="height: 400px;"></div>
 
 <div id="propertyDetails">
@@ -329,6 +460,635 @@ function getUrlParameter(name) {
     return results === null ? '' : decodeURIComponent(results[1].replace(/\+/g, ' '));
 }
 
+// Function to show the signup form
+    function showSignupForm() {
+        var signUpForm = document.getElementById("signUpForm");
+        signUpForm.style.display = "block";
+        document.getElementById("backgroundOverlay").classList.add("blur");
+
+    }
+
+    // Function to cancel and hide the signup form
+    function hideSignUpForm() {
+        var signUpForm = document.getElementById("signUpForm");
+        signUpForm.style.display = "none";
+        document.getElementById("backgroundOverlay").classList.remove("blur"); // Remove 'blur' class from background overlay
+    }
+
+        function showSigninForm() {
+        var signInForm = document.getElementById("signInForm");
+        signInForm.style.display = "block";
+        document.getElementById("backgroundOverlay").classList.add("blur");
+
+    }
+        function Signout(){
+            localStorage.clear();
+            window.location.href = "/"; // Change the URL as needed
+        }
+        function sellPage(){
+            window.location.href = "/uploadSeller"; // Change the URL as needed
+        }
+
+    // Function to cancel and hide the signup form
+    function hideSignInForm() {
+        var signInForm = document.getElementById("signInForm");
+        signInForm.style.display = "none";
+        document.getElementById("backgroundOverlay").classList.remove("blur"); // Remove 'blur' class from background overlay
+    }
+
+
+
+    function checkAndSignUp() {
+    var email = document.getElementById("email").value.trim();;
+    var name = document.getElementById("name").value.trim();
+    var phone = document.getElementById("phone").value.trim();
+    var role_id = document.getElementById("role_id").value.trim();
+    var password = document.getElementById("psw").value.trim();
+    var repeatPassword = document.getElementById("psw-repeat").value.trim();
+    var secretCode = document.getElementById("secretCode").value.trim();
+
+    var emailPattern = /^[a-zA-Z0-9._%+-]+@(gmail\.com|yahoo\.com|hotmail\.com|outlook\.com|aol\.com|icloud\.com|live\.com|msn\.com|inbox\.com)$/;
+
+    //Check if email is valid.
+    if (!email) {
+        document.getElementById("email").setCustomValidity("No email given");
+        document.getElementById("email").reportValidity();
+        return;
+    }
+
+    if (emailPattern.test(email)) {
+        // Email is valid
+        document.getElementById("email").setCustomValidity("");
+    } else {
+        // Email is invalid
+        document.getElementById("email").setCustomValidity("Please enter a valid email.");
+        document.getElementById("email").reportValidity();
+         return;
+    }
+
+    if (!name) {
+        document.getElementById("name").setCustomValidity("No name given");
+        document.getElementById("name").reportValidity();
+        return;
+    }
+
+    // Check if name has at least 4 letters
+    if (name.length < 4) {
+        document.getElementById("name").setCustomValidity("Name is too short");
+        document.getElementById("name").reportValidity();
+        return;
+    }
+    if (name.length > 15) {
+        document.getElementById("name").setCustomValidity("Name is too long");
+        document.getElementById("name").reportValidity();
+        return;
+    }
+
+    if (phone.length !== 10) {
+        document.getElementById("phone").setCustomValidity("Phone number is invalid ");
+        document.getElementById("phone").reportValidity();
+        return;
+    }
+
+    if (role_id === "0") {
+        document.getElementById("role_id").setCustomValidity("Please select a role");
+        document.getElementById("role_id").reportValidity();
+        return;
+    }
+
+    if (!password) {
+        document.getElementById("psw").setCustomValidity("No password given");
+        document.getElementById("psw").reportValidity();
+        return;
+    }
+
+    if (password.length <4) {
+        document.getElementById("psw").setCustomValidity("Password too short");
+        document.getElementById("psw").reportValidity();
+        return;
+    }
+
+    if (password.length >20) {
+        document.getElementById("psw").setCustomValidity("Password too long");
+        document.getElementById("psw").reportValidity();
+        return;
+    }
+
+    var passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).*$/;
+
+    if (!passwordRegex.test(password)) {
+        document.getElementById("psw").setCustomValidity("Password must contain at least one lowercase letter, one uppercase letter, one number, and be at least 8 characters long");
+        document.getElementById("psw").reportValidity();
+        return;
+    }
+
+    // Check if password and repeat password match
+    if (password !== repeatPassword) {
+        document.getElementById("psw-repeat").setCustomValidity("Passwords do not match");
+        document.getElementById("psw-repeat").reportValidity();
+        return;
+    }
+
+        // Make AJAX request to backend to check if email is already in use
+    var xhr = new XMLHttpRequest();
+    xhr.open("POST", "/check-email", true);
+    xhr.setRequestHeader("Content-Type", "application/json");
+    xhr.onreadystatechange = function() {
+        if (xhr.readyState === 4) {
+            if (xhr.status === 200) {
+                var response = JSON.parse(xhr.responseText);
+                if (response.available) {
+                    submitForm();
+                } else {
+                    // If email is not available, display error message
+                    document.getElementById("email").setCustomValidity("Email already in use");
+                    document.getElementById("email").reportValidity();
+
+                }
+            } else {
+                // Handle other status codes or errors if needed
+                console.error("Error checking email availability");
+            }
+        }
+    };
+    xhr.send(JSON.stringify({ email: email }));
+    }
+    function checkRole() {
+        var roleSelect = document.getElementById("role_id");
+        var secretCodeLabel = document.getElementById("secretCodeLabel");
+        var secretCodeInput = document.getElementById("secretCode");
+
+        // Check if the selected role is "Seller"
+        if (roleSelect.value === "2") {
+            // If yes, show the secret code label and input field
+            secretCodeLabel.style.display = "block";
+            secretCodeInput.style.display = "block";
+            // Show the email label
+            sellerEmailLabel.style.display = "block";
+        } else {
+            // If not, hide the secret code label and input field
+            secretCodeLabel.style.display = "none";
+            secretCodeInput.style.display = "none";
+            // Hide the email label
+            sellerEmailLabel.style.display = "none";
+        }
+    }
+
+    function checkAndSignIn() {
+    var email = document.getElementById("signInemail").value.trim();
+    var password = document.getElementById("signInpsw").value;
+
+    // Email validation
+    var emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(email)) {
+        document.getElementById("signInemail").setCustomValidity("Please enter a valid email address");
+        document.getElementById("signInemail").reportValidity();
+        return;
+    }
+
+    // Password validation
+    if (!password) {
+        document.getElementById("signInpsw").setCustomValidity("Password cannot be null");
+        document.getElementById("signInpsw").reportValidity();
+        return;
+    }
+
+        var formData = {
+        email: email,
+        password: password
+    };
+
+         // Make AJAX request to backend to check if email is already in use
+    var xhr2 = new XMLHttpRequest();
+    xhr2.open("POST", "/check-email", true);
+    xhr2.setRequestHeader("Content-Type", "application/json");
+    xhr2.onreadystatechange = function() {
+        if (xhr2.readyState === 4) {
+            if (xhr2.status === 200) {
+                var response = JSON.parse(xhr2.responseText);
+                if (response.available) {
+                    document.getElementById("signInemail").setCustomValidity("Invalid email or password");
+                    document.getElementById("signInemail").reportValidity();
+                    return;
+                } else {
+                console.error("Checking password");
+    var xhr3 = new XMLHttpRequest();
+    xhr3.open("POST", "/verify-credentials", true);
+    xhr3.setRequestHeader("Content-Type", "application/json");
+    xhr3.onreadystatechange = function() {
+        if (xhr3.readyState === 4) {
+            if (xhr3.status === 200) {
+                // Credentials are valid, handle sign-in
+                var response = JSON.parse(xhr3.responseText);
+                if (response.success) {
+                    var userId = response.userId;
+                    // Redirect user to dashboard or perform other actions
+                    alert("Successfully signed in. UserID: " + userId);
+                    console.error("signed in");
+                    sessionStorage.setItem('userId', userId);
+                    localStorage.setItem('userId', userId);
+
+                    window.location.href = "/"; // Change the URL as needed
+
+
+
+                } else {
+                    // Credentials are invalid, display error message
+                    document.getElementById("signInemail").setCustomValidity("Invalid email or password");
+                    document.getElementById("signInemail").reportValidity();
+                }
+            } else {
+                    document.getElementById("signInemail").setCustomValidity("Invalid email or password");
+                    document.getElementById("signInemail").reportValidity();
+                console.error("Error verifying credentials");
+            }
+        }
+    };
+    xhr3.send(JSON.stringify(formData));
+
+                }
+            } else {
+                // Handle other status codes or errors if needed
+                console.error("Error checking email availability");
+            }
+        }
+    };
+    xhr2.send(JSON.stringify({ email: email }));
+
+    //check password
+
+
+
+    }
+
+
+function submitForm() {
+    var formData = {
+        email: document.getElementById("email").value,
+        name: document.getElementById("name").value,
+        phone: document.getElementById("phone").value,
+        password: document.getElementById("psw").value,
+        role: { id: document.getElementById("role_id").value }
+    };
+
+    var xhr = new XMLHttpRequest();
+    xhr.open("POST", "/users", true);
+    xhr.setRequestHeader("Content-Type", "application/json");
+    xhr.onreadystatechange = function() {
+        if (xhr.readyState === 4) {
+            if (xhr.status === 200) {
+                // Handle successful form submission
+                alert("You have been registered!");
+                // Optionally, redirect to another page or perform other actions
+            } else {
+                // Handle form submission errors
+                console.error("Error creating user:", xhr.responseText);
+                alert("Error creating user. Please try again later.");
+            }
+        }
+    };
+    xhr.send(JSON.stringify(formData));
+    hideSignUpForm();
+}
+
+// Function to show the signup form
+    function showSignupForm() {
+        var signUpForm = document.getElementById("signUpForm");
+        signUpForm.style.display = "block";
+        document.getElementById("backgroundOverlay").classList.add("blur");
+
+    }
+
+    // Function to cancel and hide the signup form
+    function hideSignUpForm() {
+        var signUpForm = document.getElementById("signUpForm");
+        signUpForm.style.display = "none";
+        document.getElementById("backgroundOverlay").classList.remove("blur"); // Remove 'blur' class from background overlay
+    }
+
+        function showSigninForm() {
+        var signInForm = document.getElementById("signInForm");
+        signInForm.style.display = "block";
+        document.getElementById("backgroundOverlay").classList.add("blur");
+
+    }
+        function Signout(){
+            localStorage.clear();
+            window.location.href = "/"; // Change the URL as needed
+        }
+        function sellPage(){
+            window.location.href = "/uploadSeller"; // Change the URL as needed
+        }
+
+    // Function to cancel and hide the signup form
+    function hideSignInForm() {
+        var signInForm = document.getElementById("signInForm");
+        signInForm.style.display = "none";
+        document.getElementById("backgroundOverlay").classList.remove("blur"); // Remove 'blur' class from background overlay
+    }
+
+
+
+    function checkAndSignUp() {
+    var email = document.getElementById("email").value.trim();;
+    var name = document.getElementById("name").value.trim();
+    var phone = document.getElementById("phone").value.trim();
+    var role_id = document.getElementById("role_id").value.trim();
+    var password = document.getElementById("psw").value.trim();
+    var repeatPassword = document.getElementById("psw-repeat").value.trim();
+    var secretCode = document.getElementById("secretCode").value.trim();
+
+    var emailPattern = /^[a-zA-Z0-9._%+-]+@(gmail\.com|yahoo\.com|hotmail\.com|outlook\.com|aol\.com|icloud\.com|live\.com|msn\.com|inbox\.com)$/;
+
+    //Check if email is valid.
+    if (!email) {
+        document.getElementById("email").setCustomValidity("No email given");
+        document.getElementById("email").reportValidity();
+        return;
+    }
+
+    if (emailPattern.test(email)) {
+        // Email is valid
+        document.getElementById("email").setCustomValidity("");
+    } else {
+        // Email is invalid
+        document.getElementById("email").setCustomValidity("Please enter a valid email.");
+        document.getElementById("email").reportValidity();
+         return;
+    }
+
+    if (!name) {
+        document.getElementById("name").setCustomValidity("No name given");
+        document.getElementById("name").reportValidity();
+        return;
+    }
+
+    // Check if name has at least 4 letters
+    if (name.length < 4) {
+        document.getElementById("name").setCustomValidity("Name is too short");
+        document.getElementById("name").reportValidity();
+        return;
+    }
+    if (name.length > 15) {
+        document.getElementById("name").setCustomValidity("Name is too long");
+        document.getElementById("name").reportValidity();
+        return;
+    }
+
+    if (phone.length !== 10) {
+        document.getElementById("phone").setCustomValidity("Phone number is invalid ");
+        document.getElementById("phone").reportValidity();
+        return;
+    }
+
+    if (role_id === "0") {
+        document.getElementById("role_id").setCustomValidity("Please select a role");
+        document.getElementById("role_id").reportValidity();
+        return;
+    }
+
+    if (!password) {
+        document.getElementById("psw").setCustomValidity("No password given");
+        document.getElementById("psw").reportValidity();
+        return;
+    }
+
+    if (password.length <4) {
+        document.getElementById("psw").setCustomValidity("Password too short");
+        document.getElementById("psw").reportValidity();
+        return;
+    }
+
+    if (password.length >20) {
+        document.getElementById("psw").setCustomValidity("Password too long");
+        document.getElementById("psw").reportValidity();
+        return;
+    }
+
+    var passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).*$/;
+
+    if (!passwordRegex.test(password)) {
+        document.getElementById("psw").setCustomValidity("Password must contain at least one lowercase letter, one uppercase letter, one number, and be at least 8 characters long");
+        document.getElementById("psw").reportValidity();
+        return;
+    }
+
+    // Check if password and repeat password match
+    if (password !== repeatPassword) {
+        document.getElementById("psw-repeat").setCustomValidity("Passwords do not match");
+        document.getElementById("psw-repeat").reportValidity();
+        return;
+    }
+
+        // Make AJAX request to backend to check if email is already in use
+    var xhr = new XMLHttpRequest();
+    xhr.open("POST", "/check-email", true);
+    xhr.setRequestHeader("Content-Type", "application/json");
+    xhr.onreadystatechange = function() {
+        if (xhr.readyState === 4) {
+            if (xhr.status === 200) {
+                var response = JSON.parse(xhr.responseText);
+                if (response.available) {
+                    submitForm();
+                } else {
+                    // If email is not available, display error message
+                    document.getElementById("email").setCustomValidity("Email already in use");
+                    document.getElementById("email").reportValidity();
+
+                }
+            } else {
+                // Handle other status codes or errors if needed
+                console.error("Error checking email availability");
+            }
+        }
+    };
+    xhr.send(JSON.stringify({ email: email }));
+    }
+    function checkRole() {
+        var roleSelect = document.getElementById("role_id");
+        var secretCodeLabel = document.getElementById("secretCodeLabel");
+        var secretCodeInput = document.getElementById("secretCode");
+
+        // Check if the selected role is "Seller"
+        if (roleSelect.value === "2") {
+            // If yes, show the secret code label and input field
+            secretCodeLabel.style.display = "block";
+            secretCodeInput.style.display = "block";
+            // Show the email label
+            sellerEmailLabel.style.display = "block";
+        } else {
+            // If not, hide the secret code label and input field
+            secretCodeLabel.style.display = "none";
+            secretCodeInput.style.display = "none";
+            // Hide the email label
+            sellerEmailLabel.style.display = "none";
+        }
+    }
+
+    function checkAndSignIn() {
+    var email = document.getElementById("signInemail").value.trim();
+    var password = document.getElementById("signInpsw").value;
+
+    // Email validation
+    var emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(email)) {
+        document.getElementById("signInemail").setCustomValidity("Please enter a valid email address");
+        document.getElementById("signInemail").reportValidity();
+        return;
+    }
+
+    // Password validation
+    if (!password) {
+        document.getElementById("signInpsw").setCustomValidity("Password cannot be null");
+        document.getElementById("signInpsw").reportValidity();
+        return;
+    }
+
+        var formData = {
+        email: email,
+        password: password
+    };
+
+         // Make AJAX request to backend to check if email is already in use
+    var xhr2 = new XMLHttpRequest();
+    xhr2.open("POST", "/check-email", true);
+    xhr2.setRequestHeader("Content-Type", "application/json");
+    xhr2.onreadystatechange = function() {
+        if (xhr2.readyState === 4) {
+            if (xhr2.status === 200) {
+                var response = JSON.parse(xhr2.responseText);
+                if (response.available) {
+                    document.getElementById("signInemail").setCustomValidity("Invalid email or password");
+                    document.getElementById("signInemail").reportValidity();
+                    return;
+                } else {
+                console.error("Checking password");
+    var xhr3 = new XMLHttpRequest();
+    xhr3.open("POST", "/verify-credentials", true);
+    xhr3.setRequestHeader("Content-Type", "application/json");
+    xhr3.onreadystatechange = function() {
+        if (xhr3.readyState === 4) {
+            if (xhr3.status === 200) {
+                // Credentials are valid, handle sign-in
+                var response = JSON.parse(xhr3.responseText);
+                if (response.success) {
+                    var userId = response.userId;
+                    // Redirect user to dashboard or perform other actions
+                    alert("Successfully signed in. UserID: " + userId);
+                    console.error("signed in");
+                    sessionStorage.setItem('userId', userId);
+                    localStorage.setItem('userId', userId);
+
+                    window.location.href = "/"; // Change the URL as needed
+
+
+
+                } else {
+                    // Credentials are invalid, display error message
+                    document.getElementById("signInemail").setCustomValidity("Invalid email or password");
+                    document.getElementById("signInemail").reportValidity();
+                }
+            } else {
+                    document.getElementById("signInemail").setCustomValidity("Invalid email or password");
+                    document.getElementById("signInemail").reportValidity();
+                console.error("Error verifying credentials");
+            }
+        }
+    };
+    xhr3.send(JSON.stringify(formData));
+
+                }
+            } else {
+                // Handle other status codes or errors if needed
+                console.error("Error checking email availability");
+            }
+        }
+    };
+    xhr2.send(JSON.stringify({ email: email }));
+
+    //check password
+
+
+
+    }
+
+
+function submitForm() {
+    var formData = {
+        email: document.getElementById("email").value,
+        name: document.getElementById("name").value,
+        phone: document.getElementById("phone").value,
+        password: document.getElementById("psw").value,
+        role: { id: document.getElementById("role_id").value }
+    };
+
+    var xhr = new XMLHttpRequest();
+    xhr.open("POST", "/users", true);
+    xhr.setRequestHeader("Content-Type", "application/json");
+    xhr.onreadystatechange = function() {
+        if (xhr.readyState === 4) {
+            if (xhr.status === 200) {
+                // Handle successful form submission
+                alert("You have been registered!");
+                // Optionally, redirect to another page or perform other actions
+            } else {
+                // Handle form submission errors
+                console.error("Error creating user:", xhr.responseText);
+                alert("Error creating user. Please try again later.");
+            }
+        }
+    };
+    xhr.send(JSON.stringify(formData));
+    hideSignUpForm();
+}
+
+
+function fetchUserDetails(userId) {
+    var xhr4 = new XMLHttpRequest();
+    xhr4.open("GET", "/user-details/" + userId, true); // Properly concatenate userId
+    xhr4.setRequestHeader("Content-Type", "application/json");
+    xhr4.onreadystatechange = function() {
+        if (xhr4.readyState === 4) {
+            if (xhr4.status === 200) {
+                // User details fetched successfully
+                var userDetails = JSON.parse(xhr4.responseText);
+                // Update the navbar with the user's name
+                document.getElementById("user-name").innerText = userDetails.name;
+                document.getElementById("role").innerText = userDetails.role.name;
+                if(userDetails.role.id == 2 || userDetails.role.id == 3) {
+                    document.getElementById("sell-btn").style.display = 'inline-block';
+                }else{
+                    document.getElementById("sell-btn").style.display = 'none';
+                }
+            } else {
+                console.error("Error fetching user details");
+            }
+        }
+    };
+    xhr4.send();
+}
+
+// Check if userId is present in session storage
+var userId = localStorage.getItem('userId');
+console.error("userId is "+localStorage.getItem('userId'));
+if (userId) {
+    // Fetch user details based on userId
+    document.getElementById('signup-btn').style.display = 'none';
+    document.getElementById('signin-btn').style.display = 'none';
+    document.getElementById('user-name').style.display = 'inline-block';
+    document.getElementById('role').style.display = 'inline-block';
+    document.getElementById('signout-btn').style.display = 'inline-block';
+    fetchUserDetails(userId);
+} else {
+    console.error("User ID not found in session storage");
+    document.getElementById('signup-btn').style.display = 'inline-block'; // or 'block' for block-level display
+    document.getElementById('signin-btn').style.display = 'inline-block'; // or 'block' for block-level display
+    document.getElementById('user-name').style.display = 'none';
+    document.getElementById('role').style.display = 'none';
+    document.getElementById('signout-btn').style.display = 'none';
+    document.getElementById('sell-btn').style.display = 'none';
+
+}
 
 // Fetch the property ID from the URL
 var propertyId = getUrlParameter('id');

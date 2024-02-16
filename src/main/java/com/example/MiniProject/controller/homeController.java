@@ -26,6 +26,11 @@ public class homeController {
         return "property-details"; // Return the name of your signup.html file
     }
 
+    @GetMapping("/uploadSeller")
+    public String getUploadSellerPage() {
+        return "uploadSeller"; // Return the name of your signup.html file
+    }
+
 
 
 

@@ -42,7 +42,7 @@ public class UserDTO {
     }
 
     public String getPassword() {
-        return password;
+        return password != null ? password : "";
     }
 
     public void setPassword(String password) {
