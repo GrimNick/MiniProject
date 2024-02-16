@@ -265,6 +265,12 @@
             margin: 0;
         }
 
+            #sellerEmailLabel {
+        font-size: 12px;
+        color: gray;
+    }
+
+
 
     </style>
 </head>
@@ -289,12 +295,17 @@
     <input type="number" placeholder="Enter Phone Number" name="phone" id="phone" required>
     <b></b>
     <label for="role_id"><b>Select a Role</b></label>
-    <select name="role_id" id="role_id" required>
+    <select name="role_id" id="role_id" onchange="checkRole()" required>
         <option value="0" disabled selected>Select your role</option>
         <option value="1">Buyer</option>
         <option value="2">Seller</option>
         <option value="3">Admin</option>
     </select>
+    <b></b>
+    <label for="secretCode" id="secretCodeLabel" style="display: none;"><b>Enter Secret Code:</b></label>
+    <input type="password" id="secretCode" name="secretCode" placeholder="Enter Secret Code" style="display: none;">
+    <b></b>
+    <label id="sellerEmailLabel" style="display: none; font-size: 12px; color: gray;">Don't have a seller code? Email us at <a href="mailto:gharjagga@gmail.com">gharjagga@gmail.com</a></label>
     <b></b>
     <label for="psw"><b>Password</b></label>
     <input type="password" placeholder="Enter Password" name="psw" id="psw" required>
@@ -376,10 +387,11 @@
 
     function checkAndSignUp() {
     var email = document.getElementById("email").value.trim();;
-    var phone = document.getElementById("phone").value;
-    var role_id = document.getElementById("role_id").value;
-    var password = document.getElementById("psw").value;
-    var repeatPassword = document.getElementById("psw-repeat").value;
+    var phone = document.getElementById("phone").value.trim();
+    var role_id = document.getElementById("role_id").value.trim();
+    var password = document.getElementById("psw").value.trim();
+    var repeatPassword = document.getElementById("psw-repeat").value.trim();
+    var secretCode = document.getElementById("secretCode").value.trim();
 
     // Check if password and repeat password match
     if (password !== repeatPassword) {
@@ -388,7 +400,7 @@
     }
 
         // Make AJAX request to backend to check if email is already in use
-    var email = document.getElementById("email").value; // Get the email from the input field
+    var email = document.getElementById("email").value.trim(); // Get the email from the input field
     var xhr = new XMLHttpRequest();
     xhr.open("POST", "/check-email", true);
     xhr.setRequestHeader("Content-Type", "application/json");
@@ -410,6 +422,26 @@
         }
     };
     xhr.send(JSON.stringify({ email: email }));
+    }
+    function checkRole() {
+        var roleSelect = document.getElementById("role_id");
+        var secretCodeLabel = document.getElementById("secretCodeLabel");
+        var secretCodeInput = document.getElementById("secretCode");
+
+        // Check if the selected role is "Seller"
+        if (roleSelect.value === "2") {
+            // If yes, show the secret code label and input field
+            secretCodeLabel.style.display = "block";
+            secretCodeInput.style.display = "block";
+            // Show the email label
+            sellerEmailLabel.style.display = "block";
+        } else {
+            // If not, hide the secret code label and input field
+            secretCodeLabel.style.display = "none";
+            secretCodeInput.style.display = "none";
+            // Hide the email label
+            sellerEmailLabel.style.display = "none";
+        }
     }
 
 function submitForm() {
