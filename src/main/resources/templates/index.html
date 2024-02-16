@@ -387,20 +387,96 @@
 
     function checkAndSignUp() {
     var email = document.getElementById("email").value.trim();;
+    var name = document.getElementById("name").value.trim();
     var phone = document.getElementById("phone").value.trim();
     var role_id = document.getElementById("role_id").value.trim();
     var password = document.getElementById("psw").value.trim();
     var repeatPassword = document.getElementById("psw-repeat").value.trim();
     var secretCode = document.getElementById("secretCode").value.trim();
 
+    var emailPattern = /^[a-zA-Z0-9._%+-]+@(gmail\.com|yahoo\.com|hotmail\.com|outlook\.com|aol\.com|icloud\.com|live\.com|msn\.com|inbox\.com)$/;
+
+    //Check if email is valid.
+    if (!email) {
+        document.getElementById("email").setCustomValidity("No email given");
+        document.getElementById("email").reportValidity();
+        return;
+    }
+
+    if (emailPattern.test(email)) {
+        // Email is valid
+        document.getElementById("email").setCustomValidity("");
+    } else {
+        // Email is invalid
+        document.getElementById("email").setCustomValidity("Please enter a valid email.");
+        document.getElementById("email").reportValidity();
+         return;
+    }
+
+    if (!name) {
+        document.getElementById("name").setCustomValidity("No name given");
+        document.getElementById("name").reportValidity();
+        return;
+    }
+
+    // Check if name has at least 4 letters
+    if (name.length < 4) {
+        document.getElementById("name").setCustomValidity("Name is too short");
+        document.getElementById("name").reportValidity();
+        return;
+    }
+    if (name.length > 15) {
+        document.getElementById("name").setCustomValidity("Name is too long");
+        document.getElementById("name").reportValidity();
+        return;
+    }
+
+    if (phone.length !== 10) {
+        document.getElementById("phone").setCustomValidity("Phone number is invalid ");
+        document.getElementById("phone").reportValidity();
+        return;
+    }
+
+    if (role_id === "0") {
+        document.getElementById("role_id").setCustomValidity("Please select a role");
+        document.getElementById("role_id").reportValidity();
+        return;
+    }
+
+    if (!password) {
+        document.getElementById("psw").setCustomValidity("No password given");
+        document.getElementById("psw").reportValidity();
+        return;
+    }
+
+    if (password.length <4) {
+        document.getElementById("psw").setCustomValidity("Password too short");
+        document.getElementById("psw").reportValidity();
+        return;
+    }
+
+    if (password.length >20) {
+        document.getElementById("psw").setCustomValidity("Password too long");
+        document.getElementById("psw").reportValidity();
+        return;
+    }
+
+    var passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).*$/;
+
+    if (!passwordRegex.test(password)) {
+        document.getElementById("psw").setCustomValidity("Password must contain at least one lowercase letter, one uppercase letter, one number, and be at least 8 characters long");
+        document.getElementById("psw").reportValidity();
+        return;
+    }
+
     // Check if password and repeat password match
     if (password !== repeatPassword) {
-        alert("Passwords do not match");
+        document.getElementById("psw-repeat").setCustomValidity("Passwords do not match");
+        document.getElementById("psw-repeat").reportValidity();
         return;
     }
 
         // Make AJAX request to backend to check if email is already in use
-    var email = document.getElementById("email").value.trim(); // Get the email from the input field
     var xhr = new XMLHttpRequest();
     xhr.open("POST", "/check-email", true);
     xhr.setRequestHeader("Content-Type", "application/json");
@@ -414,6 +490,7 @@
                     // If email is not available, display error message
                     document.getElementById("email").setCustomValidity("Email already in use");
                     document.getElementById("email").reportValidity();
+
                 }
             } else {
                 // Handle other status codes or errors if needed
@@ -460,7 +537,7 @@ function submitForm() {
         if (xhr.readyState === 4) {
             if (xhr.status === 200) {
                 // Handle successful form submission
-                alert("User created successfully!");
+                alert("You have been registered!");
                 // Optionally, redirect to another page or perform other actions
             } else {
                 // Handle form submission errors
