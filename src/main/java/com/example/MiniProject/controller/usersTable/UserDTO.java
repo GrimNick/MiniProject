@@ -9,6 +9,11 @@ public class UserDTO {
     private String password;
     private String email;
 
+    public UserDTO(){}
+    public UserDTO(Long userId) {
+        this.id = userId;
+    }
+
     public Long getId() {
         return id;
     }

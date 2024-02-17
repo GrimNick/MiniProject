@@ -16,7 +16,18 @@ public class PropertiesDTO {
     private String description;
     private byte[] image;
     private double price;
-    private String propertyName;
+
+    public PropertiesDTO(){}
+    public PropertiesDTO(String title, String description, double budget, int aana, int paisa, int ropani, int daam, int type, Long userId, float latitude, float longitude, byte[] image) {
+        this.title = title;
+        this.description = description;
+        this.price = budget; // Assuming budget corresponds to price
+        this.area = new AreaDTO(aana, paisa, ropani, daam); // Assuming AreaDTO has a constructor that accepts these parameters
+        this.type = type;
+        this.user = new UserDTO(userId); // Assuming UserDTO has a constructor that accepts userId
+        this.coordinate = new CoordinateDTO(latitude, longitude); // Assuming CoordinateDTO has a constructor that accepts these parameters
+        this.image = image;
+    }
 
     // Getter and setter methods for id
     public Long getId() {
@@ -109,11 +120,4 @@ public class PropertiesDTO {
     }
 
     // Getter and setter methods for propertyName
-    public String getPropertyName() {
-        return propertyName;
-    }
-
-    public void setPropertyName(String propertyName) {
-        this.propertyName = propertyName;
-    }
 }

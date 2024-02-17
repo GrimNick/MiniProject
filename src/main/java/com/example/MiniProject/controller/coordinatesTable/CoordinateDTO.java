@@ -5,6 +5,12 @@ public class CoordinateDTO {
     private float latitude;
     private float longitude;
 
+    public CoordinateDTO(){}
+    public CoordinateDTO(float latitude, float longitude) {
+        this.latitude = latitude;
+        this.longitude = longitude;
+    }
+
     public Long getId() {
         return id;
     }

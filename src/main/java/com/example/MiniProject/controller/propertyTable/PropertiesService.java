@@ -43,11 +43,85 @@ public class PropertiesService {
                 .map(this::convertToDTO)
                 .collect(Collectors.toList());
     }
+    private properties convertToEntity(PropertiesDTO dto) {
+        properties _properties = new properties();
+        _properties.setId(dto.getId());
+        _properties.setTitle(dto.getTitle());
+
+        // Convert user DTO to entity
+        _properties.setUser(convertUserDTOToEntity(dto.getUser()));
+
+        // Convert location DTO to entity
+        _properties.setLocation(convertLocationDTOToEntity(dto.getLocation()));
+
+        // Convert coordinate DTO to entity
+        _properties.setCoordinate(convertCoordinateDTOToEntity(dto.getCoordinate()));
+
+        // Convert area DTO to entity
+        _properties.setArea(convertAreaDTOToEntity(dto.getArea()));
+
+        _properties.setTitle(dto.getTitle());
+        _properties.setType(dto.getType());
+        _properties.setDescription(dto.getDescription());
+        _properties.setImage(dto.getImage());
+        _properties.setPrice(dto.getPrice());
+
+        return _properties;
+    }
+
+    private users convertUserDTOToEntity(UserDTO userDTO) {
+        users userEntity = new users();
+        userEntity.setId(userDTO.getId());
+        userEntity.setRole(convertRoleDTOToEntity(userDTO.getRole()));
+        userEntity.setPhone(userDTO.getPhone());
+        userEntity.setName(userDTO.getName());
+        userEntity.setPassword(userDTO.getPassword());
+        userEntity.setEmail(userDTO.getEmail());
+        // Map other properties as needed
+        return userEntity;
+    }
+
+
+    private roles convertRoleDTOToEntity(RoleDTO roleDTO){
+        roles role = new roles();
+        role.setId(roleDTO.getId());
+        role.setName(roleDTO.getName());
+        // Set other properties as needed
+        return role;
+    }
+    private locations convertLocationDTOToEntity(LocationDTO locationDTO) {
+        locations locationEntity = new locations();
+        locationEntity.setId(locationDTO.getId());
+        locationEntity.setAddress(locationDTO.getAddress());
+      // Map other properties as needed
+        return locationEntity;
+    }
+
+    private coordinates convertCoordinateDTOToEntity(CoordinateDTO coordinateDTO) {
+        coordinates coordinateEntity = new coordinates();
+        coordinateEntity.setId(coordinateDTO.getId());
+        coordinateEntity.setLatitude(coordinateDTO.getLatitude());
+        coordinateEntity.setLongitude(coordinateDTO.getLongitude());
+        // Map other properties as needed
+        return coordinateEntity;
+    }
+
+    private area convertAreaDTOToEntity(AreaDTO areaDTO) {
+        area areaEntity = new area();
+        areaEntity.setId(areaDTO.getId());
+        areaEntity.setAana(areaDTO.getAana());
+        areaEntity.setPaisa(areaDTO.getPaisa());
+        areaEntity.setRopani(areaDTO.getRopani());
+        areaEntity.setDaam(areaDTO.getDaam());
+        // Map other properties as needed
+        return areaEntity;
+    }
+
+
 
     private PropertiesDTO convertToDTO(properties _properties) {
         PropertiesDTO dto = new PropertiesDTO();
         dto.setId(_properties.getId());
-        dto.setPropertyName(_properties.getTitle());
 
         // Convert users entity to DTO
         dto.setUser(userToDTO(_properties.getUser()));
@@ -137,6 +211,18 @@ public class PropertiesService {
             return null;
         }
     }
+
+    public PropertiesDTO addProperty(PropertiesDTO propertiesDTO) {
+        // Convert PropertiesDTO to Properties entity if needed
+        properties _properties = convertToEntity(propertiesDTO);
+
+        // Save the property
+        properties savedProperty = propertiesRepository.save(_properties);
+
+        // Convert the saved property entity back to DTO and return
+        return convertToDTO(savedProperty);
+    }
+
 
     public properties getPropertiesById(Long id) {
         return propertiesRepository.findById(id).orElse(null);

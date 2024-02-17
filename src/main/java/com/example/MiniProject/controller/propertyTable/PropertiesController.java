@@ -40,6 +40,14 @@ public class PropertiesController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Internal Server Error");
         }
     }
+
+    @PostMapping("/add-property")
+    public ResponseEntity<PropertiesDTO> addProperty(@RequestBody PropertiesDTO propertiesDTO) {
+        PropertiesDTO addedProperty = propertiesService.addProperty(propertiesDTO);
+        return new ResponseEntity<>(addedProperty, HttpStatus.CREATED);
+    }
+
+
     @PutMapping("/properties/{id}")
     public ResponseEntity<String> updateHouse(@PathVariable Long id, @RequestBody properties updatedProperties) {
         try {
@@ -80,8 +88,6 @@ public class PropertiesController {
         for (PropertiesDTO dto : propertiesDTOList) {
             properties prop = new properties();
             prop.setId(dto.getId());
-            prop.setTitle(dto.getPropertyName());
-
             // Set user (foreign key)
             if (dto.getUser() != null) {
                 users user = new users();

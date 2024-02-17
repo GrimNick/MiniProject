@@ -6,6 +6,13 @@ public class AreaDTO {
     private float aana;
     private float paisa;
     private float daam;
+    public AreaDTO(){}
+    public AreaDTO(int aana, int paisa, int ropani, int daam) {
+        this.aana = aana;
+        this.paisa = paisa;
+        this.ropani = ropani;
+        this.daam = daam;
+    }
 
     public Long getId() {
         return id;

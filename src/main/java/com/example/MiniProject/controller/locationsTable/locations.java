@@ -12,8 +12,8 @@ public class locations {
     @Column(name = "id")
     private Long id;
 
-    @Column(name = "country", length = 100)
-    private String country;
+    @Column(name = "country", length = 100, columnDefinition = "VARCHAR(100)")
+    private String country = "Nepal";
 
     @Column(name = "address", length = 100)
     private String address;
