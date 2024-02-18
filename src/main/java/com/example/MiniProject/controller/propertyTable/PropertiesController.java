@@ -41,11 +41,23 @@ public class PropertiesController {
         }
     }
 
-    @PostMapping("/add-property")
-    public ResponseEntity<PropertiesDTO> addProperty(@RequestBody PropertiesDTO propertiesDTO) {
-        PropertiesDTO addedProperty = propertiesService.addProperty(propertiesDTO);
-        return new ResponseEntity<>(addedProperty, HttpStatus.CREATED);
-    }
+    /**@PostMapping("/add-property")
+    public ResponseEntity<ResponseEntity<Integer>> addProperty(@RequestBody properties _properties) {
+        System.out.println(_properties.toString());
+
+        // Log the houseOwner before and after setting
+        try {
+            // Add validation or additional logic if needed
+            ResponseEntity<Integer> savedPropertyId = propertiesService.savePropertiesRetId(_properties);
+
+            return ResponseEntity.ok(savedPropertyId);
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+           // return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(-1); // Or any error code you prefer
+        }
+        return ResponseEntity.ok(0);
+    }*/
 
 
     @PutMapping("/properties/{id}")
@@ -57,12 +69,17 @@ public class PropertiesController {
                 return ResponseEntity.notFound().build();
             }
 
-            // Update the existing house with new values
-//            existingProperties.setLocation(updatedProperties.getLocation());
-//            existingProperties.setHouseOwner(updatedProperties.getHouseOwner());
-//            // Add other fields as needed
+            // Update the existing properties with new values
+            existingProperties.setArea(updatedProperties.getArea());
+            existingProperties.setCoordinate(updatedProperties.getCoordinate());
+            existingProperties.setLocation(updatedProperties.getLocation());
+            existingProperties.setDescription(updatedProperties.getDescription());
+            existingProperties.setPrice(updatedProperties.getPrice());
+            existingProperties.setUser(updatedProperties.getUser());
+            existingProperties.setTitle(updatedProperties.getTitle());
+            existingProperties.setType(updatedProperties.getType());
 
-            propertiesService.saveProperties(existingProperties);
+            propertiesService.saveProperties(existingProperties); // Use save instead of addProperty
 
             return ResponseEntity.ok("Property updated successfully!");
         } catch (Exception e) {

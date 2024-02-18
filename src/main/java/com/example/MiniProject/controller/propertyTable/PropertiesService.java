@@ -37,6 +37,20 @@ public class PropertiesService {
         }
     }
 
+
+    public ResponseEntity<Integer> savePropertiesRetId(properties properties) {
+        try {
+            // Save the property and get the ID
+            properties savedProperty = propertiesRepository.save(properties);
+            // Return the ID in the response
+            return ResponseEntity.ok(savedProperty.getId().intValue());
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(-1); // Or any error code you prefer
+        }
+    }
+
+
     public List<PropertiesDTO> getAllProperties() {
         List<properties> properties = propertiesRepository.findAll();
         return properties.stream()

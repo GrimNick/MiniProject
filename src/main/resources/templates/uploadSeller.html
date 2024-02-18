@@ -235,6 +235,9 @@ select {
     <label for="budget">Budget (numbers only):</label>
     <input type="number" id="budget" name="budget" required>
     <br>
+    <label for="address">Description:</label>
+    <textarea id="address" name="address" required></textarea>
+    <br>
     <label for="ropani">Ropani:</label>
     <input type="number" id="ropani" name="ropani" required>
     <label for="aana">Aana:</label>
@@ -298,6 +301,8 @@ function submitPropertyDetails() {
     var title = document.getElementById("title").value.trim();
     var description = document.getElementById("description").value.trim();
     var budget = document.getElementById("budget").value.trim();
+    var address = document.getElementById("address").value.trim();
+
     var aana = document.getElementById("aana").value.trim();
     var paisa = document.getElementById("paisa").value.trim();
     var ropani = document.getElementById("ropani").value.trim();
@@ -322,6 +327,12 @@ function submitPropertyDetails() {
         document.getElementById("budget").reportValidity();
         return;
     }
+     if (!address) {
+        document.getElementById("address").setCustomValidity("Address cannot be empty");
+        document.getElementById("address").reportValidity();
+        return;
+    }
+
         if (!aana) {
         document.getElementById("aana").setCustomValidity("Aana cannot be empty");
         document.getElementById("aana").reportValidity();
@@ -349,38 +360,17 @@ function submitPropertyDetails() {
         return;
     }
 
+
+
     if(!marker){
                 alert('Please mark a location in map.');
                 return;
     }
 
-    const inputElement = document.getElementById('image');
-            const file = inputElement.files[0];
-
-            // Check if a file is selected
-            if (file) {
-                const reader = new FileReader();
-                reader.onloadend = function () {
-                    const base64Content = reader.result.split(',')[1];
-
-                    const imageData = {
-                        image: base64Content
-                    };
                         var latitude = marker.getLatLng().lat.toFixed(4);
                         var longitude = marker.getLatLng().lng.toFixed(4);
-                        addProperty(title, description, budget, aana, paisa, ropani, daam, type, userId, latitude, longitude, imageData);
-
-
-                }
-                reader.readAsDataURL(file);
-                }
-                else {
-                // Handle the case where no file is selected
-                document.getElementById('image').setCustomValidity("Image cannot be empty");
-                document.getElementById('image').reportValidity();;
-
-            }
-
+                        uploadImage();
+                        addProperty(title, description, budget, aana, paisa, ropani, daam, type, userId, latitude, longitude,address);
 
 }
 
@@ -393,30 +383,21 @@ function submitPropertyDetails() {
             document.getElementById('coordinates-box').textContent = "Coordinates: ";
         }
     }
-    function addProperty(title, description, budget, aana, paisa, ropani, daam, type, userId, latitude, longitude, imageData) {
+
+    function addProperty(title, description, budget, aana, paisa, ropani, daam, type, userId, latitude, longitude,address) {
     // Construct the request body
-    const requestBody = {
-        title: title,
-        description: description,
-        budget: budget,
-        aana: aana,
-        paisa: paisa,
-        ropani: ropani,
-        daam: daam,
-        type: type,
-        userId: userId,
-        latitude: latitude,
-        longitude: longitude,
-        image: imageData
+
+
+    const requestBodyLocations = {
+        address:address
     };
 
-    // Make the POST request
-    fetch('/add-property', {
+    fetch('/locations', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json'
         },
-        body: JSON.stringify(requestBody)
+        body: JSON.stringify(requestBodyLocations)
     })
     .then(response => {
         if (response.ok) {
@@ -431,7 +412,94 @@ function submitPropertyDetails() {
         console.error('Error:', error);
         // Handle network error
     });
+
+    const requestBody = {
+        _area: {
+            id: aana // Assuming aana is the ID for _area
+        },
+        coordinate: {
+            id: latitude // Assuming latitude is the ID for coordinate
+        },
+        location: {
+            id: 1 // Assuming location ID is always 1
+        },
+        description: description,
+        price: budget, // Assuming budget is the price
+        user: {
+            id: userId // Assuming userId is the ID for user
+        },
+        title: title,
+        type: type
+    };
+    // Make the POST request
+    fetch('/properties', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(requestBody)
+    })
+    .then(response => {
+        if (response.ok) {
+        return response.json();
+        } else {
+            console.error('Failed to add property');
+            // Handle error, e.g., display an error message to the user
+        }
+    })
+    .then(data => {
+    // Access the property ID from the response data
+    const propertyId = data;
+    console.log('Property added successfully. Property ID:', propertyId);
+    // Handle success, e.g., redirect to a confirmation page
+    })
+
+    .catch(error => {
+        console.error('Error:', error);
+        // Handle network error
+    });
 }
+
+        function uploadImage() {
+            const inputElement = document.getElementById('image');
+            const file = inputElement.files[0];
+
+            // Check if a file is selected
+            if (file) {
+                const reader = new FileReader();
+                reader.onloadend = function () {
+                    const base64Content = reader.result.split(',')[1];
+
+                    const imageData = {
+                        image: base64Content
+                    };
+                    fetch('http://localhost:8080/properties', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify(imageData)
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+                        console.log('Response from backend:', data);
+                        // Handle the response as needed
+                    })
+                    .catch(error => {
+                        console.error('Error:', error);
+                        // Handle errors
+                    });
+                };
+
+                reader.readAsDataURL(file);
+            } else {
+                // Handle the case where no file is selected
+                document.getElementById('image').setCustomValidity("Image cannot be empty");
+                document.getElementById('image').reportValidity();;
+
+            }
+        }
+
 
 
 
