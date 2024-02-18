@@ -41,6 +41,21 @@ public class PropertiesController {
         }
     }
 
+    @PostMapping("/add-image")
+    public ResponseEntity<Long> addProperty(@RequestBody properties _properties) {
+        System.out.println(_properties.toString());
+
+        try {
+            // Add validation or additional logic if needed
+            Long savedPropertyId = propertiesService.saveImage(_properties);
+            return ResponseEntity.ok(savedPropertyId);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(-1L); // Return -1 for error
+        }
+    }
+
+
     /**@PostMapping("/add-property")
     public ResponseEntity<ResponseEntity<Integer>> addProperty(@RequestBody properties _properties) {
         System.out.println(_properties.toString());

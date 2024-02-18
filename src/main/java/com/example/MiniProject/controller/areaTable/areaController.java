@@ -25,11 +25,22 @@ public class areaController {
         // Log the houseOwner before and after setting
         try {
             // Add validation or additional logic if needed
-            areaService.saveProperties(area);
+            areaService.saveArea(area);
             return ResponseEntity.ok("Property saved successfully!");
         } catch (Exception e) {
             e.printStackTrace();
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Internal Server Error");
+        }
+    }
+
+    @PostMapping("/areaById")
+    public ResponseEntity<Long> addAreaById(@RequestBody area _area) {
+        try {
+            Long areaIdToReturn = areaService.saveAreaById(_area);
+            return ResponseEntity.ok(areaIdToReturn); // Assuming getId() returns the ID of the saved entity
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(-1L); // Return -1 for error
         }
     }
     @PutMapping("/area/{id}")
@@ -46,7 +57,7 @@ public class areaController {
 //            existingProperties.setHouseOwner(updatedProperties.getHouseOwner());
 //            // Add other fields as needed
 
-            areaService.saveProperties(existingArea);
+            areaService.saveArea(existingArea);
 
             return ResponseEntity.ok("Property updated successfully!");
         } catch (Exception e) {

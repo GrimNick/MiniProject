@@ -857,43 +857,40 @@ function handlePropertyData(property) {
 
 }
 
-  function getImageById(id) {
-
-            fetch(`http://localhost:8080/property-details/${id}`, {
-                method: 'GET',
-                headers: {
-                    'Content-Type': 'application/json'
-                }
-            })
-            .then(response => response.json())
-            .then(data => {
-                const base64Content = data.image;
-
-                displayImage(base64Content);
-            })
-            .catch(error => {
-                console.error('Error:', error);
-                // Handle errors
-            });
+function getImageById(id) {
+    fetch(`http://localhost:8080/property-details/${id}`, {
+        method: 'GET',
+        headers: {
+            'Content-Type': 'application/json'
         }
+    })
+    .then(response => response.json())
+    .then(data => {
+        const base64Content = data.image;
+        displayImage(base64Content);
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        // Handle errors
+    });
+}
 
-        function displayImage(base64Content) {
-            const imageElement = document.createElement('img');
-            imageElement.src = `data:image.png;base64,${base64Content}`;
+function displayImage(base64Content) {
+    // Create a new image element
+    const imageElement = document.createElement('img');
+    imageElement.src = `data:image.png;base64,${base64Content}`;
+    imageElement.setAttribute('width', '300');
+    imageElement.setAttribute('height', '200');
 
-            // Set any additional attributes or styles as needed
-             imageElement.setAttribute('width', '300');
-             imageElement.setAttribute('height', '200');
-
-const imageContainers = document.getElementsByClassName('img-container');
-Array.from(imageContainers).forEach(container => {
-    container.innerHTML = '';
-    container.appendChild(imageElement);
-});
-        }
-
-        // Append the card to the property container
-
+    // Find all containers and map each image to its respective container
+    const imageContainers = document.getElementsByClassName('img-container');
+    Array.from(imageContainers).forEach((container, index) => {
+        // Clone the image element
+        const cloneImageElement = imageElement.cloneNode(true);
+        // Append the cloned image to the container
+        container.appendChild(cloneImageElement);
+    });
+}
     window.onload = fetchAllProperties;
 
 </script>

@@ -235,7 +235,7 @@ select {
     <label for="budget">Budget (numbers only):</label>
     <input type="number" id="budget" name="budget" required>
     <br>
-    <label for="address">Description:</label>
+    <label for="address">Address:</label>
     <textarea id="address" name="address" required></textarea>
     <br>
     <label for="ropani">Ropani:</label>
@@ -367,12 +367,19 @@ function submitPropertyDetails() {
                 return;
     }
 
-                        var latitude = marker.getLatLng().lat.toFixed(4);
+                          var latitude = marker.getLatLng().lat.toFixed(4);
                         var longitude = marker.getLatLng().lng.toFixed(4);
-                        uploadImage();
-                        addProperty(title, description, budget, aana, paisa, ropani, daam, type, userId, latitude, longitude,address);
-
+uploadImage()
+  .then(updateId => {
+    // Once the image is uploaded, call addProperty with the returned UpdateId
+    addProperty(updateId, title, description, budget, aana, paisa, ropani, daam, type, userId, latitude, longitude, address);
+  })
+  .catch(error => {
+    console.error('Error uploading image:', error);
+    // Handle errors
+  });
 }
+
 
 
     function clearMarker() {
@@ -384,44 +391,152 @@ function submitPropertyDetails() {
         }
     }
 
-    function addProperty(title, description, budget, aana, paisa, ropani, daam, type, userId, latitude, longitude,address) {
-    // Construct the request body
+    var locationId;
+    var areaId;
+    var coordinateId;
 
+ async function addProperty(UpdateId, title, description, budget, aana, paisa, ropani, daam, type, userId, latitude, longitude, address) {
+    console.error("update to id number : " + UpdateId);
+    try {
+        // Call the addOthers function and wait until it completes
+        await addOthers(UpdateId, title, description, budget, aana, paisa, ropani, daam, type, userId, latitude, longitude, address);
 
-    const requestBodyLocations = {
-        address:address
-    };
+        // Once addOthers completes, call addMain with the returned UpdateId
+        await addMain(UpdateId, title, description, budget, aana, paisa, ropani, daam, type, userId, latitude, longitude, address);
 
-    fetch('/locations', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(requestBodyLocations)
-    })
-    .then(response => {
-        if (response.ok) {
-            console.log('Property added successfully');
-            // Handle success, e.g., redirect to a confirmation page
-        } else {
-            console.error('Failed to add property');
-            // Handle error, e.g., display an error message to the user
-        }
-    })
-    .catch(error => {
+        // After both addOthers and addMain complete, you can continue with other operations here
+        console.log('addProperty has completed.');
+    } catch (error) {
         console.error('Error:', error);
-        // Handle network error
-    });
+        // Handle any errors that occur during the process
+    }
+}
 
+async function addOthers(UpdateId, title, description, budget, aana, paisa, ropani, daam, type, userId, latitude, longitude, address) {
+    try {
+        // Array to store all fetch promises
+        const fetchPromises = [];
+
+        // Fetch locations
+        const requestLocationsBody = {
+            country: "Nepal",
+            address: address
+        };
+        const locationsPromise = new Promise((resolve, reject) => {
+            fetch(`/locationsById`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(requestLocationsBody)
+            })
+            .then(response => {
+                if (response.ok) {
+                    return response.json(); // Parse response JSON
+                } else {
+                    throw new Error('Failed to add Location');
+                }
+            })
+            .then(data => {
+                locationId = data;
+                console.log('Location updated successfully');
+                resolve(); // Resolve this promise
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                reject(error); // Reject this promise
+            });
+        });
+        fetchPromises.push(locationsPromise);
+
+        // Fetch area
+        const requestAreaBody = {
+            aana: aana,
+            daam: daam,
+            paisa: paisa,
+            ropani: ropani
+        };
+        const areaPromise = new Promise((resolve, reject) => {
+            fetch(`/areaById`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(requestAreaBody)
+            })
+            .then(response => {
+                if (response.ok) {
+                    return response.json(); // Parse response JSON
+                } else {
+                    throw new Error('Failed to add Area');
+                }
+            })
+            .then(data => {
+                areaId = data;
+                console.log('Area updated successfully');
+                resolve(); // Resolve this promise
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                reject(error); // Reject this promise
+            });
+        });
+        fetchPromises.push(areaPromise);
+
+        // Fetch coordinates
+        const requestCoordinatesBody = {
+            latitude: latitude,
+            longitude: longitude
+        };
+        const coordinatesPromise = new Promise((resolve, reject) => {
+            fetch(`/coordinatesById`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(requestCoordinatesBody)
+            })
+            .then(response => {
+                if (response.ok) {
+                    return response.json(); // Parse response JSON
+                } else {
+                    throw new Error('Failed to add Coordinate');
+                }
+            })
+            .then(data => {
+                coordinateId = data;
+                console.log('Coordinate updated successfully');
+                resolve(); // Resolve this promise
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                reject(error); // Reject this promise
+            });
+        });
+        fetchPromises.push(coordinatesPromise);
+
+        // Wait for all fetch promises to resolve
+        await Promise.all(fetchPromises);
+
+        // All fetch requests and their corresponding .then blocks have executed
+        console.log('All fetch requests completed successfully');
+    } catch (error) {
+        // Handle errors
+        console.error('Error in addOthers:', error);
+        throw error;
+    }
+}
+ async function addMain(UpdateId,title, description, budget, aana, paisa, ropani, daam, type, userId, latitude, longitude, address) {
+        console.error("locationId is " +locationId +"areaId is " +areaId + "coordinateId is " +coordinateId );
     const requestBody = {
         _area: {
-            id: aana // Assuming aana is the ID for _area
+            id: areaId // Assuming aana is the ID for _area
         },
         coordinate: {
-            id: latitude // Assuming latitude is the ID for coordinate
+            id: coordinateId // Assuming latitude is the ID for coordinate
         },
         location: {
-            id: 1 // Assuming location ID is always 1
+            id: locationId // Assuming location ID is always 1
         },
         description: description,
         price: budget, // Assuming budget is the price
@@ -431,9 +546,9 @@ function submitPropertyDetails() {
         title: title,
         type: type
     };
-    // Make the POST request
-    fetch('/properties', {
-        method: 'POST',
+    // Make the PUT request
+    fetch(`/properties/${UpdateId}`, {
+        method: 'PUT',
         headers: {
             'Content-Type': 'application/json'
         },
@@ -441,66 +556,61 @@ function submitPropertyDetails() {
     })
     .then(response => {
         if (response.ok) {
-        return response.json();
+        console.log('Property updated successfully');
         } else {
             console.error('Failed to add property');
             // Handle error, e.g., display an error message to the user
         }
     })
-    .then(data => {
-    // Access the property ID from the response data
-    const propertyId = data;
-    console.log('Property added successfully. Property ID:', propertyId);
-    // Handle success, e.g., redirect to a confirmation page
-    })
-
     .catch(error => {
         console.error('Error:', error);
         // Handle network error
     });
 }
 
-        function uploadImage() {
-            const inputElement = document.getElementById('image');
-            const file = inputElement.files[0];
 
-            // Check if a file is selected
-            if (file) {
-                const reader = new FileReader();
-                reader.onloadend = function () {
-                    const base64Content = reader.result.split(',')[1];
+async function uploadImage() {
+    const inputElement = document.getElementById('image');
+    const file = inputElement.files[0];
 
-                    const imageData = {
-                        image: base64Content
-                    };
-                    fetch('http://localhost:8080/properties', {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json'
-                        },
-                        body: JSON.stringify(imageData)
-                    })
-                    .then(response => response.json())
-                    .then(data => {
-                        console.log('Response from backend:', data);
-                        // Handle the response as needed
-                    })
-                    .catch(error => {
-                        console.error('Error:', error);
-                        // Handle errors
-                    });
-                };
+    // Check if a file is selected
+    if (file) {
+        const reader = new FileReader();
+        reader.readAsDataURL(file);
 
-                reader.readAsDataURL(file);
-            } else {
-                // Handle the case where no file is selected
-                document.getElementById('image').setCustomValidity("Image cannot be empty");
-                document.getElementById('image').reportValidity();;
+        // Wrap the FileReader operation in a Promise
+        const base64Content = await new Promise((resolve, reject) => {
+            reader.onloadend = () => resolve(reader.result.split(',')[1]);
+            reader.onerror = reject;
+        });
 
-            }
+        const imageData = {
+            image: base64Content
+        };
+
+        try {
+            const response = await fetch('http://localhost:8080/add-image', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(imageData)
+            });
+
+            const data = await response.json();
+            console.log('Response from backend:', data);
+            return data; // Return the ID of the uploaded image
+        } catch (error) {
+            console.error('Error:', error);
+            throw error; // Rethrow the error
         }
-
-
+    } else {
+        // Handle the case where no file is selected
+        document.getElementById('image').setCustomValidity("Image cannot be empty");
+        document.getElementById('image').reportValidity();
+        return null; // Return null as no image was uploaded
+    }
+}
 
 
 
@@ -544,7 +654,6 @@ function submitPropertyDetails() {
         document.getElementById("backgroundOverlay").classList.add("blur");
 
     }
-
     // Function to cancel and hide the signup form
     function hideSignUpForm() {
         var signUpForm = document.getElementById("signUpForm");

@@ -50,6 +50,19 @@ public class PropertiesService {
         }
     }
 
+    public Long saveImage(properties properties) {
+        try {
+            // Save the property and get the ID
+            properties savedProperty = propertiesRepository.save(properties);
+            // Return the ID
+            return savedProperty.getId();
+        } catch (Exception e) {
+            e.printStackTrace();
+            return -1L; // Or any error code you prefer
+        }
+    }
+
+
 
     public List<PropertiesDTO> getAllProperties() {
         List<properties> properties = propertiesRepository.findAll();

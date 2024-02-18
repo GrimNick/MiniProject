@@ -278,6 +278,11 @@
         .img-container {
             width: 150px; /* Adjust width as needed */
         }
+    #imageContainer {
+        position: fixed;
+        bottom: 0;
+        right: 0;
+    }
 
         .img-container img {
             width: 100%;
@@ -401,6 +406,7 @@
     </div>
 </div>
 
+<div id="imageContainer"></div>
 
 <div id="map" style="height: 400px;"></div>
 
@@ -438,8 +444,10 @@ function fetchPropertyDetails(id) {
                 <p>Location: ${property.location.address}, ${property.location.country}</p>
                 <p>Coordinate: Latitude - ${property.coordinate.latitude}, Longitude - ${property.coordinate.longitude}</p>
                 <p>Area: Ropani - ${property.area.ropani}, Aana - ${property.area.aana}, Paisa - ${property.area.paisa}, Daam - ${property.area.daam}</p>
+
                 <!-- Add more details as needed -->
             `;
+            getImageById(property.id);
         })
         .catch(error => {
             console.error('Error fetching property details:', error);
@@ -1089,6 +1097,40 @@ if (userId) {
     document.getElementById('sell-btn').style.display = 'none';
 
 }
+
+    function getImageById(id) {
+
+            fetch(`http://localhost:8080/property-details/${id}`, {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            })
+            .then(response => response.json())
+            .then(data => {
+                const base64Content = data.image;
+
+                displayImage(base64Content);
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                // Handle errors
+            });
+        }
+
+        function displayImage(base64Content) {
+            const imageElement = document.createElement('img');
+            imageElement.src = `data:image/png;base64,${base64Content}`;
+
+            // Set any additional attributes or styles as needed
+             imageElement.setAttribute('width', '300');
+             imageElement.setAttribute('height', '500');
+
+            const imageContainer = document.getElementById('imageContainer');
+            imageContainer.innerHTML = '';
+            imageContainer.appendChild(imageElement);
+        }
+
 
 // Fetch the property ID from the URL
 var propertyId = getUrlParameter('id');

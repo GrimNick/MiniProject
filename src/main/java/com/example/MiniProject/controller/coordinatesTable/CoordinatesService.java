@@ -14,7 +14,7 @@ public class CoordinatesService {
         this.coordinatesRepository = coordinatesRepository;
     }
 
-    public ResponseEntity<String> saveProperties(coordinates coordinates) {
+    public ResponseEntity<String> saveCoordinates(coordinates coordinates) {
         try {
             coordinatesRepository.save(coordinates);
             return ResponseEntity.ok("Coordinates saved successfully!");
@@ -23,6 +23,19 @@ public class CoordinatesService {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Internal Server Error");
         }
     }
+
+    public Long saveCoordinatesById(coordinates coordinates) {
+        try {
+            coordinates savedCoordinates = coordinatesRepository.save(coordinates);
+            return savedCoordinates.getId(); // Assuming getId() returns the ID of the saved entity
+        } catch (Exception e) {
+            e.printStackTrace();
+            return -1L; // Or any error code you prefer
+        }
+    }
+
+
+
     public coordinates getPropertiesById(Long id) {
         return coordinatesRepository.findById(id).orElse(null);
     }

@@ -19,19 +19,36 @@ public class LocationsController {
     }
 
     @PostMapping("/locations")
-    public ResponseEntity<String> addHouse(@RequestBody locations locations) {
+    public ResponseEntity<String> addLocation(@RequestBody locations locations) {
          System.out.println(locations.toString());
 
         // Log the houseOwner before and after setting
         try {
             // Add validation or additional logic if needed
-            locationsService.saveProperties(locations);
+            locationsService.saveLocations(locations);
             return ResponseEntity.ok("Locations saved successfully!");
         } catch (Exception e) {
             e.printStackTrace();
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Internal Server Error");
         }
     }
+
+    @PostMapping("/locationsById")
+    public ResponseEntity<Long> addLocationById(@RequestBody locations locations) {
+        System.out.println(locations.toString());
+
+        try {
+            // Save the locations and get the ID
+            Long savedLocationId = locationsService.saveLocationsById(locations);
+            // Return the ID in the response
+            return ResponseEntity.ok(savedLocationId);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(-1L); // Or any error code you prefer
+        }
+    }
+
+
     @PutMapping("/locations/{id}")
     public ResponseEntity<String> updateHouse(@PathVariable Long id, @RequestBody locations updatedLocations) {
         try {
@@ -46,7 +63,7 @@ public class LocationsController {
 //            existingProperties.setHouseOwner(updatedProperties.getHouseOwner());
 //            // Add other fields as needed
 
-            locationsService.saveProperties(existingLocations);
+            locationsService.saveLocations(existingLocations);
 
             return ResponseEntity.ok("Locations updated successfully!");
         } catch (Exception e) {

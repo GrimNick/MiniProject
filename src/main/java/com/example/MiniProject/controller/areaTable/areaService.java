@@ -14,7 +14,7 @@ public class areaService {
         this.areaRepository = areaRepository;
     }
 
-    public ResponseEntity<String> saveProperties(area area) {
+    public ResponseEntity<String> saveArea(area area) {
         try {
             areaRepository.save(area);
             return ResponseEntity.ok("Property saved successfully!");
@@ -23,6 +23,18 @@ public class areaService {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Internal Server Error");
         }
     }
+
+    public Long saveAreaById(area area) {
+        try {
+            area savedArea = areaRepository.save(area);
+            return savedArea.getId(); // Assuming getId() returns the ID of the saved area
+        } catch (Exception e) {
+            e.printStackTrace();
+            return -1L; // Or any error code you prefer
+        }
+    }
+
+
     public area getPropertiesById(Long id) {
         return areaRepository.findById(id).orElse(null);
     }

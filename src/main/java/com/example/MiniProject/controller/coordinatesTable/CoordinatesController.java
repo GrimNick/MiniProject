@@ -19,19 +19,33 @@ public class CoordinatesController {
     }
 
     @PostMapping("/coordinates")
-    public ResponseEntity<String> addHouse(@RequestBody coordinates coordinates) {
+    public ResponseEntity<String> addCoordinate(@RequestBody coordinates coordinates) {
          System.out.println(coordinates.toString());
 
         // Log the houseOwner before and after setting
         try {
             // Add validation or additional logic if needed
-            coordinatesService.saveProperties(coordinates);
+            coordinatesService.saveCoordinates(coordinates);
             return ResponseEntity.ok("Coordinates saved successfully!");
         } catch (Exception e) {
             e.printStackTrace();
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Internal Server Error");
         }
     }
+
+    @PostMapping("/coordinatesById")
+    public ResponseEntity<Long> addCoordinateById(@RequestBody coordinates _coordinates) {
+
+        try {
+            // Add validation or additional logic if needed
+            Long savedCoordinatesId = coordinatesService.saveCoordinatesById(_coordinates);
+            return ResponseEntity.ok(savedCoordinatesId);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(-1L); // Or any error code you prefer
+        }
+    }
+
     @PutMapping("/coordinates/{id}")
     public ResponseEntity<String> updateHouse(@PathVariable Long id, @RequestBody coordinates updatedCoordinates) {
         try {
@@ -46,7 +60,7 @@ public class CoordinatesController {
 //            existingProperties.setHouseOwner(updatedProperties.getHouseOwner());
 //            // Add other fields as needed
 
-            coordinatesService.saveProperties(existingCoordinates);
+            coordinatesService.saveCoordinates(existingCoordinates);
 
             return ResponseEntity.ok("Coordinates updated successfully!");
         } catch (Exception e) {

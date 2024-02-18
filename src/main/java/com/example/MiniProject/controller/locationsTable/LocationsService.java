@@ -21,7 +21,7 @@ public class LocationsService {
 
     }
 
-    public ResponseEntity<String> saveProperties(locations locations) {
+    public ResponseEntity<String> saveLocations(locations locations) {
         try {
             locationsRepository.save(locations);
             return ResponseEntity.ok("Locations saved successfully!");
@@ -30,6 +30,19 @@ public class LocationsService {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Internal Server Error");
         }
     }
+
+    public Long saveLocationsById(locations locations) {
+        try {
+            locations savedLocation = locationsRepository.save(locations);
+            Long savedLocationId = savedLocation.getId(); // Assuming getId() returns the ID of the saved location
+            return savedLocationId;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return -1L; // Or any error code you prefer
+        }
+    }
+
+
     public locations getPropertiesById(Long id) {
         return locationsRepository.findById(id).orElse(null);
     }
