@@ -827,6 +827,9 @@ function handlePropertyData(property) {
     const card = document.createElement("div");
     card.classList.add("card-container");
 
+            getImageById(property.id);
+        console.error("id to be displaying is " + property.id);
+
     // Create and populate the card content
     card.innerHTML = `
         <div class="img-container">
@@ -850,7 +853,44 @@ function handlePropertyData(property) {
 
     // Append the card to the property container
     propertyContainer.appendChild(card);
+
+
 }
+
+  function getImageById(id) {
+
+            fetch(`http://localhost:8080/property-details/${id}`, {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            })
+            .then(response => response.json())
+            .then(data => {
+                const base64Content = data.image;
+
+                displayImage(base64Content);
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                // Handle errors
+            });
+        }
+
+        function displayImage(base64Content) {
+            const imageElement = document.createElement('img');
+            imageElement.src = `data:image.png;base64,${base64Content}`;
+
+            // Set any additional attributes or styles as needed
+             imageElement.setAttribute('width', '300');
+             imageElement.setAttribute('height', '200');
+
+const imageContainers = document.getElementsByClassName('img-container');
+Array.from(imageContainers).forEach(container => {
+    container.innerHTML = '';
+    container.appendChild(imageElement);
+});
+        }
 
         // Append the card to the property container
 

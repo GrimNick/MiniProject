@@ -223,7 +223,7 @@ select {
     <button type="button" onclick="uploadImage()">Upload Image</button>
 </form>
 <div id="imageContainer"></div>
-<button type="button" onclick="getImageById(3)">Get Image by ID 3</button>
+<button type="button" onclick="getImageById(5)">Get Image by ID 3</button>
 
 <form id="propertyDetailsForm">
     <label for="title">Title:</label>
@@ -505,7 +505,8 @@ function submitPropertyDetails() {
 
 
         function getImageById(id) {
-            fetch(`http://localhost:8080/properties/${id}`, {
+
+            fetch(`http://localhost:8080/property-details/${id}`, {
                 method: 'GET',
                 headers: {
                     'Content-Type': 'application/json'
@@ -525,7 +526,7 @@ function submitPropertyDetails() {
 
         function displayImage(base64Content) {
             const imageElement = document.createElement('img');
-            imageElement.src = `data:image.png;base64,${base64Content}`;
+            imageElement.src = `data:image/png;base64,${base64Content}`;
 
             // Set any additional attributes or styles as needed
             // imageElement.setAttribute('width', '300');
