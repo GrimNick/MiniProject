@@ -557,6 +557,8 @@ async function addOthers(UpdateId, title, description, budget, aana, paisa, ropa
     .then(response => {
         if (response.ok) {
         console.log('Property updated successfully');
+            window.location.href = "/"; // Change the URL as needed
+
         } else {
             console.error('Failed to add property');
             // Handle error, e.g., display an error message to the user
