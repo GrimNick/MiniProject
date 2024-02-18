@@ -4,6 +4,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://cdn.emailjs.com/dist/email.min.js"></script>
+    <script>
+        (function(){
+            emailjs.init("ZQbWmERlu5g5VsOkV"); // Replace "your_public_key" with your actual Public Key
+        })();
+    </script>
     <link rel="stylesheet" href="/static/styles.css">
     <title>Property Type Selector</title>
     <style>
@@ -780,7 +786,45 @@ function submitForm() {
     };
     xhr.send(JSON.stringify(formData));
     hideSignUpForm();
+    sendWelcomeEmail(formData.email,formData.name);
+
+
 }
+
+function sendWelcomeEmail(email,name) {
+    // Check if the user is logged in
+    if (email) {
+        // Check if the email is from Gmail
+        if (isGmail(email)) {
+            // EmailJS parameters
+            var templateParams = {
+                to_email: email,
+                from_name: 'Newton Shahi Thakuri', // Replace 'Your Name' with the sender's name
+                to_name: name, // Replace 'User' with the recipient's name (if available)
+                subject: 'Welcome to Ghar Jagga App',
+                message: 'Thank you for joining Ghar Jagga App! We are excited to have you on board.'
+            };
+
+            // Send email using EmailJS
+            emailjs.send('service_nybva1m', 'template_13kvb1a', templateParams)
+                .then(function(response) {
+                    console.log('Email sent successfully!', response);
+                }, function(error) {
+                    console.error('Failed to send email:', error);
+                });
+        } else {
+            console.error('Email domain is not @gmail.com. Cannot send welcome email.');
+        }
+    } else {
+        console.error('Email address not found in local session management.');
+    }
+}
+
+function isGmail(email) {
+    var gmailRegex = /@gmail\.com$/i;
+    return gmailRegex.test(email);
+}
+
 
 
 let budget;
