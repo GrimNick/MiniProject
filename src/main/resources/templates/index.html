@@ -399,7 +399,7 @@
     <div class="container-box-main">
         <div class="container-box">
             <h1>Property Type Selector</h1>
-            <form th:action="@{/submit}" method="post">
+            <form id="myForm" >
                 <div class="radio-group">
                     <input type="radio" id="land" name="propertyType" value="land">
                     <label for="land">Land</label>
@@ -412,14 +412,13 @@
                     <label for="budget">Budget:</label>
                     <input type="text" id="budget" name="budget" pattern="[0-9]+" title="Please enter a numeric value">
                 </div>
+
+
                 <div class="dropdown-input">
                     <label for="location">Location:</label>
-                    <select id="location" name="location">
-                        <option value="city">City</option>
-                        <option value="suburb">Suburb</option>
-                        <option value="countryside">Countryside</option>
-                    </select>
+                    <input type="text" id="location" name="location" placeholder="Enter address">
                 </div>
+
                 <div class="area-input">
                     <label for="ropani">Ropani:</label>
                     <input type="number" id="ropani" name="ropani" min="0" step="1">
@@ -430,15 +429,19 @@
                     <label for="daam">Daam:</label>
                     <input type="number" id="daam" name="daam" min="0" step="1">
                 </div>
-                <button type="submit">Submit</button>
+                <button type="button" onclick="filterSubmit()">Submit</button>
             </form>
+
         </div>
         <div id="propertyContainer" class="display-property-box">
         </div>
 
-
     </div>
 </div>
+
+
+
+
 <script>
     // Function to show the signup form
     function showSignupForm() {
@@ -701,7 +704,55 @@
 
     }
 
+function filterSubmit() {
+    // Get form element
+    var form = document.getElementById("myForm");
 
+    // Check if form exists
+    if (form) {
+        // Retrieve property type
+        var propertyTypeElement = form.querySelector('input[name="propertyType"]:checked');
+        propertyType = propertyTypeElement ? propertyTypeElement.value : null;
+
+        // Retrieve budget
+        var budgetElement = form.querySelector('#budget');
+        budget = budgetElement ? budgetElement.value : null;
+
+        // Retrieve location
+        var locationElement = form.querySelector('#location');
+         PropertKOlocation = locationElement ? locationElement.value : null;
+
+        // Retrieve area inputs
+        var ropaniElement = form.querySelector('#ropani');
+        var ropani = ropaniElement ? ropaniElement.value : null;
+
+        var aanaElement = form.querySelector('#aana');
+        var aana = aanaElement ? aanaElement.value : null;
+
+        var paisaElement = form.querySelector('#paisa');
+        var paisa = paisaElement ? paisaElement.value : null;
+
+        var daamElement = form.querySelector('#daam');
+        var daam = daamElement ? daamElement.value : null;
+
+        area = ropani * 508.72 + aana * 31.8 + paisa * 7.95 + daam * 1.99;
+
+        // Log or use the retrieved values as needed
+        console.log("Property Type:", propertyType);
+        console.log("Budget:", budget);
+        console.log("Location:", location);
+        console.log("Ropani:", ropani);
+        console.log("Aana:", aana);
+        console.log("Paisa:", paisa);
+        console.log("Daam:", daam);
+        removePreviousCards()
+        fetchAllProperties();
+        // You can perform further actions with the retrieved values here
+    } else {
+        // Handle the case where the form is not found
+        console.error("Form not found");
+    }
+}
 function submitForm() {
     var formData = {
         email: document.getElementById("email").value,
@@ -730,7 +781,14 @@ function submitForm() {
     xhr.send(JSON.stringify(formData));
     hideSignUpForm();
 }
+
+
+let budget;
+let area;
+let propertyType;
+
 function fetchAllProperties() {
+
     const url = 'http://localhost:8080/properties';
 
     fetch(url)
@@ -742,7 +800,36 @@ function fetchAllProperties() {
         })
         .then(data => {
             // Extract property IDs from fetched data
-            const propertyIds = data.map(property => property.id);
+            let propertyIds = data.map(property => property.id);
+
+            console.log('Original data:', data);
+
+            // Check if budget is not null
+            if (budget !== null) {
+                // Filter out properties with price greater than the budget
+                data = data.filter(property => property.price <= budget);
+                // Update propertyIds after filtering
+                propertyIds = data.map(property => property.id);
+            }
+
+      /**  if (area !== null) {
+             // Filter out properties with area greater than the calculated area
+             data = data.filter(property => {
+              const propertyArea = property.ropani * 508.72 + property.aana * 31.8 + property.paisa * 7.95 + property.daam * 1.99;
+              return propertyArea <= area;
+              });
+             // Update propertyIds after filtering
+            propertyIds = data.map(property => property.id);
+            }
+            */
+
+
+            console.log('Filtered data:', data);
+
+            if (data.length === 0) {
+                console.warn('No properties found within the budget.');
+                return;
+            }
 
             // Fetch property details along with children values of foreign keys
             fetchPropertyDetails(propertyIds);
@@ -751,6 +838,18 @@ function fetchAllProperties() {
             console.error('There was a problem with the fetch operation:', error);
         });
 }
+
+function removePreviousCards() {
+    // Get the container element where cards are displayed
+    const container = document.getElementById('propertyContainer');
+
+    // Remove all child nodes (cards) from the container
+    while (container.firstChild) {
+        container.removeChild(container.firstChild);
+    }
+}
+
+
 
 function fetchPropertyDetails(propertyIds) {
     // Iterate over property IDs and fetch details for each property
@@ -819,22 +918,24 @@ if (userId) {
 }
 
 
-function handlePropertyData(property) {
-    // Get the container where the properties will be displayed
-    const propertyContainer = document.getElementById("propertyContainer");
+async function handlePropertyData(property) {
+    // Log property ID for debugging
+    console.log("Property ID:", property.id);
 
     // Create a new card element
     const card = document.createElement("div");
     card.classList.add("card-container");
 
-            getImageById(property.id);
-        console.error("id to be displaying is " + property.id);
+    // Create a container for the image with the corresponding ID
+    const imageContainer = document.createElement("div");
+    imageContainer.id = `container-${property.id}`; // Set the ID for the image container
+    imageContainer.classList.add("img-container");
 
-    // Create and populate the card content
-    card.innerHTML = `
-        <div class="img-container">
-            <img src="${property.image}" alt="${property.title}">
-        </div>
+    // Append the image container to the card
+    card.appendChild(imageContainer);
+
+    // Populate the card content with property data
+    card.innerHTML += `
         <div class="card-info">
             <h5>${property.title}</h5>
             <p>${property.description}</p>
@@ -845,53 +946,56 @@ function handlePropertyData(property) {
             </div>
         </div>
     `;
-
     card.addEventListener("click", () => {
         // Redirect to the details page with property ID
         window.location.href = `/property-details?id=${property.id}`;
     });
 
     // Append the card to the property container
+    const propertyContainer = document.getElementById("propertyContainer");
     propertyContainer.appendChild(card);
 
-
+    // Fetch and display image for the property
+    await getImageById(property.id);
 }
 
-function getImageById(id) {
-    fetch(`http://localhost:8080/property-details/${id}`, {
-        method: 'GET',
-        headers: {
-            'Content-Type': 'application/json'
-        }
-    })
-    .then(response => response.json())
-    .then(data => {
+async function getImageById(id) {
+    try {
+        const response = await fetch(`http://localhost:8080/property-details/${id}`, {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        });
+        const data = await response.json();
         const base64Content = data.image;
-        displayImage(base64Content);
-    })
-    .catch(error => {
+        displayImage(base64Content, id); // Pass the id to the displayImage function
+    } catch (error) {
         console.error('Error:', error);
         // Handle errors
-    });
+    }
 }
 
-function displayImage(base64Content) {
+function displayImage(base64Content, id) {
     // Create a new image element
     const imageElement = document.createElement('img');
-    imageElement.src = `data:image.png;base64,${base64Content}`;
+    imageElement.src = `data:image/png;base64,${base64Content}`;
     imageElement.setAttribute('width', '300');
     imageElement.setAttribute('height', '200');
 
-    // Find all containers and map each image to its respective container
-    const imageContainers = document.getElementsByClassName('img-container');
-    Array.from(imageContainers).forEach((container, index) => {
-        // Clone the image element
-        const cloneImageElement = imageElement.cloneNode(true);
-        // Append the cloned image to the container
-        container.appendChild(cloneImageElement);
-    });
+    // Find the container with the corresponding id and append the image to it
+    const container = document.getElementById(`container-${id}`); // Add 'container-' prefix
+    container.appendChild(imageElement);
 }
-    window.onload = fetchAllProperties;
+
+document.addEventListener("DOMContentLoaded", function() {
+    console.error("Event listening after dom");
+    // Your JavaScript code here
+    // For example, the handlePropertyData function call:
+    fetchAllProperties();
+});
+
+    //window.onload = fetchAllProperties;
 
 </script>
 
