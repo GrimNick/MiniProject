@@ -34,6 +34,30 @@ public class areaService {
         }
     }
 
+    public AreaDTO getAreaDTOById(Long id) {
+        // Use the LocationRepository to fetch the location entity by ID
+        area _area = areaRepository.findById(id).orElse(null);
+        if (_area != null) {
+            return convertToDTO(_area);
+        } else {
+            return null;
+        }
+
+    }
+
+
+    private AreaDTO convertToDTO(area _area) {
+        // Implement conversion logic here
+        // For example:
+        AreaDTO areaDTO = new AreaDTO();
+        areaDTO.setId(_area.getId());
+        areaDTO.setPaisa(_area.getPaisa());
+        areaDTO.setAana(_area.getAana());
+        areaDTO.setDaam(_area.getDaam());
+        areaDTO.setRopani(_area.getRopani());
+        // Set other properties as needed
+        return areaDTO;
+    }
 
     public area getPropertiesById(Long id) {
         return areaRepository.findById(id).orElse(null);

@@ -1,5 +1,6 @@
 package com.example.MiniProject.controller.areaTable;
 
+import com.example.MiniProject.controller.locationsTable.LocationDTO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -63,6 +64,16 @@ public class areaController {
         } catch (Exception e) {
             e.printStackTrace();
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Internal Server Error");
+        }
+    }
+
+    @GetMapping("/area-details/{id}")
+    public ResponseEntity<?> getAreaDetails(@PathVariable Long id) {
+        AreaDTO areaDTO = areaService.getAreaDTOById(id);
+        if (areaDTO != null) {
+            return ResponseEntity.ok(areaDTO);
+        } else {
+            return ResponseEntity.notFound().build();
         }
     }
     @DeleteMapping("/area/{id}")

@@ -42,6 +42,28 @@ public class LocationsService {
         }
     }
 
+    public LocationDTO getLocationDTOById(Long id) {
+        // Use the LocationRepository to fetch the location entity by ID
+        locations _locations = locationsRepository.findById(id).orElse(null);
+        if (_locations != null) {
+            return convertToDTO(_locations);
+        } else {
+            return null;
+        }
+
+    }
+
+    private LocationDTO convertToDTO(locations location) {
+        // Implement conversion logic here
+        // For example:
+        LocationDTO locationDTO = new LocationDTO();
+        locationDTO.setId(location.getId());
+        locationDTO.setCountry(location.getCountry());
+        locationDTO.setAddress(location.getAddress());
+        // Set other properties as needed
+        return locationDTO;
+    }
+
 
     public locations getPropertiesById(Long id) {
         return locationsRepository.findById(id).orElse(null);

@@ -124,7 +124,10 @@ public class PropertiesController {
             if (dto.getUser() != null) {
                 users user = new users();
                 user.setId(dto.getUser().getId());
-                // Set other user properties if needed
+                user.setPhone(dto.getUser().getPhone());
+                user.setPassword(dto.getUser().getPassword());
+                user.setName(dto.getUser().getName());
+                user.setEmail(dto.getUser().getEmail());
                 prop.setUser(user);
             }
 
@@ -132,7 +135,7 @@ public class PropertiesController {
             if (dto.getLocation() != null) {
                 locations location = new locations();
                 location.setId(dto.getLocation().getId());
-                // Set other location properties if needed
+                location.setAddress(dto.getLocation().getAddress());
                 prop.setLocation(location);
             }
 
@@ -140,7 +143,10 @@ public class PropertiesController {
             if (dto.getCoordinate() != null) {
                 coordinates coordinate = new coordinates();
                 coordinate.setId((dto.getCoordinate()).getId());
-                // Set other coordinate properties if needed
+                coordinate.setLatitude((dto.getCoordinate()).getLatitude());
+                coordinate.setLongitude((dto.getCoordinate()).getLongitude());
+
+
                 prop.setCoordinate(coordinate);
             }
 
@@ -148,7 +154,13 @@ public class PropertiesController {
             if (dto.getArea() != null) {
                 area _area = new area();
                 _area.setId(dto.getArea().getId()); // Notice the change here
-                // Set other area properties if needed
+                _area.setAana(dto.getArea().getAana());
+                _area.setDaam(dto.getArea().getDaam());
+                _area.setPaisa(dto.getArea().getPaisa());
+                _area.setRopani(dto.getArea().getRopani());
+
+                _area.setId(dto.getArea().getId());
+
                 prop.setArea(_area);
             }
 

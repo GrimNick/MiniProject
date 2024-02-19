@@ -17,11 +17,13 @@ public class PropertiesDTO {
     private byte[] image;
     private double price;
 
-    public PropertiesDTO(){}
+    public PropertiesDTO(){
+    }
     public PropertiesDTO(String title, String description, double budget, int aana, int paisa, int ropani, int daam, int type, Long userId, float latitude, float longitude, byte[] image) {
         this.title = title;
         this.description = description;
         this.price = budget; // Assuming budget corresponds to price
+        System.out.println("aana is "+aana+ paisa + ropani + daam );
         this.area = new AreaDTO(aana, paisa, ropani, daam); // Assuming AreaDTO has a constructor that accepts these parameters
         this.type = type;
         this.user = new UserDTO(userId); // Assuming UserDTO has a constructor that accepts userId

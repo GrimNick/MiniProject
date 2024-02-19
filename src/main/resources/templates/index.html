@@ -157,9 +157,8 @@
         .buttonsInNav{
             display: flex;
             align-items: center;
-            width: 400px; /* Set fixed width */
-            height: 40px; /* Set fixed height */
-
+            width: 700px; /* Set fixed width */
+            height: 50px; /* Set fixed height */
         }
 
         .logo {
@@ -179,6 +178,8 @@
 
 
         .container-box {
+            background-color: #08380d;
+            color: white; /* Set font color to white */
             border: 1px solid #ccc;
             padding: 20px;
             margin-top: 20px;
@@ -197,7 +198,7 @@
         }
 
         .display-property-box{
-            border: 1px solid #ccc;
+            border: 1px solid #6b6303;
             display:flex;
             flex-direction: column;
             padding: 20px;
@@ -206,6 +207,7 @@
             text-align: left;
             width:100%;
         }
+
 
         .container {
             text-align: left;
@@ -228,44 +230,85 @@
         }
 
         .user-name,
-        .user-role {
+        .user-role,
+         .signin-btn,
+         #signout-btn,
+         #sell-btn{
        background-color: #04AA6D;
           color: white;
           padding: 14px 20px;
           margin: 8px 0;
           border: 1px solid #ccc;
           width: 100%;
+          height:100%;
           opacity: 0.9;
-        }
 
-        .signout-btn{
-            background-color: red;
-          color: white;
-          padding: 14px 20px;
-          margin: 8px 0;
-          border: 1px solid #ccc;
-          width: 100%;
-          opacity: 0.9;
-        }
-
-        .sell-btn{
-            background-color: red;
-          color: white;
-          padding: 14px 20px;
-          margin: 8px 0;
-          border: 1px solid #ccc;
-          width: 100%;
-          opacity: 0.9;
         }
 
 
 
-        .card-container {
+
+
+
+.card-container {
     display: flex;
+    background-color: #c9c053;
+    color: white; /* Set font color to white */
+
     border: 1px solid #ccc;
     border-radius: 8px;
     overflow: hidden;
+    cursor: pointer; /* Set cursor to pointer */
+
+    animation: hopFromRight 1s ease-out forwards;
+    opacity: 0; /* Start with low opacity */
+    transition: transform 0.3s ease; /* Add transition for scaling */
 }
+
+#myForm {
+    background-color: #04AA6D;
+    color: white; /* Set font color to white */
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    overflow: hidden;
+
+}
+
+
+
+
+@keyframes hopFromRight {
+    0% {
+        transform: translateX(100%) scale(0.2); /* Start small and outside the viewport */
+        opacity: 0; /* Start with low opacity */
+    }
+    60% {
+        transform: translateX(50%) scale(1.5); /* Hop to the middle with larger size */
+        opacity: 1; /* Increase opacity */
+    }
+    100% {
+        transform: translateX(0%) scale(1); /* Land on the final position */
+        opacity: 1; /* End with full opacity */
+    }
+}
+        @keyframes slideToRight {
+        0% {
+            transform: translateX(0%);
+            opacity: 1; /* Start with full opacity */
+        }
+        100% {
+            transform: translateX(100%);
+            opacity: 0; /* End with low opacity */
+        }
+    }
+    #propertyContainer{
+        background-color: #ccc;
+    }
+
+    #backgroundOverlay{
+        background-color: #333;
+    }
+
 
         /* Image container */
         .img-container {
@@ -362,7 +405,12 @@
     <label for="secretCode" id="secretCodeLabel" style="display: none;"><b>Enter Secret Code:</b></label>
     <input type="password" id="secretCode" name="secretCode" placeholder="Enter Secret Code" style="display: none;">
     <b></b>
-    <label id="sellerEmailLabel" style="display: none; font-size: 12px; color: gray;">Don't have a seller code? Email us at <a href="mailto:gharjagga@gmail.com">gharjagga@gmail.com</a></label>
+    <label id="sellerEmailLabel" style="display: none; font-size: 12px; color: gray;">Don't have a seller code? Email us at <a href="mailto:suton.empire123@gmail.com">gharjagga@gmail.com</a></label>
+    <b></b>
+    <label for="AdminCode" id="AdminCodeLabel" style="display: none;"><b>Enter Secret Code:</b></label>
+    <input type="password" id="AdminCode" name="AdminCode" placeholder="Enter Admin Code" style="display: none;">
+    <b></b>
+    <label id="AdminEmailLabel" style="display: none; font-size: 12px; color: gray;">Don't have a admin code? Email us at <a href="mailto:suton.empire123@gmail.com">gharjagga@gmail.com</a></label>
     <b></b>
     <b></b>
     <label for="psw"><b>Password</b></label>
@@ -421,9 +469,10 @@
 
 
                 <div class="dropdown-input">
-                    <label for="location">Location:</label>
+                    <label for="location">Advanced Location:</label>
                     <input type="text" id="location" name="location" placeholder="Enter address">
                 </div>
+
 
                 <div class="area-input">
                     <label for="ropani">Ropani:</label>
@@ -494,7 +543,8 @@
     var role_id = document.getElementById("role_id").value.trim();
     var password = document.getElementById("psw").value.trim();
     var repeatPassword = document.getElementById("psw-repeat").value.trim();
-    var secretCode = document.getElementById("secretCode").value.trim();
+    if(role_id == 2) var secretCode = document.getElementById("secretCode").value.trim();
+    if(role_id == 3) var AdminCode = document.getElementById("AdminCode").value.trim();
 
     var emailPattern = /^[a-zA-Z0-9._%+-]+@(gmail\.com|yahoo\.com|hotmail\.com|outlook\.com|aol\.com|icloud\.com|live\.com|msn\.com|inbox\.com)$/;
 
@@ -542,6 +592,18 @@
     if (role_id === "0") {
         document.getElementById("role_id").setCustomValidity("Please select a role");
         document.getElementById("role_id").reportValidity();
+        return;
+    }
+
+    if(role_id == 2 && secretCode!=="5555") {
+        document.getElementById("secretCode").setCustomValidity("Incorrect seller code");
+        document.getElementById("secretCode").reportValidity();
+        return;
+
+    }
+    if(role_id == 3 && AdminCode!=="7777") {
+        document.getElementById("AdminCode").setCustomValidity("Incorrect admin code");
+        document.getElementById("AdminCode").reportValidity();
         return;
     }
 
@@ -606,6 +668,8 @@
         var roleSelect = document.getElementById("role_id");
         var secretCodeLabel = document.getElementById("secretCodeLabel");
         var secretCodeInput = document.getElementById("secretCode");
+        var AdminCodeLabel = document.getElementById("AdminCodeLabel");
+        var AdminCodeInput = document.getElementById("AdminCode");
 
         // Check if the selected role is "Seller"
         if (roleSelect.value === "2") {
@@ -620,6 +684,20 @@
             secretCodeInput.style.display = "none";
             // Hide the email label
             sellerEmailLabel.style.display = "none";
+        }
+
+        if (roleSelect.value === "3") {
+            // If yes, show the secret code label and input field
+            AdminCodeLabel.style.display = "block";
+            AdminCodeInput.style.display = "block";
+            // Show the email label
+            AdminEmailLabel.style.display = "block";
+        } else {
+            // If not, hide the secret code label and input field
+            AdminCodeLabel.style.display = "none";
+            AdminCodeInput.style.display = "none";
+            // Hide the email label
+            AdminEmailLabel.style.display = "none";
         }
     }
 
@@ -719,39 +797,38 @@ function filterSubmit() {
         // Retrieve property type
         var propertyTypeElement = form.querySelector('input[name="propertyType"]:checked');
         propertyType = propertyTypeElement ? propertyTypeElement.value : null;
-
+        updatePropertyTypeValue();
         // Retrieve budget
         var budgetElement = form.querySelector('#budget');
-        budget = budgetElement ? budgetElement.value : null;
+        budget = (budgetElement.value.trim() !== '') ? budgetElement.value : null;
+
 
         // Retrieve location
-        var locationElement = form.querySelector('#location');
-         PropertKOlocation = locationElement ? locationElement.value : null;
+        var locationElement = document.getElementById('location');
+        PropertyKOlocation = (locationElement.value.trim() !== '')  ? locationElement.value : null;
 
         // Retrieve area inputs
         var ropaniElement = form.querySelector('#ropani');
-        var ropani = ropaniElement ? ropaniElement.value : null;
+         ropani = (ropaniElement.value.trim() !== '') ? ropaniElement.value : null;
 
         var aanaElement = form.querySelector('#aana');
-        var aana = aanaElement ? aanaElement.value : null;
+         aana = (aanaElement.value.trim() !== '') ? aanaElement.value : null;
 
         var paisaElement = form.querySelector('#paisa');
-        var paisa = paisaElement ? paisaElement.value : null;
+         paisa = (paisaElement.value.trim() !== '') ? paisaElement.value : null;
 
         var daamElement = form.querySelector('#daam');
-        var daam = daamElement ? daamElement.value : null;
-
-        area = ropani * 508.72 + aana * 31.8 + paisa * 7.95 + daam * 1.99;
-
+         daam = (daamElement.value.trim() !== '') ? daamElement.value : null;
         // Log or use the retrieved values as needed
         console.log("Property Type:", propertyType);
         console.log("Budget:", budget);
-        console.log("Location:", location);
+        console.log("Location:", PropertyKOlocation);
         console.log("Ropani:", ropani);
         console.log("Aana:", aana);
         console.log("Paisa:", paisa);
         console.log("Daam:", daam);
-        removePreviousCards()
+
+        removePreviousCards();
         fetchAllProperties();
         // You can perform further actions with the retrieved values here
     } else {
@@ -827,12 +904,24 @@ function isGmail(email) {
 
 
 
-let budget;
-let area;
-let propertyType;
+let budget=null;
+let ropani = null;
+let aana = null;
+let paisa = null;
+let daam = null;
+let propertyType=null;
+let propertyTypeValue=null;
+let sortByName=budget;
+let sortAlg=1;
+
+function updatePropertyTypeValue(){
+if(propertyType=="roles") {propertyTypeValue =1;}
+if(propertyType=="both") {propertyTypeValue =3;}
+if(propertyType=="land") {propertyTypeValue =2;}
+}
+let PropertyKOlocation=null;
 
 function fetchAllProperties() {
-
     const url = 'http://localhost:8080/properties';
 
     fetch(url)
@@ -843,12 +932,34 @@ function fetchAllProperties() {
             return response.json();
         })
         .then(data => {
-            // Extract property IDs from fetched data
+            // Extract property IDs and area IDs from fetched data
             let propertyIds = data.map(property => property.id);
-
             console.log('Original data:', data);
-
             // Check if budget is not null
+
+            console.log('Original propertyTypeValue:', propertyTypeValue);
+            //console.log('Original property.type:', property.type);
+
+            if(propertyTypeValue!==null && propertyTypeValue !== 3){
+                data = data.filter(property => property.type == propertyTypeValue);
+                propertyIds = data.map(property => property.id);
+            }
+            else{
+                data = data.filter(property => {
+                        if (property.type == 1) {
+                            return true;
+                        }
+                        else if(property.type == 2){
+                            return true;
+                        }
+                        return false;
+
+                    });
+                    propertyIds = data.map(property => property.id);
+
+
+            }
+
             if (budget !== null) {
                 // Filter out properties with price greater than the budget
                 data = data.filter(property => property.price <= budget);
@@ -856,17 +967,77 @@ function fetchAllProperties() {
                 propertyIds = data.map(property => property.id);
             }
 
-      /**  if (area !== null) {
-             // Filter out properties with area greater than the calculated area
-             data = data.filter(property => {
-              const propertyArea = property.ropani * 508.72 + property.aana * 31.8 + property.paisa * 7.95 + property.daam * 1.99;
-              return propertyArea <= area;
-              });
-             // Update propertyIds after filtering
-            propertyIds = data.map(property => property.id);
-            }
-            */
+            if(PropertyKOlocation!== null){
+                data = data.filter(property => property.location.address.toLowerCase().includes(PropertyKOlocation.toLowerCase()));
+                propertyIds = data.map(property => property.id);
 
+            }
+
+                if (ropani !== null) {
+                    data = data.filter(property => {
+                        if (property.area.ropani > ropani) {
+                            return false;
+                        }else if(property.area.ropani == ropani){
+                             if (property.area.aana > aana) {
+                            return false;
+                            }
+                            else if(property.area.aana == aana){
+                                 if(property.area.paisa > paisa){
+                                 return false;
+                                }
+                                else if(property.area.paisa == paisa){
+                                    if(property.area.daam>daam){
+                                     return false;
+                                    }
+                                }
+                             }
+                        }
+
+                        return true;
+                    });
+                    propertyIds = data.map(property => property.id);
+                }
+                if (ropani == null && aana !== null) {
+                    data = data.filter(property => {
+                        if (property.area.aana > aana) {
+                            return false;
+                        }
+                        else if(property.area.aana == aana){
+                            if(property.area.paisa > paisa){
+                               return false;
+                            }
+                            else if(property.area.paisa == paisa){
+                                if(property.area.daam>daam){
+                                return false;
+                                }
+                            }
+                        }
+                        return true;
+
+                    });
+                    propertyIds = data.map(property => property.id);
+
+                }
+
+                if (ropani == null && aana == null && paisa !== null) {
+                    data = data.filter(property => {
+                        if (property.area.paisa > paisa) {
+                            return false;
+                        }
+                        else if(property.area.paisa == paisa){
+                            if(property.area.daam > daam){
+                               return false;
+                            }
+                        }
+                        return true;
+
+                    });
+                    propertyIds = data.map(property => property.id);
+
+                }
+
+
+                fetchPropertyDetails(propertyIds);
 
             console.log('Filtered data:', data);
 
@@ -875,13 +1046,96 @@ function fetchAllProperties() {
                 return;
             }
 
+
+
             // Fetch property details along with children values of foreign keys
-            fetchPropertyDetails(propertyIds);
         })
         .catch(error => {
             console.error('There was a problem with the fetch operation:', error);
         });
 }
+
+
+
+<!--async function fetchAreaSmallerDetails(propertyIds) {-->
+<!--    // Array to store the IDs of areas whose calculated area is smaller than the specified area-->
+<!--    const smallerAreaIds = [];-->
+
+<!--    // Initialize ropani, aana, paisa, and daam variables outside the loop-->
+
+<!--    // Iterate over each property ID-->
+<!--for (const id of propertyIds) {-->
+<!--    try {-->
+<!--        // Fetch property details for the current property ID-->
+<!--        const response = await fetch(`/property-details/${id}`);-->
+<!--        if (!response.ok) {-->
+<!--            throw new Error('Network response was not ok');-->
+<!--        }-->
+
+<!--        // Parse the JSON response-->
+<!--        const property = await response.json();-->
+
+<!--        // Calculate the property area for the current property using a separate function-->
+<!--        const propertyArea = calculatePropertyArea(property);-->
+
+<!--        // Log the property area for the current property ID-->
+<!--        console.log(`Property ID: ${id}, Property Area: ${propertyArea}`);-->
+
+<!--        // Check if the property area is smaller than or equal to the specified area-->
+<!--        if (propertyArea <= area) {-->
+<!--            // If it is, push the property ID to the array of smaller area IDs-->
+<!--            smallerAreaIds.push(property.area.id);-->
+<!--        }-->
+<!--    } catch (error) {-->
+<!--        console.error('Error fetching property details:', error);-->
+<!--    }-->
+<!--}-->
+
+<!--    // Return the array of area IDs whose property areas are smaller than or equal to the specified area-->
+<!--    return smallerAreaIds;-->
+<!--}-->
+
+<!--function calculatePropertyArea(property) {-->
+<!--    console.log(parseFloat(property.area.ropani) * 508.72 +-->
+<!--           parseFloat(property.area.aana) * 31.8 +-->
+<!--           parseFloat(property.area.paisa) * 7.95 +-->
+<!--           parseFloat(property.area.daam) * 1.99);-->
+
+<!--    return parseFloat(property.area.ropani) * 508.72 +-->
+<!--           parseFloat(property.area.aana) * 31.8 +-->
+<!--           parseFloat(property.area.paisa) * 7.95 +-->
+<!--           parseFloat(property.area.daam) * 1.99;-->
+<!--}-->
+
+
+<!--async function fetchAreaById(areaId) {-->
+<!--console.log("fetching area by id " + areaId);-->
+<!--    // Assume you have an API endpoint to fetch area by ID-->
+<!--    const apiUrl = `http://localhost:8080/area-details/${areaId}`;-->
+
+<!--    try {-->
+<!--        // Use fetch API to make a GET request to fetch the area record-->
+<!--        const response = await fetch(apiUrl);-->
+
+<!--        if (!response.ok) {-->
+<!--            throw new Error(`Failed to fetch area record. Status: ${response.status}`);-->
+<!--        }-->
+
+<!--        // Parse the response JSON data-->
+<!--        const area = await response.json();-->
+
+<!--        // Return the fetched area record-->
+<!--        return area;-->
+<!--    } catch (error) {-->
+<!--        // Handle errors during the fetch operation-->
+<!--        console.error("Error fetching area record:", error);-->
+<!--        throw error; // Rethrow the error to be caught in the calling code-->
+<!--    }-->
+<!--}-->
+
+
+// Define a global variable to control script execution
+let animationInProgress = false;
 
 function removePreviousCards() {
     // Get the container element where cards are displayed
@@ -897,6 +1151,7 @@ function removePreviousCards() {
 
 function fetchPropertyDetails(propertyIds) {
     // Iterate over property IDs and fetch details for each property
+    if(!propertyIds) console.log("no ids");
     propertyIds.forEach(id => {
         fetch(`/property-details/${id}`)
             .then(response => {
@@ -990,10 +1245,24 @@ async function handlePropertyData(property) {
             </div>
         </div>
     `;
-    card.addEventListener("click", () => {
+// JavaScript
+const cards = document.querySelectorAll('.card-container');
+
+card.addEventListener("click", () => {
         // Redirect to the details page with property ID
         window.location.href = `/property-details?id=${property.id}`;
     });
+
+card.addEventListener('mouseenter', () => {
+        card.classList.add('enlarged');
+});
+
+card.addEventListener('mouseleave', () => {
+    card.classList.remove('enlarged');
+});
+
+
+
 
     // Append the card to the property container
     const propertyContainer = document.getElementById("propertyContainer");

@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.*;
 public class LocationsController {
     private static final Logger logger = LoggerFactory.getLogger(LocationsController.class);
 
+    @Autowired
     private final LocationsService locationsService;
 
     @Autowired
@@ -83,11 +84,13 @@ public class LocationsController {
     }
 
     @GetMapping("/location-details/{id}")
-    public ResponseEntity<LocationDTO> getLocationDetails(@PathVariable Long id) {
-        LocationsService locationService = new LocationsService(); // Instantiate LocationService
-        return locationService.getLocationById(id)
-                .map(location -> new ResponseEntity<>(convertToDTO(location), HttpStatus.OK))
-                .orElse(new ResponseEntity<>(HttpStatus.NOT_FOUND));
+    public ResponseEntity<?> getLocationDetails(@PathVariable Long id) {
+        LocationDTO locationDTO = locationsService.getLocationDTOById(id);
+        if (locationDTO != null) {
+            return ResponseEntity.ok(locationDTO);
+        } else {
+            return ResponseEntity.notFound().build();
+        }
     }
 
     private LocationDTO convertToDTO(locations location) {
