@@ -69,44 +69,30 @@
             font-weight: bold;
         }
 
-.buttonsInNav{
+        .buttonsInNav{
             display: flex;
             align-items: center;
-            width: 400px; /* Set fixed width */
-            height: 40px; /* Set fixed height */
-
+            width: 700px; /* Set fixed width */
+            height: 50px; /* Set fixed height */
         }
 
-.user-name,
-        .user-role {
+  .user-name,
+        .user-role,
+         .signin-btn,
+         #signout-btn,
+         #sell-btn,
+         #home-btn{
        background-color: #04AA6D;
           color: white;
           padding: 14px 20px;
           margin: 8px 0;
           border: 1px solid #ccc;
           width: 100%;
+          height:100%;
           opacity: 0.9;
+
         }
 
-        .signout-btn{
-            background-color: red;
-          color: white;
-          padding: 14px 20px;
-          margin: 8px 0;
-          border: 1px solid #ccc;
-          width: 100%;
-          opacity: 0.9;
-        }
-
-        .sell-btn{
-            background-color: red;
-          color: white;
-          padding: 14px 20px;
-          margin: 8px 0;
-          border: 1px solid #ccc;
-          width: 100%;
-          opacity: 0.9;
-        }
 
         select:focus {
             background-color: #ddd;
@@ -342,6 +328,7 @@
         <button id="signin-btn" onclick="showSigninForm()">Sign In</button>
         <button id="signout-btn" onclick="Signout()">Sign Out</button>
         <button id="sell-btn" onclick="sellPage()">Want to Sell?</button>
+        <button id="home-btn" onclick="homePage()">Home Page</button>
 
     </div>
 </div>
@@ -495,6 +482,9 @@ function getUrlParameter(name) {
         }
         function sellPage(){
             window.location.href = "/uploadSeller"; // Change the URL as needed
+        }
+         function homePage(){
+            window.location.href = "/"; // Change the URL as needed
         }
 
     // Function to cancel and hide the signup form

@@ -233,7 +233,7 @@
         .user-role,
          .signin-btn,
          #signout-btn,
-         #sell-btn{
+         #sell-btn,#home-btn{
        background-color: #04AA6D;
           color: white;
           padding: 14px 20px;
@@ -260,10 +260,19 @@
     overflow: hidden;
     cursor: pointer; /* Set cursor to pointer */
 
-    animation: hopFromRight 1s ease-out forwards;
-    opacity: 0; /* Start with low opacity */
-    transition: transform 0.3s ease; /* Add transition for scaling */
+    transition: transform 0.5s ease, opacity 0.5s ease; /* Smooth transitions for transform and opacity */
+    animation: hopFromRight 1s ease-out forwards, fadeIn 1s ease-out forwards; /* Apply animation for hopFromRight and fadeIn */
+
+    //opacity: 0; /* Start with low opacity */
 }
+
+.card-container:hover {
+        perspective: 1000px; /* Perspective for 3D effect */
+    transform-style: preserve-3d; /* Preserve 3D transformations */
+
+    transform: rotateY(45deg); /* Rotate along the Y-axis */
+}
+
 
 #myForm {
     background-color: #04AA6D;
@@ -279,31 +288,29 @@
 
 @keyframes hopFromRight {
     0% {
-        transform: translateX(100%) scale(0.2); /* Start small and outside the viewport */
-        opacity: 0; /* Start with low opacity */
-    }
-    60% {
-        transform: translateX(50%) scale(1.5); /* Hop to the middle with larger size */
-        opacity: 1; /* Increase opacity */
+        transform: translateX(100%);
+
     }
     100% {
-        transform: translateX(0%) scale(1); /* Land on the final position */
-        opacity: 1; /* End with full opacity */
+        transform: translateX(0%);
+
     }
 }
-        @keyframes slideToRight {
-        0% {
-            transform: translateX(0%);
-            opacity: 1; /* Start with full opacity */
-        }
-        100% {
-            transform: translateX(100%);
-            opacity: 0; /* End with low opacity */
-        }
+
+@keyframes fadeIn {
+    0% {
+        opacity: 0;
     }
+    100% {
+        opacity: 1;
+
+    }
+}
     #propertyContainer{
         background-color: #ccc;
+        perspective: 1000px; /* Perspective for 3D effect */
     }
+
 
     #backgroundOverlay{
         background-color: #333;
@@ -378,6 +385,7 @@
         <button id="signin-btn" onclick="showSigninForm()">Sign In</button>
         <button id="signout-btn" onclick="Signout()">Sign Out</button>
         <button id="sell-btn" onclick="sellPage()">Want to Sell?</button>
+        <button id="home-btn" onclick="homePage()">Home Page</button>
 
     </div>
 </div>
@@ -525,6 +533,9 @@
         }
         function sellPage(){
             window.location.href = "/uploadSeller"; // Change the URL as needed
+        }
+        function homePage(){
+            window.location.href = "/"; // Change the URL as needed
         }
 
     // Function to cancel and hide the signup form
