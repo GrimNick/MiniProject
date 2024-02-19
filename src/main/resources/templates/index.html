@@ -222,7 +222,26 @@
         }
 
         .dropdown-input {
+
             /* Add styles for the dropdown input if needed */
+        }
+        .dropdown-inputForSort{
+
+            width: 220px;
+            height: 20px;
+            //top: 0; /* Align divSmall to the top of the container */
+            //right: 0; /* Align divSmall to the right of the container */
+
+        }
+        .manageByColumns{
+    //border: 1px solid #ccc;
+    display: flex;
+    gap: 10px;
+    flex-direction: row;
+    justify-content: flex-end; /* Align items to the right */
+    padding: 15px;
+    margin-top: 1px;
+    text-align: left;
         }
 
         .area-input {
@@ -233,7 +252,7 @@
         .user-role,
          .signin-btn,
          #signout-btn,
-         #sell-btn,#home-btn{
+         #sell-btn,.home-btn{
        background-color: #04AA6D;
           color: white;
           padding: 14px 20px;
@@ -367,6 +386,43 @@
         color: gray;
     }
 
+/* Define the animation */
+@keyframes fadeInFromTopToCenter {
+  0% {
+    opacity: 0;
+    transform: translateY(-100px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(-50px);
+  }
+}
+
+/* Apply the animation to the specified elements */
+#signUpForm {
+  animation: fadeInFromTopToCenter 0.5s ease-in-out forwards;
+  position: fixed;
+  top: 7%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+#signInForm{
+  animation: fadeInFromTopToCenter 0.5s ease-in-out forwards;
+  position: fixed;
+  top: 30%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+#subscribeForm {
+  animation: fadeInFromTopToCenter 0.5s ease-in-out forwards;
+  position: fixed;
+  top: 30%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+
 
 
     </style>
@@ -386,7 +442,6 @@
         <button id="signout-btn" onclick="Signout()">Sign Out</button>
         <button id="sell-btn" onclick="sellPage()">Want to Sell?</button>
         <button id="home-btn" onclick="homePage()">Home Page</button>
-
     </div>
 </div>
 
@@ -455,9 +510,63 @@
     </div>
 </div>
 
+<div id="subscribeForm" class="container">
+    <h2>Subscribe for future news</h2>
+
+    <div class="radio-group">
+        <input type="radio" id="subscribeLand" name="propertyType" value="land">
+        <label for="land">Land</label>
+        <input type="radio" id="subscribeRoles" name="propertyType" value="roles">
+        <label for="roles">House</label>
+        <input type="radio" id="subscribeBoth" name="propertyType" value="both">
+        <label for="both">Both</label>
+    </div>
+    <label for="subscribeLocation"><b>Advanced Location</b></label>
+    <input type="text" placeholder="Enter desired location" name="email" id="subscribeLocation" required>
+
+    <label for="subscribeBudget"><b>Budget</b></label>
+    <input type="number" placeholder="Enter your budget" name="psw" id="subscribeBudget" required>
+
+
+    <div class="clearfix">
+        <button type="button" class="cancelbtn" onclick="hideSubscribeForm()">Cancel</button>
+        <button type="submit" class="signupbtn" onclick="SubmitSubscribeForm()">Notify me!</button>
+    </div>
+</div>
+
+<div id="subscribeSuccessForm" class="container">
+    <h2>Succesfully Subscribed!</h2>
+    <label for="subscribeBudget"><b>You will be notified </b>
+        <b>When any subscribed</b><b>Property is on SALE!</b>
+    </label>
+    <div class="clearfix">
+        <button type="submit" class="signupbtn" onclick="hideSuccessSubscribeForm()">OK!</button>
+    </div>
+</div>
 
 
 <div id="backgroundOverlay">
+    <div class="manageByColumns">
+    <div class="dropdown-inputForSort">
+        <select id="SortName" onchange="SortNamechange()">
+            <option value="price" selected> Sort By Budget</option>
+<!--            <option value="areaSort">Sort By Area</option>-->
+        </select>
+    </div>
+    <div class="dropdown-inputForSort">
+        <select id="SortAlg" onchange="SortAlgchange()">
+            <option value="Asc" selected> Increasing</option>
+            <option value="Dsc">Decreasing </option>
+        </select>
+    </div>
+
+        <div class="dropdown-inputForSort">
+        <button id="subscribe-btn" onclick="subscribePage()">Subscribe </button>
+        </div>
+        <div class="dropdown-inputForSort">
+        <button id="deleteSubscribe-btn" onclick="deleteSubscribePage()">Delete all Subscribe </button>
+        </div>
+    </div>
     <div class="container-box-main">
         <div class="container-box">
             <h1>Property Type Selector</h1>
@@ -675,6 +784,182 @@
     };
     xhr.send(JSON.stringify({ email: email }));
     }
+
+    let SortName="price";
+    let SortAlg = "Asc";
+
+    function SortNamechange(){
+         SortName = document.getElementById("SortName");
+        removePreviousCards();
+        fetchAllProperties();
+
+    }
+
+    function SortAlgchange(){
+         SortAlg = document.getElementById("SortAlg");
+        removePreviousCards();
+        fetchAllProperties();
+
+    }
+
+    function subscribePage(){
+    if(userId!=null){
+        var subscribeForm = document.getElementById("subscribeForm");
+        subscribeForm.style.display = "block";
+        document.getElementById("backgroundOverlay").classList.add("blur");
+    }else{
+        alert("Please log in first.");
+    }
+    }
+function deleteSubscribeByUserEmail(email) {
+    // Send an HTTP DELETE request to the server
+fetch('/subscribe', {
+    method: 'GET', // Change the method to GET
+    headers: {
+        'Content-Type': 'application/json'
+    }
+})
+.then(response => {
+    if (response.ok) {
+        return response.json(); // Parse JSON response
+    }
+    throw new Error('Network response was not ok.');
+})
+.then(data => {
+    console.log(data); // Log the response from the server
+
+    // Filter data based on email
+
+    data = data.filter(item => item.email == email); // Replace 'email' with the email you want to filter out
+    subscribeIds = data.map(subscribe => subscribe.id);
+
+    console.log(data); // Log subscribeIds
+    console.log(subscribeIds); // Log subscribeIds
+
+    // Call function to delete filtered IDs
+    deleteFilteredSubscriptions(subscribeIds);
+})
+.catch(error => {
+    console.error('There was a problem with the fetch operation:', error);
+    // Optionally, handle errors or display error messages to the user
+});
+}
+
+async function deleteFilteredSubscriptions(subscribeIds) {
+    try {
+        // Create an array to store all fetch requests
+        const deleteRequests = subscribeIds.map(async id => {
+            const response = await fetch(`/subscribe/${id}`, {
+                method: 'DELETE',
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            });
+
+            if (!response.ok) {
+                throw new Error(`Failed to delete subscription with ID: ${id}`);
+            }
+
+            return id; // Return the ID if deletion is successful
+        });
+
+        // Await all fetch requests to complete
+        const deletedIds = await Promise.all(deleteRequests);
+
+        console.log(`Successfully deleted subscriptions with IDs: ${deletedIds.join(', ')}`);
+    } catch (error) {
+        console.error('There was a problem deleting subscriptions:', error);
+        // Optionally, handle errors or display error messages to the user
+    }
+}
+
+function deleteSubscribePage() {
+    if (userId != null) {
+        deleteSubscribeByUserEmail(userKOEmail); // Assuming userKoEmail is defined elsewhere
+    } else {
+        alert("Please log in first.");
+    }
+}
+
+
+
+
+        function hideSubscribeForm() {
+        var subscribeForm = document.getElementById("subscribeForm");
+        subscribeForm.style.display = "none";
+        document.getElementById("backgroundOverlay").classList.remove("blur"); // Remove 'blur' class from background overlay
+    }
+
+    function SubmitSubscribeForm() {
+        // Retrieve desired location and budget
+            var locationInput = document.getElementById("subscribeLocation");
+            var budgetInput = document.getElementById("subscribeBudget");
+            var propertyTypeInput = document.querySelector('input[name="propertyType"]:checked');
+
+            var location = locationInput ? locationInput.value.trim() : null;
+            var budget = budgetInput || budgetInput!=0 ? budgetInput.value.trim() : null;
+        var propertyType;
+        if(propertyTypeInput==land) propertyType=1;
+        if(propertyTypeInput==roles) propertyType=2;
+        if(propertyTypeInput==both) propertyType=3;
+        // Display the retrieved information (you can do whatever you want with this information)
+        console.log("Desired location:", location);
+        console.log("Budget:", budget);
+        console.log("Property type:", propertyType);
+
+                var data = {
+                location: location,
+                price: budget,
+                type: propertyType,
+                email:userKOEmail
+            };
+
+            // Send an HTTP POST request to the server
+            fetch('/subscribe', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(data)
+            })
+            .then(response => {
+                if (response.ok) {
+                    // Clear the form fields
+                    locationInput.value = '';
+                    budgetInput.value = '';
+                    // Clear radio button selection (assuming there's only one group)
+                    var propertyTypeInputs = document.querySelectorAll('input[name="propertyType"]');
+                    propertyTypeInputs.forEach(input => {
+                        input.checked = false;
+                    });
+                    return response.text();
+                }
+                throw new Error('Network response was not ok.');
+            })
+            .then(data => {
+                console.log(data); // Log the response from the server
+                // Optionally, you can perform any additional actions after the request is successful
+            })
+            .catch(error => {
+                console.error('There was a problem with the fetch operation:', error);
+                // Optionally, handle errors or display error messages to the user
+            });
+        hideSubscribeForm();
+        SuccessSubscribe();
+    }
+    function SuccessSubscribe(){
+                var subscribeForm = document.getElementById("subscribeSuccessForm");
+                subscribeForm.style.display = "block";
+                document.getElementById("backgroundOverlay").classList.add("blur");
+
+    }
+
+        function hideSuccessSubscribeForm() {
+        var subscribeForm = document.getElementById("subscribeSuccessForm");
+        subscribeForm.style.display = "none";
+        document.getElementById("backgroundOverlay").classList.remove("blur"); // Remove 'blur' class from background overlay
+    }
+
     function checkRole() {
         var roleSelect = document.getElementById("role_id");
         var secretCodeLabel = document.getElementById("secretCodeLabel");
@@ -765,6 +1050,7 @@
                     console.error("signed in");
                     sessionStorage.setItem('userId', userId);
                     localStorage.setItem('userId', userId);
+                    localStorage.setItem('userEmail', formData.email);
 
                     window.location.href = "/"; // Change the URL as needed
 
@@ -922,8 +1208,7 @@ let paisa = null;
 let daam = null;
 let propertyType=null;
 let propertyTypeValue=null;
-let sortByName=budget;
-let sortAlg=1;
+
 
 function updatePropertyTypeValue(){
 if(propertyType=="roles") {propertyTypeValue =1;}
@@ -1047,6 +1332,56 @@ function fetchAllProperties() {
 
                 }
 
+            let PriceArray = data.map(property => property.price);
+
+            console.log('Price array before sort:', PriceArray);
+            console.log("SortName is : " +SortName);
+            if(SortName == "price"){
+                if(SortAlg =="Asc"){
+                PriceArray.sort((a, b) => a - b);
+                console.log(' ASC Price array after sort:', PriceArray);
+                }else{
+                PriceArray.sort((a, b) => b-a);
+                console.log(' DSC Price array after sort:', PriceArray);
+                }
+
+                // Map property IDs according to sorted PriceArray
+                propertyIds = PriceArray.map(price => {
+                    const property = data.find(property => property.price === price);
+                    return property ? property.id : null;
+                });
+                console.log('Property IDs:', propertyIds);
+
+            }
+
+
+<!--            if(SortName == "areaSort"){-->
+<!--                if(SortAlg =="Asc"){-->
+<!--                CalulateAreaArray.sort((a, b) => a - b);-->
+<!--                console.log(' ASC CalulateAreaArray array after sort:', CalulateAreaArray);-->
+<!--                }else{-->
+<!--                CalulateAreaArray.sort((a, b) => b-a);-->
+<!--                console.log(' CalulateAreaArray Price array after sort:', CalulateAreaArray);-->
+<!--                }-->
+
+<!--                // Map property IDs according to sorted PriceArray-->
+<!--                propertyIds = CalulateAreaArray.map(price => {-->
+<!--                    const property = data.find(property => property.price === price);-->
+<!--                    return property ? property.id : null;-->
+<!--                });-->
+<!--                console.log('Property IDs:', propertyIds);-->
+
+<!--            }-->
+
+
+
+
+
+
+            // Extract property IDs from sorted data
+            // propertyIds = data.map(property => property.id);
+            console.log('Property IDs:', propertyIds);
+
 
                 fetchPropertyDetails(propertyIds);
 
@@ -1160,25 +1495,26 @@ function removePreviousCards() {
 
 
 
-function fetchPropertyDetails(propertyIds) {
+async function fetchPropertyDetails(propertyIds) {
     // Iterate over property IDs and fetch details for each property
-    if(!propertyIds) console.log("no ids");
-    propertyIds.forEach(id => {
-        fetch(`/property-details/${id}`)
-            .then(response => {
-                if (!response.ok) {
-                    throw new Error('Network response was not ok');
-                }
-                return response.json();
-            })
-            .then(property => {
-                // Call a function to handle the fetched property data
-                handlePropertyData(property);
-            })
-            .catch(error => {
-                console.error('Error fetching property details:', error);
-            });
-    });
+    if (!propertyIds) {
+        console.log("No property IDs provided");
+        return;
+    }
+
+    try {
+        for (const id of propertyIds) {
+            const response = await fetch(`/property-details/${id}`);
+            if (!response.ok) {
+                throw new Error(`Failed to fetch property details for ID ${id}`);
+            }
+            const property = await response.json();
+            // Call a function to handle the fetched property data
+            handlePropertyData(property);
+        }
+    } catch (error) {
+        console.error('Error fetching property details:', error);
+    }
 }
 function fetchUserDetails(userId) {
     var xhr4 = new XMLHttpRequest();
@@ -1207,7 +1543,10 @@ function fetchUserDetails(userId) {
 
 // Check if userId is present in session storage
 var userId = localStorage.getItem('userId');
+var userKOEmail = localStorage.getItem('userEmail');
 console.error("userId is "+localStorage.getItem('userId'));
+console.error("userEmail is "+localStorage.getItem('userEmail'));
+
 if (userId) {
     // Fetch user details based on userId
     document.getElementById('signup-btn').style.display = 'none';

@@ -7,6 +7,13 @@
     <link rel="stylesheet" href="https://unpkg.com/leaflet-control-geocoder/dist/Control.Geocoder.css" />
     <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
     <script src="https://unpkg.com/leaflet-control-geocoder/dist/Control.Geocoder.js"></script>
+    <script src="https://cdn.emailjs.com/dist/email.min.js"></script>
+    <script>
+        (function(){
+            emailjs.init("ZQbWmERlu5g5VsOkV"); // Replace "your_public_key" with your actual Public Key
+        })();
+    </script>
+
     <style>
 
         /* Style for input labels */
@@ -15,7 +22,28 @@
              margin-right: 10px;
         }
 
+        #UploadComplete {
+          animation: fadeInFromTopToCenter 0.5s ease-in-out forwards;
+            background: #f1f1f1;
+            border: 2px solid #000; /* Add a 2px solid black border */
 
+          position: fixed;
+          top: 30%;
+          left: 50%;
+          transform: translate(-50%, -50%);
+              z-index: 9999; /* Set a high z-index value to ensure it overlaps other elements */
+        }
+            /* Define the animation */
+            @keyframes fadeInFromTopToCenter {
+              0% {
+                opacity: 0;
+                transform: translateY(-100px);
+              }
+              100% {
+                opacity: 1;
+                transform: translateY(-50px);
+              }
+            }
         body {
             font-family: Arial, sans-serif;
             margin: 0;
@@ -228,7 +256,7 @@
             border: 1px solid #ccc;
             display:flex;
             gap:10px;
-            flex-direction: row;
+            flex-direction: column;
             padding: 20px;
             margin-top: 20px;
             text-align: left;
@@ -246,8 +274,10 @@
         }
 
         .container {
+
             text-align: left;
         }
+
 #myForm {
     background-color: #04AA6D;
     color: white; /* Set font color to white */
@@ -329,6 +359,7 @@
     </style>
 </head>
 <body>
+
 <div class="navbar">
     <div class="logo">Ghar Jagga</div>
 
@@ -342,8 +373,17 @@
         <button id="home-btn" onclick="homePage()">Home Page</button>
 
     </div>
-</div>
 
+    <div id="UploadComplete" class="container" style="display: none;">
+        <h2>Property Enlisted!</h2>
+        <label for="UploadComplete"><b>Interested buyers </b>
+            <b>will be notified soon</b>
+        </label>
+        <div class="clearfix">
+            <button type="submit" class="signupbtn" onclick="hideUploadComplete()">OK!</button>
+        </div>
+    </div>
+</div>
 <div id="map" style="height: 400px;"></div>
 <button onclick="clearMarker()">Clear Marker</button>
 
@@ -392,6 +432,8 @@
             </form>
     </div>
 </div>
+
+
 
 <script>
     var map = L.map('map').setView([28.3949, 84.1240], 13);
@@ -473,8 +515,19 @@ function submitPropertyDetails() {
         document.getElementById("aana").reportValidity();
         return;
     }
+
+    if (aana>=16) {
+        document.getElementById("aana").setCustomValidity("1 Ropani is equal to 16 Aana");
+        document.getElementById("aana").reportValidity();
+        return;
+    }
     if (!paisa) {
         document.getElementById("paisa").setCustomValidity("Paisa cannot be empty");
+        document.getElementById("paisa").reportValidity();
+        return;
+    }
+    if (paisa>=4) {
+        document.getElementById("paisa").setCustomValidity("1 Aana is equal to 4 Paisa");
         document.getElementById("paisa").reportValidity();
         return;
     }
@@ -487,6 +540,12 @@ function submitPropertyDetails() {
         document.getElementById("daam").setCustomValidity("Daam cannot be empty");
         document.getElementById("daam").reportValidity();
         return;
+    }
+    if(daam>=4){
+            document.getElementById("daam").setCustomValidity("1 Paisa is equal to 4 Daam");
+        document.getElementById("daam").reportValidity();
+        return;
+
     }
 
     if (!type || type ==0) {
@@ -504,10 +563,13 @@ function submitPropertyDetails() {
 
                           var latitude = marker.getLatLng().lat.toFixed(4);
                         var longitude = marker.getLatLng().lng.toFixed(4);
+
 uploadImage()
   .then(updateId => {
+    sendAlertEmail(updateId, title, description, budget, aana, paisa, ropani, daam, type, userId, latitude, longitude, address);
     // Once the image is uploaded, call addProperty with the returned UpdateId
     addProperty(updateId, title, description, budget, aana, paisa, ropani, daam, type, userId, latitude, longitude, address);
+    showUploadComplete();
   })
   .catch(error => {
     console.error('Error uploading image:', error);
@@ -526,6 +588,24 @@ uploadImage()
         }
     }
 
+    function showUploadComplete() {
+        var UploadComplete = document.getElementById("UploadComplete");
+        UploadComplete.style.display = "block";
+        document.getElementById("backgroundOverlay").classList.add("blur");
+
+    }
+
+
+    function hideUploadComplete(){
+    if(donePropertyAdd &&  doneAlert){
+        window.location.href = "/"; // Change the URL as needed
+
+    }else{
+        alert("Wait a few second. Finishing up");
+    }
+    }
+    let donePropertyAdd=false;
+    let doneAlert=false;
     var locationId;
     var areaId;
     var coordinateId;
@@ -692,8 +772,7 @@ async function addOthers(UpdateId, title, description, budget, aana, paisa, ropa
     .then(response => {
         if (response.ok) {
         console.log('Property updated successfully');
-            window.location.href = "/"; // Change the URL as needed
-
+                donePropertyAdd = true;
         } else {
             console.error('Failed to add property');
             // Handle error, e.g., display an error message to the user
@@ -749,7 +828,93 @@ async function uploadImage() {
     }
 }
 
+function sendAlertEmail(updateId, title, description, budget, aana, paisa, ropani, daam, type, userId, latitude, longitude, address) {
+    // Check if the user is logged in
 
+fetch('/subscribe', {
+    method: 'GET', // Change the method to GET
+    headers: {
+        'Content-Type': 'application/json'
+    }
+})
+.then(response => {
+    if (response.ok) {
+        return response.json(); // Parse JSON response
+    }
+    throw new Error('Network response was not ok.');
+})
+.then(data => {
+    console.log(data); // Log the response from the server
+
+    // Filter data based on email
+
+data = data.filter(property => {
+    const propertyLocation = property.location.toLowerCase();
+    const inputAddress = address.toLowerCase();
+    console.log('Property Location:', propertyLocation);
+    console.log('Input Address:', inputAddress);
+    return inputAddress.includes(propertyLocation);
+});
+    propertyIds = data.map(property => property.id);
+
+    console.log(data); // Log subscribeIds
+    console.log(propertyIds); // Log subscribeIds
+
+    // Call function to delete filtered IDs
+    if(data.length===0){
+        doneAlert=true;
+    }else{
+    SendEmails(data, updateId, title, description, budget, aana, paisa, ropani, daam, type, userId, latitude, longitude, address);
+    }
+})
+.catch(error => {
+    console.error('There was a problem with the fetch operation:', error);
+    // Optionally, handle errors or display error messages to the user
+});
+}
+
+function SendEmails(data,updateId, title, description, budget, aana, paisa, ropani, daam, type, userId, latitude, longitude, address ){
+
+// Array to store promises for email sending operations
+const emailPromises = [];
+
+// Iterate through data array
+data.forEach(item => {
+    var templateParams = {
+        to_email: item.email,
+        from_name: 'Newton Shahi Thakuri', // Replace 'Your Name' with the sender's name
+        to_name: item.name, // Replace 'User' with the recipient's name (if available)
+        id: updateId, // Assuming item has an updateId property
+        subject: 'PROPERTY OF INTEREST',
+        message: 'A new property on sale'
+    };
+
+    // Create promise for email sending operation and add to array
+    const emailPromise = emailjs.send('service_nybva1m', 'template_3j0ggmr', templateParams)
+        .then(function(response) {
+            console.log('Email sent successfully to', item.email, response);
+        })
+        .catch(function(error) {
+            console.error('Failed to send email to', item.email, error);
+        });
+
+    emailPromises.push(emailPromise);
+});
+
+// Wait for all email sending promises to resolve
+Promise.all(emailPromises)
+    .then(() => {
+        // All emails sent successfully
+        console.log('All emails sent successfully.');
+        // Set doneAlert to true
+        doneAlert = true;
+    })
+    .catch(error => {
+        // At least one email sending operation failed
+        console.error('Some emails failed to send:', error);
+        doneAlert= true;
+    });
+}
 
         function getImageById(id) {
 
