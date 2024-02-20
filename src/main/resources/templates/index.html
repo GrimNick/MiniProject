@@ -381,6 +381,20 @@
         .card-info p {
             margin: 10px 0;
         }
+        .SubscribeCard-info {
+            flex: 1;
+            padding: 15px;
+        }
+
+        .SubscribeCard-info h5 {
+            margin: 0;
+            font-size: 18px;
+            font-weight: bold;
+        }
+
+        .SubscribeCard-info p {
+            margin: 10px 0;
+        }
 
         /* Property info */
         .property-info {
@@ -532,7 +546,7 @@
 </div>
 
 <div id="subscribeList" class="container">
-    <div>
+    <div id="subscribeContainer">
 
     </div>
     <div class="clearfix">
@@ -650,6 +664,10 @@
     <p>This is a card</p>
     <button class="delete-button">Delete Card</button>
 </div>
+<div class="card">
+    <p>This is a card</p>
+    <button class="delete-subscribeButton">Delete Card</button>
+</div>
 
 
 
@@ -664,11 +682,14 @@
 
     }
 
-    function showSubscribeList(){
-        var subscribeList = document.getElementById("subscribeList");
-        subscribeList.style.display = "block";
-        document.getElementById("backgroundOverlay").classList.add("blur");
-    }
+function showSubscribeList() {
+    var subscribeList = document.getElementById("subscribeList");
+    subscribeList.style.display = "block";
+    document.getElementById("backgroundOverlay").classList.add("blur");
+    removePreviousSubscribeCards();
+    fetchSubscriptionData();
+}
+
 
     // Function to cancel and hide the signup form
     function hideSignUpForm() {
@@ -1545,6 +1566,15 @@ function fetchAllProperties() {
 // Define a global variable to control script execution
 let animationInProgress = false;
 
+function removePreviousSubscribeCards() {
+    // Get the container element where cards are displayed
+    const container = document.getElementById('subscribeContainer');
+
+    // Remove all child nodes (cards) from the container
+    while (container.firstChild) {
+        container.removeChild(container.firstChild);
+    }
+}
 function removePreviousCards() {
     // Get the container element where cards are displayed
     const container = document.getElementById('propertyContainer');
@@ -1628,6 +1658,72 @@ if (userId) {
     document.getElementById('sell-btn').style.display = 'none';
 
 }
+
+async function handleSubscriptionData(subscription) {
+    // Log subscription ID for debugging
+    console.log("Subscription ID:", subscription.id);
+    console.log("email:", subscription.email);
+    if (subscription.email !== userKOEmail) {
+        // The subscription email does not match the user's email, so we skip creating a card
+        return;
+    }
+
+    // Create a new card element
+    const card = document.createElement("div");
+    card.classList.add("card-container");
+
+    // Populate the card content with subscription data and delete button
+    card.innerHTML += `
+        <div class="SubscribeCard-info">
+            <h5>User Email: ${subscription.email}</h5>
+            <p>Subscription location: ${subscription.location}</p>
+            <p>Subscription price: ${subscription.price}</p>
+            <p>Subscription type: ${subscription.type}</p>
+            <button class="delete-subscribeButton red-delete-button">Delete Subscription</button>
+        </div>
+    `;
+
+    // Get the delete button within this card
+    const deleteButton = card.querySelector('.delete-subscribeButton');
+
+    // Add click event listener to the delete button
+    if (deleteButton) {
+        deleteButton.addEventListener('click', async () => {
+            try {
+                // Example: Send an HTTP request to your server to delete the subscription
+                await fetch(`/subscribe/${subscription.id}`, {
+                    method: 'DELETE'
+                });
+
+                // If deletion from the database is successful, remove the card from the UI
+                card.remove();
+            } catch (error) {
+                console.error('Error deleting subscription:', error);
+            }
+        });
+    }
+
+    // Append the card to the subscription container
+    const subscribeContainer = document.getElementById("subscribeContainer");
+    subscribeContainer.appendChild(card);
+}
+
+// Fetch subscription data
+async function fetchSubscriptionData() {
+    try {
+        // Example: Send an HTTP request to your server to fetch subscription data
+        const response = await fetch('/subscriptions');
+        const data = await response.json();
+        console.log(data);
+        // Iterate over subscription data and handle each subscription
+        data.forEach(subscription => {
+            handleSubscriptionData(subscription);
+        });
+    } catch (error) {
+        console.error('Error fetching subscription data:', error);
+    }
+}
+
 
 
 async function handlePropertyData(property) {
@@ -1757,6 +1853,8 @@ document.addEventListener("DOMContentLoaded", function() {
     // For example, the handlePropertyData function call:
     fetchAllProperties();
 });
+
+
 
     //window.onload = fetchAllProperties;
 

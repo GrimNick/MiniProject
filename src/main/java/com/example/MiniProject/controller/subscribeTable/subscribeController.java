@@ -79,6 +79,11 @@ public class subscribeController
             return ResponseEntity.notFound().build();
         }
     }
+ @GetMapping("/subscriptions")
+ public ResponseEntity<List<subscribe>> getAllSubscriptions() {
+     List<subscribe> subscriptions = subscribeService.getAllSubscriptions();
+     return new ResponseEntity<>(subscriptions, HttpStatus.OK);
+ }
 
     @GetMapping("/subscribe")
     public List<subscribe> getAllSubscribeProperties() {

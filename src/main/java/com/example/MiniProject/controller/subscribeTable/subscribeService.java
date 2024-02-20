@@ -37,6 +37,11 @@ public class subscribeService {
         }
     }
 
+    public List<subscribe> getAllSubscriptions() {
+        return subscribeRepository.findAll();
+    }
+
+
     public SubscribeDTO getSubscribeDTOById(Long id) {
         // Use the LocationRepository to fetch the location entity by ID
         subscribe _subscribe = subscribeRepository.findById(id).orElse(null);
