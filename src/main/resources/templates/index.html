@@ -80,6 +80,20 @@
         }
 
 
+            .red-delete-button {
+                background-color: red;
+                color: white;
+                border: none;
+                padding: 5px 10px;
+                border-radius: 5px;
+                cursor: pointer;
+            }
+
+            .red-delete-button:hover {
+                background-color: darkred;
+            }
+
+
         button {
           background-color: #04AA6D;
           color: white;
@@ -374,6 +388,7 @@
             align-items: center;
         }
 
+
         .property-info span i {
             margin-right: 5px;
         }
@@ -611,6 +626,12 @@
 
     </div>
 </div>
+
+<div class="card">
+    <p>This is a card</p>
+    <button class="delete-button">Delete Card</button>
+</div>
+
 
 
 
@@ -1529,6 +1550,7 @@ function fetchUserDetails(userId) {
                 // Update the navbar with the user's name
                 document.getElementById("user-name").innerText = userDetails.name;
                 document.getElementById("role").innerText = userDetails.role.name;
+                localStorage.setItem('userRole', userDetails.role.name);
                 if(userDetails.role.id == 2 || userDetails.role.id == 3) {
                     document.getElementById("sell-btn").style.display = 'inline-block';
                 }else{
@@ -1569,6 +1591,11 @@ if (userId) {
 
 
 async function handlePropertyData(property) {
+    const userId = localStorage.getItem('userId') ? localStorage.getItem('userId'): 0;
+    if(userId!=0) fetchUserDetails(userId);
+    const userRole = localStorage.getItem('userRole') ? localStorage.getItem('userRole') : 0;
+
+
     // Log property ID for debugging
     console.log("Property ID:", property.id);
 
@@ -1594,14 +1621,52 @@ async function handlePropertyData(property) {
                 <span><i></i><p>${property.location.address}, ${property.location.country}</p></span>
                 <span><i></i><p>Ropani: ${property.area.ropani}, Aana: ${property.area.aana}, Paisa: ${property.area.paisa}, Daam: ${property.area.daam}</p></span>
             </div>
+
         </div>
     `;
 // JavaScript
+
+console.log("userrole is :"+userRole);
+if (userRole === "admin") {
+    // Add delete button div
+    const deleteButtonDiv = document.createElement("div");
+
+    deleteButtonDiv.innerHTML = '<button class="delete-button">Delete Card</button>';
+
+    // Append delete button div to card
+    card.appendChild(deleteButtonDiv);
+
+    // Get the delete button within this card
+    const deleteButton = deleteButtonDiv.querySelector('.delete-button');
+
+    // Add click event listener to the delete button
+            deleteButton.classList.add('red-delete-button');
+
+    deleteButton.addEventListener('click', async () => {
+        // Set a flag to disable card click event listener
+        card.dataset.disabled = true;
+
+        try {
+            // Example: Send an HTTP request to your server to delete the property
+            await fetch(`/properties/${property.id}`, {
+                method: 'DELETE'
+            });
+
+            // If deletion from the database is successful, remove the card from the UI
+            card.remove();
+        } catch (error) {
+            console.error('Error deleting property:', error);
+        }
+    });
+}
+
 const cards = document.querySelectorAll('.card-container');
 
 card.addEventListener("click", () => {
+    if (!event.currentTarget.dataset.disabled) {
         // Redirect to the details page with property ID
         window.location.href = `/property-details?id=${property.id}`;
+    }
     });
 
 
