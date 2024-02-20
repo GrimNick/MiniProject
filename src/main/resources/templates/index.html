@@ -305,8 +305,6 @@
 .card-container:hover {
     background-color: #f0f067;
 
-        perspective: 1000px; /* Perspective for 3D effect */
-    transform-style: preserve-3d; /* Preserve 3D transformations */
 
     transform: rotateY(45deg); /* Rotate along the Y-axis */
 }
@@ -345,10 +343,14 @@
     }
 }
     #propertyContainer{
+
         background-color: #ccc;
-        perspective: 1000px; /* Perspective for 3D effect */
     }
 
+    #subscribeContainer{
+    height: 800px;
+        overflow:auto;
+    }
 
     #backgroundOverlay{
         background-color: #ffffff;
@@ -367,6 +369,9 @@
         }
 
         /* Card info */
+        .card{
+        display:none;
+        }
         .card-info {
             flex: 1;
             padding: 15px;
@@ -440,6 +445,9 @@
   top: 7%;
   left: 50%;
   transform: translate(-50%, -50%);
+      height: 800px;
+        overflow:auto;
+
 }
 
 #signInForm{
@@ -661,11 +669,9 @@
 </div>
 
 <div class="card">
-    <p>This is a card</p>
     <button class="delete-button">Delete Card</button>
 </div>
-<div class="card">
-    <p>This is a card</p>
+<div class="card" >
     <button class="delete-subscribeButton">Delete Card</button>
 </div>
 
@@ -683,11 +689,16 @@
     }
 
 function showSubscribeList() {
+        if (userId != null) {
     var subscribeList = document.getElementById("subscribeList");
     subscribeList.style.display = "block";
     document.getElementById("backgroundOverlay").classList.add("blur");
     removePreviousSubscribeCards();
     fetchSubscriptionData();
+    }
+    else {
+        alert("Please log in first.");
+    }
 }
 
 
@@ -1853,6 +1864,7 @@ document.addEventListener("DOMContentLoaded", function() {
     // For example, the handlePropertyData function call:
     fetchAllProperties();
 });
+
 
 
 
