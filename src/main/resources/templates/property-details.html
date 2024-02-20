@@ -222,6 +222,33 @@
             text-align: left;
         }
 
+        .DetailsContainer-box {
+            border: 1px solid #ccc;
+            padding: 20px;
+            margin-top: 20px;
+            text-align: left;
+            width: 300px;
+
+        }
+        .DetailsContainer-box-main {
+            border: 1px solid #ccc;
+            display:flex;
+            gap:10px;
+            padding: 20px;
+            margin-top: 20px;
+            text-align: left;
+        }
+
+                .DetailsContainer {
+            width: 1000px;
+            padding: 89px;
+            background-color: #FFFC9B;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            z-index: 9999;
+        }
+
+
         .display-property-box{
             border: 1px solid #ccc;
             display:flex;
@@ -262,13 +289,17 @@
 
         /* Image container */
         .img-container {
-            width: 150px; /* Adjust width as needed */
+            width: 400px; /* Adjust width as needed */
         }
-    #imageContainer {
+#imageContainer {
         position: fixed;
         bottom: 0;
         right: 0;
-    }
+       width: 700; /* Adjust the width as needed, considering the boundary */
+    padding: 10px; /* Add padding to provide space between the content and boundary */
+    border: 1px solid #ccc; /* Optional: Add border for visual indication of the boundary */
+    background-color: #f1f1f1; /* Optional: Set background color for visual differentiation */
+}
 
         .img-container img {
             width: 100%;
@@ -309,6 +340,8 @@
         .property-info span p {
             margin: 0;
         }
+
+        #propertyDetails
 
 
     </style>
@@ -397,7 +430,7 @@
 
 <div id="map" style="height: 400px;"></div>
 
-<div id="propertyDetails">
+<div id="propertyDetails" class="DetailsContainer">
     <!-- Property details will be displayed here -->
 </div>
 
@@ -1113,7 +1146,7 @@ if (userId) {
             imageElement.src = `data:image/png;base64,${base64Content}`;
 
             // Set any additional attributes or styles as needed
-             imageElement.setAttribute('width', '300');
+             imageElement.setAttribute('width', '900');
              imageElement.setAttribute('height', '500');
 
             const imageContainer = document.getElementById('imageContainer');

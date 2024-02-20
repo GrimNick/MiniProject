@@ -178,8 +178,8 @@
 
 
         .container-box {
-            background-color: #08380d;
-            color: white; /* Set font color to white */
+            background-color: #ffffff;
+            color: black; /* Set font color to white */
             border: 1px solid #ccc;
             padding: 20px;
             margin-top: 20px;
@@ -332,18 +332,19 @@
 
 
     #backgroundOverlay{
-        background-color: #333;
+        background-color: #ffffff;
     }
 
 
         /* Image container */
         .img-container {
             width: 150px; /* Adjust width as needed */
+            height: 150px;
         }
 
         .img-container img {
             width: 100%;
-            height: auto;
+            height: 100%;
         }
 
         /* Card info */
@@ -1603,13 +1604,6 @@ card.addEventListener("click", () => {
         window.location.href = `/property-details?id=${property.id}`;
     });
 
-card.addEventListener('mouseenter', () => {
-        card.classList.add('enlarged');
-});
-
-card.addEventListener('mouseleave', () => {
-    card.classList.remove('enlarged');
-});
 
 
 
