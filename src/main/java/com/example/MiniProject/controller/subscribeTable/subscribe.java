@@ -60,7 +60,7 @@ public class subscribe {
         return price;
     }
 
-    public void setPrice(double aana) {
+    public void setPrice(double price) {
         this.price = price;
     }
 

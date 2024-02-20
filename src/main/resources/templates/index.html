@@ -94,6 +94,9 @@
             }
 
 
+        #subscribeList.display-property-box {
+            display: none;
+            }
         button {
           background-color: #04AA6D;
           color: white;
@@ -528,15 +531,25 @@
     </div>
 </div>
 
+<div id="subscribeList" class="container">
+    <div>
+
+    </div>
+    <div class="clearfix">
+        <button type="button" class="cancelbtn" onclick="hideSubscribeList()">Cancel</button>
+    </div>
+</div>
+
+
 <div id="subscribeForm" class="container">
     <h2>Subscribe for future news</h2>
 
-    <div class="radio-group">
-        <input type="radio" id="subscribeLand" name="propertyType" value="land">
+    <div class="subscribeRadio-group">
+        <input type="radio" id="subscribeLand" name="subscribePropertyType" value="land">
         <label for="land">Land</label>
-        <input type="radio" id="subscribeRoles" name="propertyType" value="roles">
+        <input type="radio" id="subscribeRoles" name="subscribePropertyType" value="roles">
         <label for="roles">House</label>
-        <input type="radio" id="subscribeBoth" name="propertyType" value="both">
+        <input type="radio" id="subscribeBoth" name="subscribePropertyType" value="both">
         <label for="both">Both</label>
     </div>
     <label for="subscribeLocation"><b>Advanced Location</b></label>
@@ -583,6 +596,10 @@
         </div>
         <div class="dropdown-inputForSort">
         <button id="deleteSubscribe-btn" onclick="deleteSubscribePage()">Delete all Subscribe </button>
+            </div>
+
+        <div class="dropdown-inputForSort">
+        <button id="showSubscribeList-btn" onclick="showSubscribeList()">Subscribe List </button>
         </div>
     </div>
     <div class="container-box-main">
@@ -647,10 +664,22 @@
 
     }
 
+    function showSubscribeList(){
+        var subscribeList = document.getElementById("subscribeList");
+        subscribeList.style.display = "block";
+        document.getElementById("backgroundOverlay").classList.add("blur");
+    }
+
     // Function to cancel and hide the signup form
     function hideSignUpForm() {
         var signUpForm = document.getElementById("signUpForm");
         signUpForm.style.display = "none";
+        document.getElementById("backgroundOverlay").classList.remove("blur"); // Remove 'blur' class from background overlay
+    }
+
+    function hideSubscribeList() {
+        var subscribeList = document.getElementById("subscribeList");
+        subscribeList.style.display = "none";
         document.getElementById("backgroundOverlay").classList.remove("blur"); // Remove 'blur' class from background overlay
     }
 
@@ -918,18 +947,27 @@ function deleteSubscribePage() {
         // Retrieve desired location and budget
             var locationInput = document.getElementById("subscribeLocation");
             var budgetInput = document.getElementById("subscribeBudget");
-            var propertyTypeInput = document.querySelector('input[name="propertyType"]:checked');
+            const radioGroup = document.querySelector('.subscribeRadio-group');
+
+            const checkedRadioButton = radioGroup.querySelector('input[type="radio"]:checked');
+            var propertyTypeInput,propertyType;
+            // Get the value of the checked radio button
+            if (checkedRadioButton) {
+                const selectedValue = checkedRadioButton.value;
+                console.log('Selected value:', selectedValue);
+                propertyTypeInput = selectedValue;
+            } else {
+                console.log('No radio button selected.');
+            }
 
             var location = locationInput ? locationInput.value.trim() : null;
             var budget = budgetInput || budgetInput!=0 ? budgetInput.value.trim() : null;
-        var propertyType;
-        if(propertyTypeInput==land) propertyType=1;
-        if(propertyTypeInput==roles) propertyType=2;
-        if(propertyTypeInput==both) propertyType=3;
+        if(propertyTypeInput=="land") propertyType=1;
+        else if(propertyTypeInput=="roles") propertyType=2;
+        else propertyType=3;
         // Display the retrieved information (you can do whatever you want with this information)
         console.log("Desired location:", location);
         console.log("Budget:", budget);
-        console.log("Property type:", propertyType);
 
                 var data = {
                 location: location,
@@ -1616,11 +1654,11 @@ async function handlePropertyData(property) {
     // Populate the card content with property data
     card.innerHTML += `
         <div class="card-info">
-            <h5>${property.title}</h5>
-            <p>${property.description}</p>
+            <h5>Title :${property.title}</h5>
+            <p>Description :${property.description}</p>
             <div class="property-info">
-                <span><i></i><p>${property.price}</p></span>
-                <span><i></i><p>${property.location.address}, ${property.location.country}</p></span>
+                <span><i></i><p>Price :${property.price}</p></span>
+                <span><i></i><p>Address:${property.location.address},Country: ${property.location.country}</p></span>
                 <span><i></i><p>Ropani: ${property.area.ropani}, Aana: ${property.area.aana}, Paisa: ${property.area.paisa}, Daam: ${property.area.daam}</p></span>
             </div>
 
