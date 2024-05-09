@@ -2,6 +2,7 @@ package com.example.MiniProject;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+//ahg
 @SpringBootApplication
 public class MiniProjectApplication {
 
