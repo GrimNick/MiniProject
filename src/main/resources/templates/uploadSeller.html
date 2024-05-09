@@ -439,7 +439,7 @@
                 <br>
                 <label for="property-type">Type:</label>
                 <select id="property-type" name="property-type" required>
-                    <option value="0" disabled selected>Select your role</option>
+                    <option value="0" disabled selected>Select type of property</option>
                     <option value="1">House</option>
                     <option value="2">Land</option>
                 </select>
@@ -866,10 +866,43 @@ fetch('/subscribe', {
 data = data.filter(property => {
     const propertyLocation = property.location.toLowerCase();
     const inputAddress = address.toLowerCase();
+    const propertyPrice = parseInt(property.price);
+    const inputPrice = budget;
+    const propertyType = property.type;
+    const inputType =parseInt(type);
+
     console.log('Property Location:', propertyLocation);
     console.log('Input Address:', inputAddress);
-    return inputAddress.includes(propertyLocation);
+    console.log('propertyPrice:', propertyPrice);
+    console.log('inputPrice:', inputPrice);
+    console.log('propertyType:', propertyType);
+    console.log('inputType:', inputType);
+
+
+    console.log(inputAddress.includes(propertyLocation));
+    console.log(inputPrice < propertyPrice);
+    console.log(propertyType == inputType);
+    var locationMatch;
+    if(propertyLocation!==0 && propertyLocation!==null){
+         locationMatch = inputAddress.includes(propertyLocation);
+    }
+    else {locationMatch = true;}
+
+    var priceMatch;
+    if(propertyPrice!==0 && propertyPrice!==null){
+         priceMatch = inputPrice < propertyPrice;
+    }
+    else {priceMatch = true;}
+    var typeMatch;
+    if(propertyType!=0 && propertyType!=null && propertyType!=3){
+         typeMatch = propertyType == inputType;
+    }
+    else {typeMatch = true;}
+
+        return locationMatch && priceMatch && typeMatch;
+
 });
+
     propertyIds = data.map(property => property.id);
 
     console.log(data); // Log subscribeIds
