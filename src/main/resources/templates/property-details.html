@@ -20,7 +20,7 @@
 
         input[type=text], input[type=password] {
           width: 100%;
-          padding: 15px;
+          padding: 45px;
           margin: 5px 0 22px 0;
           display: inline-block;
           border: none;
@@ -34,9 +34,10 @@
 
         input[type=number] {
            width: 100%;
-            padding: 15px;
+            padding: 45px;
              margin: 5px 0 22px 0;
             display: inline-block;
+
             border: none;
             background: #f1f1f1;
         }
@@ -81,8 +82,8 @@
          .signin-btn,
          #signout-btn,
          #sell-btn,
-         #home-btn{
-       background-color: #04AA6D;
+         .home-btn{
+          background-color: #04AA6D;
           color: white;
           padding: 14px 20px;
           margin: 8px 0;
@@ -173,7 +174,7 @@
           display: table;
         }
 
-        @media screen and (max-width: 300px) {
+        @media screen and (max-width: 300px){
           .cancelbtn, .signupbtn {
             width: 100%;
           }
@@ -209,7 +210,11 @@
             padding: 20px;
             margin-top: 20px;
             text-align: left;
+
             width: 300px;
+            position: fixed;
+            bottom: 0;
+
 
         }
         .container-box-main {
@@ -220,6 +225,7 @@
             padding: 20px;
             margin-top: 20px;
             text-align: left;
+
         }
 
         .DetailsContainer-box {
@@ -229,6 +235,7 @@
             text-align: left;
             width: 300px;
 
+
         }
         .DetailsContainer-box-main {
             border: 1px solid #ccc;
@@ -237,15 +244,27 @@
             padding: 20px;
             margin-top: 20px;
             text-align: left;
+
         }
 
                 .DetailsContainer {
-            width: 1000px;
-            padding: 89px;
+
+            max-width: 600px;
+            margin: 20px auto;
+            padding: 30px;
             background-color: #FFFC9B;
             border-radius: 10px;
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-            z-index: 9999;
+            /* z-index: 9999; */
+            float: left;
+        }
+        @media (max-width: 768px)
+        {
+           .DetailsContainer
+          {
+            max-width: 100%;
+            margin: 20px 10px;
+          }
         }
 
 
@@ -260,7 +279,7 @@
             width:100%;
         }
 
-        .container {
+       .container {
             text-align: left;
         }
 
@@ -285,31 +304,31 @@
     border: 1px solid #ccc;
     border-radius: 8px;
     overflow: hidden;
+ }
+   #imageContainer{
+   position: fixed;
+   bottom: 20px;
+   right: 20px;
+   width: 300px;
+   height: 200px;
+   border-radius: 8px;
+   box-shadow: 0 0 10px rgba(0, 0, 0.1);
+
+ }
+
+.img-container img{
+width: 50%;
+height: auto;
+position: fixed;
+bottom: 0;
+right: 0;
 }
 
-        /* Image container */
-        .img-container {
-            width: 700px; /* Adjust width as needed */
-        }
-#imageContainer {
-        position: fixed;
-        bottom: 0;
-        right: 0;
-       width: 700px; /* Adjust the width as needed, considering the boundary */
-    padding: 10px; /* Add padding to provide space between the content and boundary */
-    border: 1px solid #ccc; /* Optional: Add border for visual indication of the boundary */
-    background-color: #f1f1f1; /* Optional: Set background color for visual differentiation */
-}
-
-        .img-container img {
-            width: 100%;
-            height: auto;
-        }
 
         /* Card info */
         .card-info {
             flex: 1;
-            padding: 15px;
+            padding: 30px;
         }
 
         .card-info h5 {
