@@ -1358,6 +1358,7 @@ function fetchAllProperties() {
         .then(data => {
             // Extract property IDs and area IDs from fetched data
             let propertyIds = data.map(property => property.id);
+
             console.log('Original data:', data);
             // Check if budget is not null
 

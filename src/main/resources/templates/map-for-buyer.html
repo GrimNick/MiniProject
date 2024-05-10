@@ -438,9 +438,35 @@
         attribution: '© OpenStreetMap contributors'
     }).addTo(map);
 
-// Function to fetch property details by ID
-function fetchPropertyDetails(id) {
 
+    function fetchAllProperties() {
+        console.log("running");
+        const url = 'http://localhost:8080/properties';
+
+        fetch(url)
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                return response.json();
+            })
+            .then(data => {
+                // Extract property IDs and area IDs from fetched data
+                let propertyIds = data.map(property => property.id);
+
+                console.log("idsss:::",propertyIds);
+
+                for(let i=0; i<propertyIds.length; i++)
+                {
+                    fetchPropertyDetails(propertyIds[i]);
+                }
+
+            })
+
+    }
+
+    // Function to fetch property details by ID
+function fetchPropertyDetails(id) {
     fetch(`/property-details/${id}`)
         .then(response => {
             if (!response.ok) {
@@ -450,37 +476,27 @@ function fetchPropertyDetails(id) {
         })
         .then(property => {
             // Update HTML content with property details and associated entities
-                                var coordinates = [property.coordinate.latitude, property.coordinate.longitude];
-                updateMarker(coordinates);
-                map.panTo(coordinates);
-                console.log(property.coordinate.latitude,property.coordinate.longitude);
+                var coordinates = [property.coordinate.latitude, property.coordinate.longitude];
 
-            document.getElementById('propertyDetails').innerHTML = `
+                for(let i=0; i<coordinates.length; i++)
+                {
+                    let x=0;
+                    let y=1;
+                    console.log("aayo??:::",coordinates[i]);
+                    var marker = L.marker([coordinates[x], coordinates[y]]).addTo(map);
+                    x +=2;
+                    y+=2;
+                }
 
-                <h2>${property.title}</h2>
-                <p>Description: ${property.description}</p>
-                <p>Price: ${property.price}</p>
-                <p>Seller details:</p>
-                <p>User: ${property.user.name}</p>
-                <p>Email: ${property.user.email}</p>
-                <p>Phone number: ${property.user.phone}</p>
-                <p>Location: ${property.location.address}, ${property.location.country}</p>
-                <p>Coordinate: Latitude - ${property.coordinate.latitude}, Longitude - ${property.coordinate.longitude}</p>
-                <p>Area: Ropani - ${property.area.ropani}, Aana - ${property.area.aana}, Paisa - ${property.area.paisa}, Daam - ${property.area.daam}</p>
 
-                <!-- Add more details as needed -->
-            `;
-            getImageById(property.id);
         })
         .catch(error => {
             console.error('Error fetching property details:', error);
         });
 }
 
-    function updateMarker(coordinates) {
-        var marker = L.marker(coordinates).addTo(map);
-        marker.bindPopup("Property Location");
-    }
+
+
 
 
 // Function to extract query parameter from URL
@@ -1124,44 +1140,9 @@ if (userId) {
 
 }
 
-    function getImageById(id) {
-
-            fetch(`http://localhost:8080/property-details/${id}`, {
-                method: 'GET',
-                headers: {
-                    'Content-Type': 'application/json'
-                }
-            })
-            .then(response => response.json())
-            .then(data => {
-                const base64Content = data.image;
-
-                displayImage(base64Content);
-            })
-            .catch(error => {
-                console.error('Error:', error);
-                // Handle errors
-            });
-        }
-
-        function displayImage(base64Content) {
-            const imageElement = document.createElement('img');
-            imageElement.src = `data:image/png;base64,${base64Content}`;
-
-            // Set any additional attributes or styles as needed
-             imageElement.setAttribute('width', '900');
-             imageElement.setAttribute('height', '500');
-
-            const imageContainer = document.getElementById('imageContainer');
-            imageContainer.innerHTML = '';
-            imageContainer.appendChild(imageElement);
-        }
-
 
 // Fetch the property ID from the URL
-var propertyId = getUrlParameter('id');
-window.onload = fetchPropertyDetails(propertyId);
-
+fetchAllProperties();
 
 </script>
 </body>
