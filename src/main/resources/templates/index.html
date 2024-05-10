@@ -54,7 +54,7 @@
 
         select {
             width: 100%;
-            padding: 15px;
+            padding: 10px;
             margin: 5px 0 22px 0;
             display: inline-block;
             border: none;
@@ -97,11 +97,13 @@
         #subscribeList.display-property-box {
             display: none;
             }
+
         button {
           background-color: #04AA6D;
+          font-size:15px;
           color: white;
-          padding: 14px 20px;
-          margin: 8px 0;
+          padding: 15px 20px;
+          margin: auto;
           border: 1px solid #ccc;
           cursor: pointer;
           width: 100%;
@@ -110,6 +112,8 @@
 
         button:hover {
           opacity: 1;
+          background:#0b1977;
+          transition:.5s;
         }
 
         .cancelbtn {
@@ -124,20 +128,41 @@
 
 
         .container {
+            color: #fff;
             display: none; /* Initially hide the container */
             position: fixed; /* Position the container relative to the viewport */
             top: 50%; /* Center vertically */
             left: 50%; /* Center horizontally */
             transform: translate(-50%, -50%); /* Center the container */
-            width: 500px;
+            width: 300px;
             padding: 20px;
-            background-color: #FFFC9B;
+            background-color: #04AA6D;
             border-radius: 10px;
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
             z-index: 9999;
             filter:blur(0px);
-            height:200px;
+
         }
+
+        input[type=text],
+        input[type=password],
+        input[type=tel]{
+             width: 100%;
+             padding: 8px;
+            margin-top: 5px;
+            margin-bottom: 10px;
+            box-sizing: border-box;
+
+    }
+
+     h2{
+        text-align:center;
+        }
+
+        p{
+        font-size:12px;
+        }
+
         .blur {
             filter: blur(5px); /* Apply blur effect */
             pointer-events: none; /* Disable pointer events */
@@ -202,7 +227,7 @@
             padding: 20px;
             margin-top: 20px;
             text-align: left;
-            width: 300px;
+            width: 500px;
 
         }
         .container-box-main {
@@ -441,14 +466,15 @@
 
 /* Apply the animation to the specified elements */
 #signUpForm {
+    background:#04AA6D;
   animation: fadeInFromTopToCenter 0.5s ease-in-out forwards;
   position: fixed;
-  top: 7%;
-  left: 50%;
+  top: 17%;
+  left: 40%;
   transform: translate(-50%, -50%);
-      height: 500px;
-        overflow:auto;
-
+  height: 625px;
+  overflow:auto;
+    width:500px;
 }
 
 #signInForm{
@@ -486,11 +512,12 @@
         <button id="signout-btn" onclick="Signout()">Sign Out</button>
         <button id="sell-btn" onclick="sellPage()">Want to Sell?</button>
         <button id="home-btn" onclick="homePage()">Home Page</button>
+        <a href="###"><button id="map">Map</button></a>
     </div>
 </div>
 
 <div id="signUpForm" class="container">
-    <h2>Sign Up</h2>
+    <h2 text-align="center">Sign Up</h2>
 
     <label for="email"><b>Email</b></label>
     <input type="text" placeholder="Enter Email" name="email" id="email" required>
@@ -499,8 +526,9 @@
     <input type="text" placeholder="Enter Name" name="email" id="name" required>
 
     <label for="phone"><b>Phone</b></label>
-    <input type="number" placeholder="Enter Phone Number" name="phone" id="phone" required>
-    <b></b>
+    <input type="tel" placeholder="Enter Phone Number" name="phone" id="phone" required>
+    <br>
+
     <label for="role_id"><b>Select a Role</b></label>
     <select name="role_id" id="role_id" onchange="checkRole()" required>
         <option value="0" disabled selected>Select your role</option>
@@ -527,7 +555,7 @@
     <input type="password" placeholder="Repeat Password" name="psw-repeat" id="psw-repeat" required>
 
 
-    <p>By creating an account you agree to our Terms & Privacy</a>.</p>
+    <p><u>By creating an account you agree to our <b>Terms & Privacy</b></u>.</p>
 
     <div class="clearfix">
         <button type="button" class="cancelbtn" onclick="hideSignUpForm()">Cancel</button>
