@@ -12,10 +12,12 @@
             margin: 0;
             padding: 0;
 
+
         }
 
         * {
           box-sizing: border-box;
+
         }
 
         input[type=text], input[type=password] {
@@ -47,7 +49,7 @@
              outline: none;
         }
 
-        select {
+         select {
             width: 100%;
             padding: 15px;
             margin: 5px 0 22px 0;
@@ -142,6 +144,7 @@
 
 
         .container {
+           color: #fff;
             display: none; /* Initially hide the container */
             position: fixed; /* Position the container relative to the viewport */
             top: 50%; /* Center vertically */
@@ -149,11 +152,29 @@
             transform: translate(-50%, -50%); /* Center the container */
             width: 300px;
             padding: 20px;
-            background-color: #FFFC9B;
+            background-color: #04AA6D;
             border-radius: 10px;
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
             z-index: 9999;
             filter:blur(0px);
+        }
+         input[type=text],
+        input[type=password],
+        input[type=tel]{
+             width: 100%;
+             padding: 8px;
+            margin-top: 5px;
+            margin-bottom: 10px;
+            box-sizing: border-box;
+
+    }
+     h2{
+        text-align:left;
+        bold: 9px;
+        }
+
+        p{
+        font-size: 16px;
         }
         .blur {
             filter: blur(5px); /* Apply blur effect */
@@ -163,7 +184,7 @@
         }
 
 
-        hr {
+         hr {
           border: 1px solid #f1f1f1;
           margin-bottom: 25px;
         }
@@ -206,14 +227,14 @@
 
 
         .container-box {
+
+            background-color: #ffffff;
+            color: black; /* Set font color to white */
             border: 1px solid #ccc;
             padding: 20px;
             margin-top: 20px;
             text-align: left;
-
-            width: 300px;
-            position: fixed;
-            bottom: 0;
+            width: 500px;
 
 
         }
@@ -247,25 +268,8 @@
 
         }
 
-                .DetailsContainer {
 
-            max-width: 600px;
-            margin: 20px auto;
-            padding: 30px;
-            background-color: #FFFC9B;
-            border-radius: 10px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-            /* z-index: 9999; */
-            float: left;
-        }
-        @media (max-width: 768px)
-        {
-           .DetailsContainer
-          {
-            max-width: 100%;
-            margin: 20px 10px;
-          }
-        }
+
 
 
         .display-property-box{
@@ -305,24 +309,10 @@
     border-radius: 8px;
     overflow: hidden;
  }
-   #imageContainer{
-   position: fixed;
-   bottom: 20px;
-   right: 20px;
-   width: 300px;
-   height: 200px;
-   border-radius: 8px;
-   box-shadow: 0 0 10px rgba(0, 0, 0.1);
 
- }
 
-.img-container img{
-width: 50%;
-height: auto;
-position: fixed;
-bottom: 0;
-right: 0;
-}
+
+
 
 
         /* Card info */
@@ -360,7 +350,52 @@ right: 0;
             margin: 0;
         }
 
-        #propertyDetails
+
+
+/* Styling for map */
+#map {
+    background-color: #E6E6E6;
+    border: 2px solid #CCCCCC;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    height: 400px;
+    max-width: 100%
+    position: absolute;
+
+}
+/* Styling for imageContainer */
+#imageContainer {
+    background-color: #DDDDDD;
+    border: 2px solid #A0AEC0;
+    padding: 20px;
+    border-radius: 8px; /* Rounded corners */
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); /* Drop shadow */
+    max-width: 100%;
+
+
+}
+
+
+/* Styling for propertyDetails and DetailsContainer */
+#propertyDetails, .DetailsContainer {
+    background-color: #11111;
+    border: 2px solid #D3D3D3;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+        @media only screen and (max-width: 600px) {
+    /* Adjust padding for smaller screens */
+    #imageContainer, #map, #propertyDetails, .DetailsContainer {
+        padding: 10px;
+    }
+}
+
+
+
+
+
 
 
     </style>
@@ -447,7 +482,7 @@ right: 0;
 
 <div id="imageContainer"></div>
 
-<div id="map" style="height: 400px;"></div>
+<div id="map" ></div>
 
 <div id="propertyDetails" class="DetailsContainer">
     <!-- Property details will be displayed here -->
