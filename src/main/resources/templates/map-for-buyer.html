@@ -200,7 +200,7 @@
             color: white;
             padding: 10px 20px;
             text-decoration: none;
-            border-radius: 5px
+            border-radius: 5px;
             cursor: pointer;
         }
 
@@ -365,7 +365,7 @@
         <button id="signout-btn" onclick="Signout()">Sign Out</button>
         <button id="sell-btn" onclick="sellPage()">Want to Sell?</button>
         <button id="home-btn" onclick="homePage()">Home Page</button>
-        <button id="ok-button" onclick="userChose()">OK</button>>
+        <button id="ok-button" onclick="userChose()">OK</button>
 
     </div>
 </div>
@@ -430,7 +430,6 @@
     </div>
 </div>
 
-<div id="imageContainer"></div>
 
 <div id="map" style="height: 625px; overflow:hidden;"></div>
 
@@ -443,32 +442,7 @@
         attribution: '© OpenStreetMap contributors'
     }).addTo(map);
 
-
-    function fetchAllProperties() {
-        const url = 'http://localhost:8080/properties';
-
-        fetch(url)
-            .then(response => {
-                if (!response.ok) {
-                    throw new Error('Network response was not ok');
-                }
-                return response.json();
-            })
-            .then(data => {
-                // Extract property IDs and area IDs from fetched data
-                propertyIds = data.map(property => property.id);
-
-                console.log("idsss:::",propertyIds);
-
-                for(let i=0; i<propertyIds.length; i++)
-                {
-<!--                    fetchPropertyDetails(propertyIds[i]);-->
-                }
-
-            })
-    }
-
-    var geocoder = L.Control.Geocoder.nominatim();
+var geocoder = L.Control.Geocoder.nominatim();
     var coordinates;
     var control = L.Control.geocoder({
         geocoder: geocoder,
@@ -500,6 +474,32 @@
 
         document.getElementById('coordinates-box').textContent = "Coordinates: " + coordinates.lat.toFixed(4) + "° N, " + coordinates.lng.toFixed(4) + "° E";
     }
+
+
+    function fetchAllProperties() {
+        const url = 'http://localhost:8080/properties';
+
+        fetch(url)
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                return response.json();
+            })
+            .then(data => {
+                // Extract property IDs and area IDs from fetched data
+                propertyIds = data.map(property => property.id);
+
+                console.log("idsss:::",propertyIds);
+
+                for(let i=0; i<propertyIds.length; i++)
+                {
+<!--                    fetchPropertyDetails(propertyIds[i]);-->
+                }
+
+            })
+    }
+
 
 var coordinatesArr=[];
     var tempCoordinates;
