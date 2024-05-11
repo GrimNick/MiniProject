@@ -12,17 +12,15 @@
             margin: 0;
             padding: 0;
 
-
         }
 
         * {
           box-sizing: border-box;
-
         }
 
         input[type=text], input[type=password] {
           width: 100%;
-          padding: 45px;
+          padding: 15px;
           margin: 5px 0 22px 0;
           display: inline-block;
           border: none;
@@ -36,10 +34,9 @@
 
         input[type=number] {
            width: 100%;
-            padding: 45px;
+            padding: 15px;
              margin: 5px 0 22px 0;
             display: inline-block;
-
             border: none;
             background: #f1f1f1;
         }
@@ -49,7 +46,7 @@
              outline: none;
         }
 
-         select {
+        select {
             width: 100%;
             padding: 15px;
             margin: 5px 0 22px 0;
@@ -84,8 +81,8 @@
          .signin-btn,
          #signout-btn,
          #sell-btn,
-         .home-btn{
-          background-color: #04AA6D;
+         #home-btn{
+       background-color: #04AA6D;
           color: white;
           padding: 14px 20px;
           margin: 8px 0;
@@ -144,7 +141,6 @@
 
 
         .container {
-           color: #fff;
             display: none; /* Initially hide the container */
             position: fixed; /* Position the container relative to the viewport */
             top: 50%; /* Center vertically */
@@ -152,29 +148,11 @@
             transform: translate(-50%, -50%); /* Center the container */
             width: 300px;
             padding: 20px;
-            background-color: #04AA6D;
+            background-color: #FFFC9B;
             border-radius: 10px;
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
             z-index: 9999;
             filter:blur(0px);
-        }
-         input[type=text],
-        input[type=password],
-        input[type=tel]{
-             width: 100%;
-             padding: 8px;
-            margin-top: 5px;
-            margin-bottom: 10px;
-            box-sizing: border-box;
-
-    }
-     h2{
-        text-align:left;
-        bold: 9px;
-        }
-
-        p{
-        font-size: 16px;
         }
         .blur {
             filter: blur(5px); /* Apply blur effect */
@@ -184,7 +162,7 @@
         }
 
 
-         hr {
+        hr {
           border: 1px solid #f1f1f1;
           margin-bottom: 25px;
         }
@@ -195,7 +173,7 @@
           display: table;
         }
 
-        @media screen and (max-width: 300px){
+        @media screen and (max-width: 300px) {
           .cancelbtn, .signupbtn {
             width: 100%;
           }
@@ -221,21 +199,17 @@
             color: white;
             padding: 10px 20px;
             text-decoration: none;
-            border-radius: 5px;
+            border-radius: 5px
             cursor: pointer;
         }
 
 
         .container-box {
-
-            background-color: #ffffff;
-            color: black; /* Set font color to white */
             border: 1px solid #ccc;
             padding: 20px;
             margin-top: 20px;
             text-align: left;
-            width: 500px;
-
+            width: 300px;
 
         }
         .container-box-main {
@@ -246,7 +220,6 @@
             padding: 20px;
             margin-top: 20px;
             text-align: left;
-
         }
 
         .DetailsContainer-box {
@@ -256,7 +229,6 @@
             text-align: left;
             width: 300px;
 
-
         }
         .DetailsContainer-box-main {
             border: 1px solid #ccc;
@@ -265,11 +237,16 @@
             padding: 20px;
             margin-top: 20px;
             text-align: left;
-
         }
 
-
-
+                .DetailsContainer {
+            width: 1000px;
+            padding: 89px;
+            background-color: #FFFC9B;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            z-index: 9999;
+        }
 
 
         .display-property-box{
@@ -283,7 +260,7 @@
             width:100%;
         }
 
-       .container {
+        .container {
             text-align: left;
         }
 
@@ -308,17 +285,31 @@
     border: 1px solid #ccc;
     border-radius: 8px;
     overflow: hidden;
- }
+}
 
+        /* Image container */
+        .img-container {
+            width: 700px; /* Adjust width as needed */
+        }
+#imageContainer {
+        position: fixed;
+        bottom: 0;
+        right: 0;
+       width: 700px; /* Adjust the width as needed, considering the boundary */
+    padding: 10px; /* Add padding to provide space between the content and boundary */
+    border: 1px solid #ccc; /* Optional: Add border for visual indication of the boundary */
+    background-color: #f1f1f1; /* Optional: Set background color for visual differentiation */
+}
 
-
-
-
+        .img-container img {
+            width: 100%;
+            height: auto;
+        }
 
         /* Card info */
         .card-info {
             flex: 1;
-            padding: 30px;
+            padding: 15px;
         }
 
         .card-info h5 {
@@ -350,52 +341,9 @@
             margin: 0;
         }
 
+        #propertyDetails{
 
-
-/* Styling for map */
-#map {
-    background-color: #E6E6E6;
-    border: 2px solid #CCCCCC;
-    padding: 20px;
-    border-radius: 8px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-    height: 400px;
-    max-width: 100%
-    position: absolute;
-
-}
-/* Styling for imageContainer */
-#imageContainer {
-
-    background-color: #E3DDD3;
-    border: 2px solid #A0AEC0;
-    padding: 20px;
-    border-radius: 8px; /* Rounded corners */
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); /* Drop shadow */
-    width:100px;
-    height
-}
-
-
-/* Styling for propertyDetails and DetailsContainer */
-#propertyDetails, .DetailsContainer {
-    background-color: #E3DDD3;
-    border: 2px solid #D3D3D3;
-    padding: 20px;
-    border-radius: 8px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-}
-        @media only screen and (max-width: 600px) {
-    /* Adjust padding for smaller screens */
-    #imageContainer, #map, #propertyDetails, .DetailsContainer {
-        padding: 10px;
-    }
-}
-
-
-
-
-
+        }
 
 
     </style>
@@ -480,15 +428,9 @@
     </div>
 </div>
 
-<div id="imageContainer" >
+<div id="imageContainer"></div>
 
-</div>
-
-<div id="map" ></div>
-
-<div id="propertyDetails" class="DetailsContainer">
-    <!-- Property details will be displayed here -->
-</div>
+<div id="map" style="height: 625px; overflow:hidden;"></div>
 
 <script>
     var map = L.map('map').setView([28.3949, 84.1240], 18);
@@ -496,7 +438,34 @@
         attribution: '© OpenStreetMap contributors'
     }).addTo(map);
 
-// Function to fetch property details by ID
+
+    function fetchAllProperties() {
+        console.log("running");
+        const url = 'http://localhost:8080/properties';
+
+        fetch(url)
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                return response.json();
+            })
+            .then(data => {
+                // Extract property IDs and area IDs from fetched data
+                let propertyIds = data.map(property => property.id);
+
+                console.log("idsss:::",propertyIds);
+
+                for(let i=0; i<propertyIds.length; i++)
+                {
+                    fetchPropertyDetails(propertyIds[i]);
+                }
+
+            })
+
+    }
+
+    // Function to fetch property details by ID
 function fetchPropertyDetails(id) {
     fetch(`/property-details/${id}`)
         .then(response => {
@@ -507,36 +476,27 @@ function fetchPropertyDetails(id) {
         })
         .then(property => {
             // Update HTML content with property details and associated entities
-                                var coordinates = [property.coordinate.latitude, property.coordinate.longitude];
-                updateMarker(coordinates);
-                map.panTo(coordinates);
+                var coordinates = [property.coordinate.latitude, property.coordinate.longitude];
 
-            document.getElementById('propertyDetails').innerHTML = `
+                for(let i=0; i<coordinates.length; i++)
+                {
+                    let x=0;
+                    let y=1;
+                    console.log("aayo??:::",coordinates[i]);
+                    var marker = L.marker([coordinates[x], coordinates[y]]).addTo(map);
+                    x +=2;
+                    y+=2;
+                }
 
-                <h2>${property.title}</h2>
-                <p>Description: ${property.description}</p>
-                <p>Price: ${property.price}</p>
-                <p>Seller details:</p>
-                <p>User: ${property.user.name}</p>
-                <p>Email: ${property.user.email}</p>
-                <p>Phone number: ${property.user.phone}</p>
-                <p>Location: ${property.location.address}, ${property.location.country}</p>
-                <p>Coordinate: Latitude - ${property.coordinate.latitude}, Longitude - ${property.coordinate.longitude}</p>
-                <p>Area: Ropani - ${property.area.ropani}, Aana - ${property.area.aana}, Paisa - ${property.area.paisa}, Daam - ${property.area.daam}</p>
 
-                <!-- Add more details as needed -->
-            `;
-            getImageById(property.id);
         })
         .catch(error => {
             console.error('Error fetching property details:', error);
         });
 }
 
-    function updateMarker(coordinates) {
-        var marker = L.marker(coordinates).addTo(map);
-        marker.bindPopup("Property Location");
-    }
+
+
 
 
 // Function to extract query parameter from URL
@@ -1180,44 +1140,9 @@ if (userId) {
 
 }
 
-    function getImageById(id) {
-
-            fetch(`http://localhost:8080/property-details/${id}`, {
-                method: 'GET',
-                headers: {
-                    'Content-Type': 'application/json'
-                }
-            })
-            .then(response => response.json())
-            .then(data => {
-                const base64Content = data.image;
-
-                displayImage(base64Content);
-            })
-            .catch(error => {
-                console.error('Error:', error);
-                // Handle errors
-            });
-        }
-
-        function displayImage(base64Content) {
-            const imageElement = document.createElement('img');
-            imageElement.src = `data:image/png;base64,${base64Content}`;
-
-            // Set any additional attributes or styles as needed
-             imageElement.setAttribute('width', '250');
-             imageElement.setAttribute('height', '250');
-
-            const imageContainer = document.getElementById('imageContainer');
-            imageContainer.innerHTML = '';
-            imageContainer.appendChild(imageElement);
-        }
-
 
 // Fetch the property ID from the URL
-var propertyId = getUrlParameter('id');
-window.onload = fetchPropertyDetails(propertyId);
-
+fetchAllProperties();
 
 </script>
 </body>

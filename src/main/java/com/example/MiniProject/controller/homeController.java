@@ -37,6 +37,11 @@ public class homeController {
         return "map-for-buyer"; // Return the name of your signup.html file
     }
 
+    @GetMapping("/urusha-map-for-buyer")
+    public String mapForUrushaBuyer() {
+        return "urusha-map-for-buyer"; // Return the name of your signup.html file
+    }
+
 
 
 //    @PostMapping("/submit")
