@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
     <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+    <script src="https://unpkg.com/leaflet-control-geocoder/dist/Control.Geocoder.js"></script>
 
     <style>
         body {
@@ -364,6 +365,7 @@
         <button id="signout-btn" onclick="Signout()">Sign Out</button>
         <button id="sell-btn" onclick="sellPage()">Want to Sell?</button>
         <button id="home-btn" onclick="homePage()">Home Page</button>
+        <button id="ok-button" onclick="userChose()">OK</button>>
 
     </div>
 </div>
@@ -434,13 +436,15 @@
 
 <script>
     var map = L.map('map').setView([28.3949, 84.1240], 18);
+    var marker;
+    var propertyIds;
+
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
         attribution: '© OpenStreetMap contributors'
     }).addTo(map);
 
 
     function fetchAllProperties() {
-        console.log("running");
         const url = 'http://localhost:8080/properties';
 
         fetch(url)
@@ -452,19 +456,52 @@
             })
             .then(data => {
                 // Extract property IDs and area IDs from fetched data
-                let propertyIds = data.map(property => property.id);
+                propertyIds = data.map(property => property.id);
 
                 console.log("idsss:::",propertyIds);
 
                 for(let i=0; i<propertyIds.length; i++)
                 {
-                    fetchPropertyDetails(propertyIds[i]);
+<!--                    fetchPropertyDetails(propertyIds[i]);-->
                 }
 
             })
-
     }
 
+    var geocoder = L.Control.Geocoder.nominatim();
+    var coordinates;
+    var control = L.Control.geocoder({
+        geocoder: geocoder,
+        defaultMarkGeocode: false
+    }).on('markgeocode', function (e) {
+        var bbox = e.geocode.bbox;
+        var poly = L.polygon([
+            bbox.getSouthEast(),
+            bbox.getNorthEast(),
+            bbox.getNorthWest(),
+            bbox.getSouthWest()
+        ]).addTo(map);
+        map.fitBounds(poly.getBounds());
+    }).addTo(map);
+
+    map.on('click', function (e) {
+        coordinates = e.latlng;
+        tempCoordinates=coordinates;
+        updateMarker(coordinates);
+    });
+
+    function updateMarker(coordinates) {
+        if (marker) {
+            map.removeLayer(marker);
+        }
+
+        marker = L.marker(coordinates).addTo(map);
+        marker.bindPopup("Marker at " + coordinates.lat.toFixed(4) + "° N, " + coordinates.lng.toFixed(4) + "° E");
+
+        document.getElementById('coordinates-box').textContent = "Coordinates: " + coordinates.lat.toFixed(4) + "° N, " + coordinates.lng.toFixed(4) + "° E";
+    }
+
+var coordinatesArr=[];
     // Function to fetch property details by ID
 function fetchPropertyDetails(id) {
     fetch(`/property-details/${id}`)
@@ -476,18 +513,20 @@ function fetchPropertyDetails(id) {
         })
         .then(property => {
             // Update HTML content with property details and associated entities
-                var coordinates = [property.coordinate.latitude, property.coordinate.longitude];
+                coordinatesArr = [property.coordinate.latitude, property.coordinate.longitude];
 
-                for(let i=0; i<coordinates.length; i++)
+
+                shortestDistance();
+                for(let i=0; i<coordinatesArr.length; i++)
                 {
                     let x=0;
                     let y=1;
-                    console.log("aayo??:::",coordinates[i]);
-                    var marker = L.marker([coordinates[x], coordinates[y]]).addTo(map);
+                    console.log("aayo??:::",coordinatesArr[i]);
+                    var marker = L.marker([coordinatesArr[x], coordinatesArr[y]]).addTo(map);
                     x +=2;
                     y+=2;
                 }
-
+                console.log(coordinatesArr.length);
 
         })
         .catch(error => {
@@ -497,6 +536,33 @@ function fetchPropertyDetails(id) {
 
 
 
+    var tempCoordinates;
+    //function fpr button OK
+    function userChose() {
+        map.removeLayer(marker);
+
+         for(let i=0; i<propertyIds.length; i++)
+                {
+                    fetchPropertyDetails(propertyIds[i]);
+                }
+
+}
+
+//getCoordinates
+function getCoordinates()
+{
+    var tempCoordinatesLat = coordinates.lat.toFixed(4);
+    var tempCoordinatesLng = coordinates.lng.toFixed(4);
+<!--    console.log(tempCoordinatesLat + " " + tempCoordinatesLng);-->
+
+
+}
+getCoordinates();
+//shortest distance
+function shortestDistance(x1, y1, x2, y2){
+    return Math.sqrt(Math.pow((x2 - x1), 2) + Math.pow((y2 - y1), 2));
+
+}
 
 
 // Function to extract query parameter from URL
