@@ -480,7 +480,9 @@
     </div>
 </div>
 
-<div id="imageContainer"></div>
+<div id="imageContainer" >
+
+</div>
 
 <div id="map" ></div>
 
@@ -1203,8 +1205,8 @@ if (userId) {
             imageElement.src = `data:image/png;base64,${base64Content}`;
 
             // Set any additional attributes or styles as needed
-             imageElement.setAttribute('width', '900');
-             imageElement.setAttribute('height', '500');
+             imageElement.setAttribute('width', '250');
+             imageElement.setAttribute('height', '250');
 
             const imageContainer = document.getElementById('imageContainer');
             imageContainer.innerHTML = '';
