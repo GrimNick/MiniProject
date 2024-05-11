@@ -31,6 +31,11 @@ public class homeController {
         return "uploadSeller"; // Return the name of your signup.html file
     }
 
+    //added by sabin to check
+    @GetMapping("/map-for-buyer")
+    public String mapForBuyer() {
+        return "map-for-buyer"; // Return the name of your signup.html file
+    }
 
 
 

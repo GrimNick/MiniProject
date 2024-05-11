@@ -512,7 +512,10 @@
         <button id="signout-btn" onclick="Signout()">Sign Out</button>
         <button id="sell-btn" onclick="sellPage()">Want to Sell?</button>
         <button id="home-btn" onclick="homePage()">Home Page</button>
-        <a href="###"><button id="map">Map</button></a>
+
+
+        <!--added by sabin just to check -->
+        <button id="map-for-buyers" onclick="mapForBuyers()">Map</button>
     </div>
 </div>
 
@@ -758,13 +761,18 @@ function showSubscribeList() {
             window.location.href = "/"; // Change the URL as needed
         }
 
+        //added by sabin just to check
+        function mapForBuyers()
+        {
+            window.location.href = "/map-for-buyer"; // Change the URL as needed
+        }
+
     // Function to cancel and hide the signup form
     function hideSignInForm() {
         var signInForm = document.getElementById("signInForm");
         signInForm.style.display = "none";
         document.getElementById("backgroundOverlay").classList.remove("blur"); // Remove 'blur' class from background overlay
     }
-
 
 
     function checkAndSignUp() {
@@ -1350,6 +1358,7 @@ function fetchAllProperties() {
         .then(data => {
             // Extract property IDs and area IDs from fetched data
             let propertyIds = data.map(property => property.id);
+
             console.log('Original data:', data);
             // Check if budget is not null
 
