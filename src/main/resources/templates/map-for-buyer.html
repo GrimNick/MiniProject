@@ -502,66 +502,111 @@
     }
 
 var coordinatesArr=[];
-    // Function to fetch property details by ID
-function fetchPropertyDetails(id) {
-    fetch(`/property-details/${id}`)
-        .then(response => {
-            if (!response.ok) {
-                throw new Error('Network response was not ok');
-            }
-            return response.json();
-        })
-        .then(property => {
-            // Update HTML content with property details and associated entities
-                coordinatesArr = [property.coordinate.latitude, property.coordinate.longitude];
-
-
-                shortestDistance();
-                for(let i=0; i<coordinatesArr.length; i++)
-                {
-                    let x=0;
-                    let y=1;
-                    console.log("aayo??:::",coordinatesArr[i]);
-                    var marker = L.marker([coordinatesArr[x], coordinatesArr[y]]).addTo(map);
-                    x +=2;
-                    y+=2;
-                }
-                console.log(coordinatesArr.length);
-
-        })
-        .catch(error => {
-            console.error('Error fetching property details:', error);
-        });
-}
-
-
-
     var tempCoordinates;
+var tempResult;
+var resultCOD;
+var idNearMe;
+    // Function to fetch property details by ID
+async function fetchPropertyDetails(id) {
+    try {
+        const response = await fetch(`/property-details/${id}`);
+        if (!response.ok) {
+            throw new Error('Network response was not ok');
+        }
+        const property = await response.json();
+        // Update HTML content with property details and associated entities
+        coordinatesArr = [property.coordinate.latitude, property.coordinate.longitude];
+
+        console.log("BHITRAAAAAA GAYOOO");
+        console.log("tempCoordinates ko lat is", tempCoordinates.lat.toFixed(4));
+        var x1ho = tempCoordinates.lat.toFixed(4);
+        var y1ho = tempCoordinates.lng.toFixed(4);
+        var x2ho = coordinatesArr[0];
+        var y2ho = coordinatesArr[1];
+
+        tempResult = shortestDistance(x1ho, y1ho, x2ho, y2ho);
+        console.log("tempResult is", tempResult, "for id number:", id);
+        if (resultCOD === -11111) {
+            resultCOD = tempResult;
+            idNearMe = id;
+        } else {
+            if (resultCOD > tempResult) {
+                resultCOD = tempResult;
+                idNearMe = id;
+            }
+        }
+        console.log("property id nearest is", idNearMe);
+
+        for (let i = 0; i < coordinatesArr.length; i++) {
+            let x = 0;
+            let y = 1;
+            console.log("aayo??:::", coordinatesArr[i]);
+            var marker = L.marker([coordinatesArr[x], coordinatesArr[y]]).addTo(map);
+            x += 2;
+            y += 2;
+        }
+        console.log(coordinatesArr.length);
+    } catch (error) {
+        console.error('Error fetching property details:', error);
+    }
+}
+
+async function panToThisId(id) {
+    try {
+        const response = await fetch(`/property-details/${id}`);
+        if (!response.ok) {
+            throw new Error('Network response was not ok');
+        }
+        const property = await response.json();
+        // Update HTML content with property details and associated entities
+        coordinatesArr = [property.coordinate.latitude, property.coordinate.longitude];
+        map.panTo(coordinatesArr);
+    } catch (error) {
+        console.error('Error fetching property details:', error);
+    }
+}
+
+
+async function userChose(){
+    await userChosen();
+    console.log("sabinsabinsaibsiadnksid");
+    panToThisId(idNearMe);
+}
     //function fpr button OK
-    function userChose() {
+async function userChosen() {
+    try {
         map.removeLayer(marker);
+        resultCOD = -11111;
+        idNearMe = propertyIds[0];
 
-         for(let i=0; i<propertyIds.length; i++)
-                {
-                    fetchPropertyDetails(propertyIds[i]);
-                }
+        // Array to store all fetch promises
+        const fetchPromises = [];
 
+        // Sequentially fetch property details
+        for (const id of propertyIds) {
+            fetchPromises.push(fetchPropertyDetails(id));
+        }
+
+        // Wait for all fetch promises to resolve
+        await Promise.all(fetchPromises);
+
+        console.log("Shortest distance is:", resultCOD);
+        console.log("Nearest id is:", idNearMe);
+    } catch (error) {
+        console.error('There was a problem processing user choice:', error);
+        // Optionally, handle errors or display error messages to the user
+    }
 }
 
-//getCoordinates
-function getCoordinates()
-{
-    var tempCoordinatesLat = coordinates.lat.toFixed(4);
-    var tempCoordinatesLng = coordinates.lng.toFixed(4);
-<!--    console.log(tempCoordinatesLat + " " + tempCoordinatesLng);-->
 
-
-}
-getCoordinates();
 //shortest distance
 function shortestDistance(x1, y1, x2, y2){
-    return Math.sqrt(Math.pow((x2 - x1), 2) + Math.pow((y2 - y1), 2));
+        console.log("x1 value is  ",x1);
+        console.log("x2 value is  ",x2);
 
+    let value = Math.sqrt(Math.pow((x2 - x1), 2) + Math.pow((y2 - y1), 2));
+    console.log("value is shortest distance that is ",value);
+    return value;
 }
 
 
