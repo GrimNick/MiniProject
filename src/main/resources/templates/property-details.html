@@ -417,6 +417,8 @@
         <button id="sell-btn" onclick="sellPage()">Want to Sell?</button>
         <button id="home-btn" onclick="homePage()">Home Page</button>
 
+        <button id="favourite-btn" onclick="FavouriteProperty()">Favourite</button>
+
     </div>
 </div>
 
@@ -577,6 +579,26 @@ function getUrlParameter(name) {
         }
          function homePage(){
             window.location.href = "/"; // Change the URL as needed
+        }
+
+        function FavouriteProperty(){
+            // Retrieve the array of user IDs from localStorage
+            let favIds = JSON.parse(localStorage.getItem('favIds')) || [];
+            console.log("fav ids is: ",favIds);
+            // Add the new user ID to the array
+            let favId = propertyId; // Replace 'newUserId' with the actual user ID
+            let index = favIds.indexOf(favId);
+            if (index !== -1) {
+                // If userId exists, remove it from the array
+                favIds.splice(index, 1);
+            } else {
+                // If userId does not exist, add it to the array
+                favIds.push(favId);
+            }
+            console.log("fav ids after push is: ",favIds);
+
+            // Save the updated array back to localStorage
+            localStorage.setItem('favIds', JSON.stringify(favIds));
         }
 
     // Function to cancel and hide the signup form

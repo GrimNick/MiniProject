@@ -669,6 +669,8 @@ h1{
                     <label for="land">Land</label>
                     <input type="radio" id="roles" name="propertyType" value="roles">
                     <label for="roles">House</label>
+                    <input type="radio" id="favourite" name="propertyType" value="favourite">
+                    <label for="roles">Favourite</label>
                     <input type="radio" id="both" name="propertyType" value="both">
                     <label for="both">Both</label>
                 </div>
@@ -1353,6 +1355,8 @@ function updatePropertyTypeValue(){
 if(propertyType=="roles") {propertyTypeValue =1;}
 if(propertyType=="both") {propertyTypeValue =3;}
 if(propertyType=="land") {propertyTypeValue =2;}
+if(propertyType=="favourite") {propertyTypeValue =4;}
+
 }
 let PropertyKOlocation=null;
 
@@ -1375,6 +1379,12 @@ function fetchAllProperties() {
 
             console.log('Original propertyTypeValue:', propertyTypeValue);
             //console.log('Original property.type:', property.type);
+
+            // Retrieve the JSON string from localStorage
+            let favIdsJSON = localStorage.getItem('favIds');
+
+            // Parse the JSON string into an array
+            let favIds = JSON.parse(favIdsJSON) || [];
 
             if(propertyTypeValue!==null && propertyTypeValue !== 3){
                 data = data.filter(property => property.type == propertyTypeValue);
@@ -1519,6 +1529,13 @@ function fetchAllProperties() {
 
 
             // Extract property IDs from sorted data
+            if(propertyTypeValue===4){
+                    console.log("inside fav is :",favIds);
+                    propertyIds = []; // Empty propertyIds array
+                    propertyIds = propertyIds.concat(favIds); // Concatenate favIds with propertyIds
+                    console.log("inside propertyIds :",propertyIds);
+
+            }
             // propertyIds = data.map(property => property.id);
             console.log('Property IDs:', propertyIds);
 
