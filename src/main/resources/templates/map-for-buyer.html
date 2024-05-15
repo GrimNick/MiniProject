@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+    <link rel="stylesheet" href="https://unpkg.com/leaflet-control-geocoder/dist/Control.Geocoder.css" />
     <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
     <script src="https://unpkg.com/leaflet-control-geocoder/dist/Control.Geocoder.js"></script>
 
@@ -434,7 +435,7 @@
 <div id="map" style="height: 625px; overflow:hidden;"></div>
 
 <script>
-    var map = L.map('map').setView([28.3949, 84.1240], 18);
+    var map = L.map('map').setView([27.7007, 85.3001], 13);
     var marker;
     var propertyIds;
 
@@ -598,13 +599,23 @@ async function userChosen() {
     }
 }
 
+//ha
+function latLonToCartesian(lat, lon) {
+    const R = 6371; // Radius of the Earth in kilometers
+    const x = R * Math.cos(lat) * Math.cos(lon);
+    const y = R * Math.cos(lat) * Math.sin(lon);
+    return { x, y };
+}
 
 //shortest distance
 function shortestDistance(x1, y1, x2, y2){
         console.log("x1 value is  ",x1);
         console.log("x2 value is  ",x2);
 
-    let value = Math.sqrt(Math.pow((x2 - x1), 2) + Math.pow((y2 - y1), 2));
+        const { x, y } = latLonToCartesian(x1 * Math.PI / 180, y1 * Math.PI / 180);
+        const { a, b } = latLonToCartesian(x2 * Math.PI / 180, y2 * Math.PI / 180);
+
+    let value = Math.sqrt(Math.pow((a - x), 2) + Math.pow((b - y), 2));
     console.log("value is shortest distance that is ",value);
     return value;
 }
