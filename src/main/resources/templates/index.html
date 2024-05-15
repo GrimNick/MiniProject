@@ -112,7 +112,7 @@
 
         button:hover {
           opacity: 1;
-          background:#0b1977;
+          background:#A3C1AD;
           transition:.5s;
         }
 
@@ -224,7 +224,7 @@
         .container-box {
             background-color: #ffffff;
             color: black; /* Set font color to white */
-            
+
             padding: 20px;
             margin-top: 20px;
             text-align: left;
@@ -315,11 +315,13 @@
 
 .card-container {
     display: flex;
-    background-color: #3b1e08;
-    color: white; /* Set font color to white */
+    background-color: white;
+    color: black; /* Set font color to white */
     border-radius: 8px;
     overflow: hidden;
     cursor: pointer; /* Set cursor to pointer */
+    border-style: inset;
+    border-color:#482b08;
 
     transition: transform 0.5s ease, opacity 0.5s ease; /* Smooth transitions for transform and opacity */
     animation: hopFromRight 1s ease-out forwards, fadeIn 1s ease-out forwards; /* Apply animation for hopFromRight and fadeIn */
@@ -328,7 +330,7 @@
 }
 
 .card-container:hover {
-    background-color: #04AA6D;
+    background-color: #A3C1AD;
 
 
     transform: rotateY(45deg); /* Rotate along the Y-axis */
@@ -403,17 +405,18 @@ h1{
         }
         .card-info {
             flex: 1;
-            padding: 15px;
+            padding: 30px;
         }
 
         .card-info h5 {
             margin: 0;
-            font-size: 18px;
+            font-size: 20px;
             font-weight: bold;
         }
 
         .card-info p {
             margin: 10px 0;
+            font-size:14px
         }
         .SubscribeCard-info {
             flex: 1;

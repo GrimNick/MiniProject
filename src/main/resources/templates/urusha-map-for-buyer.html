@@ -465,6 +465,8 @@
 
     }
 
+
+
     // Function to fetch property details by ID
 function fetchPropertyDetails(id) {
     fetch(`/property-details/${id}`)
@@ -486,8 +488,24 @@ function fetchPropertyDetails(id) {
                     var marker = L.marker([coordinates[x], coordinates[y]]).addTo(map);
                     x +=2;
                     y+=2;
-                }
 
+
+                 // Add marker with popup
+
+    marker.bindPopup("<b>Hello!</b><br>This is a popup.").openPopup();
+
+    // Add click event listener to the marker
+    marker.on('click', function(e) {
+      var popupContent = "<b>Hello!</b><br>This is a popup."; // Your popup content
+      L.popup()
+        .setLatLng(e.LatLng)
+        .setContent(popupContent)
+        .openOn(map);
+    });
+                 }
+
+
+}
 
         })
         .catch(error => {
