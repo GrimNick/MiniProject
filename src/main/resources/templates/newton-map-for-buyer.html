@@ -598,8 +598,15 @@ const kMeansInstance = new KMeans(2);
 
 <!--                currentCentroidIndex = 0;-->
              userChosen();
+             let min = 0;
+            let max = TotalId-1;
+            idNearMeCounter = Math.floor(Math.random() * (max - min + 1)) + min;
 
-<!--                panToCentroid(currentCentroidIndex);-->
+            idNearMe = propertyIds[idNearMeCounter];
+            console.log("id near me random generated is :",idNearMeCounter);
+            console.log("id near me random generated is :",idNearMe);
+
+            panToThisId(idNearMe);
 
 
 
@@ -738,8 +745,8 @@ var totalCentroids;
 
 // Function to pan to the next centroid
 async function nextCluster() {
-    currentCentroidIndex = (currentCentroidIndex + 1) % totalCentroids;
-    kMeansInstance.run();
+    if(firstTime!=0)currentCentroidIndex = (currentCentroidIndex + 1) % totalCentroids;
+<!--    kMeansInstance.run();-->
 
     panToCentroid(currentCentroidIndex);
 }
