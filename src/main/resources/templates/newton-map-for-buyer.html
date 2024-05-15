@@ -4,7 +4,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+    <link rel="stylesheet" href="https://unpkg.com/leaflet-control-geocoder/dist/Control.Geocoder.css" />
     <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+    <script src="https://unpkg.com/leaflet-control-geocoder/dist/Control.Geocoder.js"></script>
 
     <style>
         body {
@@ -199,7 +201,7 @@
             color: white;
             padding: 10px 20px;
             text-decoration: none;
-            border-radius: 5px
+            border-radius: 5px;
             cursor: pointer;
         }
 
@@ -364,6 +366,8 @@
         <button id="signout-btn" onclick="Signout()">Sign Out</button>
         <button id="sell-btn" onclick="sellPage()">Want to Sell?</button>
         <button id="home-btn" onclick="homePage()">Home Page</button>
+        <button id="nextbtn" onclick="nextCluster()">Next--></button>
+        <button id="prevbtn" onclick="prevCluster()"><--Previos</button>
 
     </div>
 </div>
@@ -428,19 +432,25 @@
     </div>
 </div>
 
-<div id="imageContainer"></div>
 
 <div id="map" style="height: 625px; overflow:hidden;"></div>
 
 <script>
-    var map = L.map('map').setView([28.3949, 84.1240], 18);
+    var map = L.map('map').setView([27.7007, 85.3001], 13);
+    var marker;
+    var propertyIds;
+
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
         attribution: '© OpenStreetMap contributors'
     }).addTo(map);
 
+    function updateMarker(coordinates) {
+        var marker = L.marker(coordinates).addTo(map);
+        marker.bindPopup("Marker at " + coordinates.lat.toFixed(4) + "° N, " + coordinates.lng.toFixed(4) + "° E");
+    }
+
 
     function fetchAllProperties() {
-        console.log("running");
         const url = 'http://localhost:8080/properties';
 
         fetch(url)
@@ -452,69 +462,146 @@
             })
             .then(data => {
                 // Extract property IDs and area IDs from fetched data
-                let propertyIds = data.map(property => property.id);
-
+                propertyIds = data.map(property => property.id);
+                TotalId = propertyIds.length;
+                idNearMeCounter=0;
                 console.log("idsss:::",propertyIds);
+                console.log("Total idsss:::",TotalId);
 
                 for(let i=0; i<propertyIds.length; i++)
                 {
-                    fetchPropertyDetails(propertyIds[i]);
+<!--                    fetchPropertyDetails(propertyIds[i]);-->
                 }
-
+            nextCluster();
             })
-
     }
 
 
-
+var coordinatesArr=[];
+    var tempCoordinates;
+var tempResult;
+var resultCOD;
+var idNearMe;
+var idNearMeCounter;
     // Function to fetch property details by ID
-function fetchPropertyDetails(id) {
-    fetch(`/property-details/${id}`)
-        .then(response => {
-            if (!response.ok) {
-                throw new Error('Network response was not ok');
-            }
-            return response.json();
-        })
-        .then(property => {
-            // Update HTML content with property details and associated entities
-                var coordinates = [property.coordinate.latitude, property.coordinate.longitude];
+async function fetchPropertyDetails(id) {
+    try {
+        const response = await fetch(`/property-details/${id}`);
+        if (!response.ok) {
+            throw new Error('Network response was not ok');
+        }
+        const property = await response.json();
+        // Update HTML content with property details and associated entities
+        coordinatesArr = [property.coordinate.latitude, property.coordinate.longitude];
 
-                for(let i=0; i<coordinates.length; i++)
-                {
-                    let x=0;
-                    let y=1;
-                    console.log("aayo??:::",coordinates[i]);
-                    var marker = L.marker([coordinates[x], coordinates[y]]).addTo(map);
-                    x +=2;
-                    y+=2;
+        console.log("BHITRAAAAAA GAYOOO");
+<!--        console.log("tempCoordinates ko lat is", tempCoordinates.lat.toFixed(4));-->
+<!--        var x1ho = tempCoordinates.lat.toFixed(4);-->
+<!--        var y1ho = tempCoordinates.lng.toFixed(4);-->
+<!--        var x2ho = coordinatesArr[0];-->
+<!--        var y2ho = coordinatesArr[1];-->
 
+<!--        tempResult = shortestDistance(x1ho, y1ho, x2ho, y2ho);-->
+<!--        console.log("tempResult is", tempResult, "for id number:", id);-->
+<!--        if (resultCOD === -11111) {-->
+<!--            resultCOD = tempResult;-->
+<!--            idNearMe = id;-->
+<!--        } else {-->
+<!--            if (resultCOD > tempResult) {-->
+<!--                resultCOD = tempResult;-->
+<!--                idNearMe = id;-->
+<!--            }-->
+<!--        }-->
+<!--        console.log("property id nearest is", idNearMe);-->
 
-                 // Add marker with popup
-
-    marker.bindPopup("<b>Hello!</b><br>This is a popup.").openPopup();
-
-    // Add click event listener to the marker
-    marker.on('click', function(e) {
-      var popupContent = "<b>Hello!</b><br>This is a popup."; // Your popup content
-      L.popup()
-        .setLatLng(e.LatLng)
-        .setContent(popupContent)
-        .openOn(map);
-    });
-                 }
-
-
+        for (let i = 0; i < coordinatesArr.length; i++) {
+            let x = 0;
+            let y = 1;
+            console.log("aayo??:::", coordinatesArr[i]);
+            var marker = L.marker([coordinatesArr[x], coordinatesArr[y]]).addTo(map);
+            x += 2;
+            y += 2;
+        }
+        console.log(coordinatesArr.length);
+    } catch (error) {
+        console.error('Error fetching property details:', error);
+    }
 }
 
-        })
-        .catch(error => {
-            console.error('Error fetching property details:', error);
-        });
+async function panToThisId(id) {
+    try {
+        const response = await fetch(`/property-details/${id}`);
+        if (!response.ok) {
+            throw new Error('Network response was not ok');
+        }
+        const property = await response.json();
+        // Update HTML content with property details and associated entities
+        coordinatesArr = [property.coordinate.latitude, property.coordinate.longitude];
+        map.panTo(coordinatesArr);
+    } catch (error) {
+        console.error('Error fetching property details:', error);
+    }
 }
 
 
+async function nextCluster(){
+    await userChosen();
+    idNearMeCounter = idNearMeCounter+1;
+    if(idNearMeCounter===TotalId) idNearMeCounter=0;
+    idNearMe = propertyIds[idNearMeCounter];
 
+    panToThisId(idNearMe);
+}
+async function prevCluster(){
+    await userChosen();
+    idNearMeCounter = idNearMeCounter-1;
+    if(idNearMeCounter===-1) idNearMeCounter=TotalId-1;
+    idNearMe = propertyIds[idNearMeCounter];
+
+    panToThisId(idNearMe);
+}
+    //function fpr button OK
+async function userChosen() {
+    try {
+        resultCOD = -11111;
+
+        // Array to store all fetch promises
+        const fetchPromises = [];
+
+        // Sequentially fetch property details
+        for (const id of propertyIds) {
+            fetchPromises.push(fetchPropertyDetails(id));
+        }
+
+        // Wait for all fetch promises to resolve
+        await Promise.all(fetchPromises);
+
+    } catch (error) {
+        console.error('There was a problem processing user choice:', error);
+        // Optionally, handle errors or display error messages to the user
+    }
+}
+
+//ha
+function latLonToCartesian(lat, lon) {
+    const R = 6371; // Radius of the Earth in kilometers
+    const x = R * Math.cos(lat) * Math.cos(lon);
+    const y = R * Math.cos(lat) * Math.sin(lon);
+    return { x, y };
+}
+
+//shortest distance
+function shortestDistance(x1, y1, x2, y2){
+        console.log("x1 value is  ",x1);
+        console.log("x2 value is  ",x2);
+
+        const { x, y } = latLonToCartesian(x1 * Math.PI / 180, y1 * Math.PI / 180);
+        const { a, b } = latLonToCartesian(x2 * Math.PI / 180, y2 * Math.PI / 180);
+
+    let value = Math.sqrt(Math.pow((a - x), 2) + Math.pow((b - y), 2));
+    console.log("value is shortest distance that is ",value);
+    return value;
+}
 
 
 // Function to extract query parameter from URL
