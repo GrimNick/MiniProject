@@ -449,6 +449,124 @@
         marker.bindPopup("Marker at " + coordinates.lat.toFixed(4) + "° N, " + coordinates.lng.toFixed(4) + "° E");
     }
 
+class Point {
+    constructor(id, x, y) {
+        this.id = id;
+        this.x = x;
+        this.y = y;
+    }
+}
+
+class KMeans {
+    constructor(k, maxIterations = 100) {
+        this.k = k;
+        this.maxIterations = maxIterations;
+        this.points = [];
+        this.centroids = [];
+        this.clusters = [];
+    }
+
+    // Helper function to calculate the distance between two points
+    distance(point1, point2) {
+        return Math.sqrt(Math.pow(point1.x - point2.x, 2) + Math.pow(point1.y - point2.y, 2));
+    }
+
+    // Function to initialize centroids randomly
+    initializeCentroids() {
+        const centroids = [];
+        const usedIndices = new Set();
+        while (centroids.length < this.k && this.points.length > 0) {
+            const randomIndex = Math.floor(Math.random() * this.points.length);
+            if (!usedIndices.has(randomIndex)) {
+                centroids.push({...this.points[randomIndex]});
+                usedIndices.add(randomIndex);
+            }
+        }
+        return centroids;
+    }
+
+    // Function to assign points to the nearest centroid
+    assignPointsToClusters() {
+        const clusters = Array(this.centroids.length).fill().map(() => []);
+        this.points.forEach(point => {
+            let minDistance = Infinity;
+            let closestCentroidIndex = -1;
+            this.centroids.forEach((centroid, index) => {
+                const dist = this.distance(point, centroid);
+                if (dist < minDistance) {
+                    minDistance = dist;
+                    closestCentroidIndex = index;
+                }
+            });
+            clusters[closestCentroidIndex].push(point);
+        });
+        return clusters;
+    }
+
+    // Function to update the centroid of each cluster
+    updateCentroids(clusters) {
+        return clusters.map(cluster => {
+            const sum = cluster.reduce((acc, point) => {
+                acc.x += point.x;
+                acc.y += point.y;
+                return acc;
+            }, {x: 0, y: 0});
+            return new Point(null, sum.x / cluster.length, sum.y / cluster.length);
+        });
+    }
+
+    // Main k-means function
+    run() {
+        if (this.points.length === 0) {
+            this.centroids = [];
+            this.clusters = [];
+            return {clusters: this.clusters, centroids: this.centroids};
+        }
+
+        this.centroids = this.initializeCentroids();
+        for (let i = 0; i < this.maxIterations; i++) {
+            this.clusters = this.assignPointsToClusters();
+            const newCentroids = this.updateCentroids(this.clusters);
+
+            // Check for convergence
+            let converged = true;
+            for (let j = 0; j < this.centroids.length; j++) {
+                if (this.distance(this.centroids[j], newCentroids[j]) > 1e-6) {
+                    converged = false;
+                    break;
+                }
+            }
+
+            this.centroids = newCentroids;
+            if (converged) break;
+        }
+
+        return {clusters: this.clusters, centroids: this.centroids};
+    }
+
+    // Function to add new points
+    addPoints(newPoints) {
+        this.points = this.points.concat(newPoints);
+    }
+
+    // Function to get points' IDs inside clusters with cluster IDs
+    getClusteredPoints() {
+        return this.clusters.map((cluster, clusterId) => {
+            return {
+                clusterId: clusterId,
+                points: cluster.map(point => point.id)
+            };
+        });
+    }
+
+    // Getter for centroids
+    getCentroids() {
+        return this.centroids;
+    }
+}
+const kMeansInstance = new KMeans(2);
+
+// Initially no points
 
     function fetchAllProperties() {
         const url = 'http://localhost:8080/properties';
@@ -472,17 +590,31 @@
                 {
 <!--                    fetchPropertyDetails(propertyIds[i]);-->
                 }
-            nextCluster();
+<!--                kMeansInstance.run();-->
+<!--                console.log('Clustered Points:', kMeansInstance.getClusteredPoints());-->
+<!--                centroids = kMeansInstance.getCentroids();-->
+
+<!--                totalCentroids = centroids.length;-->
+
+<!--                currentCentroidIndex = 0;-->
+             userChosen();
+
+<!--                panToCentroid(currentCentroidIndex);-->
+
+
+
             })
     }
 
 
 var coordinatesArr=[];
-    var tempCoordinates;
+var tempCoordinatesArr=[];
+var tempCoordinates;
 var tempResult;
 var resultCOD;
 var idNearMe;
 var idNearMeCounter;
+let firstTime =0;
     // Function to fetch property details by ID
 async function fetchPropertyDetails(id) {
     try {
@@ -522,7 +654,26 @@ async function fetchPropertyDetails(id) {
             x += 2;
             y += 2;
         }
+        kMeansInstance.addPoints([
+                new Point(id, property.coordinate.latitude, property.coordinate.longitude),
+            ]);
+
         console.log(coordinatesArr.length);
+    } catch (error) {
+        console.error('Error fetching property details:', error);
+    }
+}
+async function fetchCoordinatesArray(id) {
+    try {
+        const response = await fetch(`/property-details/${id}`);
+        if (!response.ok) {
+            throw new Error('Network response was not ok');
+        }
+        const property = await response.json();
+        // Update HTML content with property details and associated entities
+        tempCoordinatesArr = [property.coordinate.latitude, property.coordinate.longitude];
+
+        console.log("Done fetched id number",id);
     } catch (error) {
         console.error('Error fetching property details:', error);
     }
@@ -543,22 +694,62 @@ async function panToThisId(id) {
     }
 }
 
+async function panToCentroid(index) {
+                if(firstTime ===0){
+                        kMeansInstance.run();
+                    centroids = kMeansInstance.getCentroids();
 
-async function nextCluster(){
-    await userChosen();
+                totalCentroids = centroids.length;
+
+                currentCentroidIndex = 0;
+                firstTime =1;
+                }
+
+    if (index >= 0 && index < totalCentroids) {
+        const centroid = centroids[index];
+        const coordinatesCentroidArr = [centroid.x, centroid.y];
+        map.panTo(coordinatesCentroidArr); // Assuming `map` is your map instance
+        console.log(`Panning to centroid ${index}:`, coordinatesCentroidArr);
+    } else {
+        console.error('Invalid centroid index:', index);
+    }
+}
+
+
+async function nextID(){
+<!--    await userChosen();-->
     idNearMeCounter = idNearMeCounter+1;
     if(idNearMeCounter===TotalId) idNearMeCounter=0;
     idNearMe = propertyIds[idNearMeCounter];
 
     panToThisId(idNearMe);
 }
-async function prevCluster(){
-    await userChosen();
+async function prevID(){
+<!--    await userChosen();-->
     idNearMeCounter = idNearMeCounter-1;
     if(idNearMeCounter===-1) idNearMeCounter=TotalId-1;
     idNearMe = propertyIds[idNearMeCounter];
 
     panToThisId(idNearMe);
+}
+var currentCentroidIndex;
+var centroids;
+var totalCentroids;
+
+// Function to pan to the next centroid
+async function nextCluster() {
+    currentCentroidIndex = (currentCentroidIndex + 1) % totalCentroids;
+    kMeansInstance.run();
+
+    panToCentroid(currentCentroidIndex);
+}
+
+// Function to pan to the previous centroid
+async function prevCluster() {
+    currentCentroidIndex = (currentCentroidIndex - 1 + totalCentroids) % totalCentroids;
+   kMeansInstance.run();
+
+    panToCentroid(currentCentroidIndex);
 }
     //function fpr button OK
 async function userChosen() {
@@ -572,6 +763,7 @@ async function userChosen() {
         for (const id of propertyIds) {
             fetchPromises.push(fetchPropertyDetails(id));
         }
+
 
         // Wait for all fetch promises to resolve
         await Promise.all(fetchPromises);
