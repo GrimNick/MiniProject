@@ -472,13 +472,16 @@
                 {
 <!--                    fetchPropertyDetails(propertyIds[i]);-->
                 }
-            nextCluster();
+            userChosen();
+                panToThisId(propertyIds[idNearMeCounter]);
+
             })
     }
 
 
 var coordinatesArr=[];
-    var tempCoordinates;
+var tempCoordinatesArr=[];
+var tempCoordinates;
 var tempResult;
 var resultCOD;
 var idNearMe;
@@ -527,6 +530,21 @@ async function fetchPropertyDetails(id) {
         console.error('Error fetching property details:', error);
     }
 }
+async function fetchCoordinatesArray(id) {
+    try {
+        const response = await fetch(`/property-details/${id}`);
+        if (!response.ok) {
+            throw new Error('Network response was not ok');
+        }
+        const property = await response.json();
+        // Update HTML content with property details and associated entities
+        tempCoordinatesArr = [property.coordinate.latitude, property.coordinate.longitude];
+
+        console.log("Done fetched id number",id);
+    } catch (error) {
+        console.error('Error fetching property details:', error);
+    }
+}
 
 async function panToThisId(id) {
     try {
@@ -545,7 +563,7 @@ async function panToThisId(id) {
 
 
 async function nextCluster(){
-    await userChosen();
+<!--    await userChosen();-->
     idNearMeCounter = idNearMeCounter+1;
     if(idNearMeCounter===TotalId) idNearMeCounter=0;
     idNearMe = propertyIds[idNearMeCounter];
@@ -553,7 +571,7 @@ async function nextCluster(){
     panToThisId(idNearMe);
 }
 async function prevCluster(){
-    await userChosen();
+<!--    await userChosen();-->
     idNearMeCounter = idNearMeCounter-1;
     if(idNearMeCounter===-1) idNearMeCounter=TotalId-1;
     idNearMe = propertyIds[idNearMeCounter];
