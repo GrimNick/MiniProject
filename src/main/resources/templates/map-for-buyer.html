@@ -436,48 +436,156 @@
 
 <script>
     var map = L.map('map').setView([27.7007, 85.3001], 13);
-    var marker;
-    var propertyIds;
+var marker;
+var propertyIds;
 
-    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-        attribution: '© OpenStreetMap contributors'
-    }).addTo(map);
+L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+    attribution: '© OpenStreetMap contributors'
+}).addTo(map);
 
 var geocoder = L.Control.Geocoder.nominatim();
-    var coordinates;
-    var control = L.Control.geocoder({
-        geocoder: geocoder,
-        defaultMarkGeocode: false
-    }).on('markgeocode', function (e) {
-        var bbox = e.geocode.bbox;
-        var poly = L.polygon([
-            bbox.getSouthEast(),
-            bbox.getNorthEast(),
-            bbox.getNorthWest(),
-            bbox.getSouthWest()
-        ]).addTo(map);
-        map.fitBounds(poly.getBounds());
-    }).addTo(map);
+var coordinates;
+var control = L.Control.geocoder({
+    geocoder: geocoder,
+    defaultMarkGeocode: false
+}).on('markgeocode', function (e) {
+    var bbox = e.geocode.bbox;
+    var poly = L.polygon([
+        bbox.getSouthEast(),
+        bbox.getNorthEast(),
+        bbox.getNorthWest(),
+        bbox.getSouthWest()
+    ]).addTo(map);
+    map.fitBounds(poly.getBounds());
+}).addTo(map);
 
-    map.on('click', function (e) {
-        coordinates = e.latlng;
-        tempCoordinates=coordinates;
-        updateMarker(coordinates);
-    });
+map.on('click', function (e) {
+    coordinates = e.latlng;
+    tempCoordinates = coordinates;
+    updateMarker(coordinates);
+});
 
-    function updateMarker(coordinates) {
-        if (marker) {
-            map.removeLayer(marker);
-        }
-
-        marker = L.marker(coordinates).addTo(map);
-        marker.bindPopup("Marker at " + coordinates.lat.toFixed(4) + "° N, " + coordinates.lng.toFixed(4) + "° E");
-
-        document.getElementById('coordinates-box').textContent = "Coordinates: " + coordinates.lat.toFixed(4) + "° N, " + coordinates.lng.toFixed(4) + "° E";
+// Function to update the marker on the map
+function updateMarker(coordinates) {
+    if (marker) {
+        map.removeLayer(marker);
     }
 
+    marker = L.marker(coordinates).addTo(map);
+    marker.bindPopup("Marker at " + coordinates.lat.toFixed(4) + "° N, " + coordinates.lng.toFixed(4) + "° E");
 
-    function fetchAllProperties() {
+    document.getElementById('coordinates-box').textContent = "Coordinates: " + coordinates.lat.toFixed(4) + "° N, " + coordinates.lng.toFixed(4) + "° E";
+}
+
+function calculateCentroid(coordinates) {
+    // Extract latitude and longitude coordinates from fetched data
+    const lats = coordinates.map(coord => coord.latitude);
+    const lngs = coordinates.map(coord => coord.longitude);
+
+    // Calculate centroid latitude and longitude
+    const centroidLat = lats.reduce((sum, lat) => sum + lat, 0) / lats.length;
+    const centroidLng = lngs.reduce((sum, lng) => sum + lng, 0) / lngs.length;
+
+    return { latitude: centroidLat, longitude: centroidLng };
+}
+
+
+// Function to convert lat and lng into x and y axis
+    function latLngToXY(latitude, longitude) {
+    const earthRadius = 6378137; // Earth's radius in meters
+    const originShift = Math.PI * earthRadius;
+
+    // Convert latitude and longitude to radians
+    const latRad = latitude * Math.PI / 180;
+    const lonRad = longitude * Math.PI / 180;
+
+    // Calculate X and Y using Web Mercator projection
+    const x = originShift * lonRad / 180;
+    let y = Math.log(Math.tan((90 + latitude) * Math.PI / 360)) / (Math.PI / 180);
+    y = originShift * y / 180;
+
+    return { x: x, y: y };
+}
+
+// Function to convert XY coordinates to latitude and longitude
+function xyToLatLng(x, y) {
+    const earthRadius = 6378137; // Earth's radius in meters
+    const originShift = Math.PI * earthRadius;
+
+    // Convert XY to latitude and longitude using Web Mercator projection
+    const lon = (x / originShift) * 180;
+    const lat = (y / originShift) * 180;
+    const latRad = (180 / Math.PI) * (2 * Math.atan(Math.exp(lat * Math.PI / 180)) - Math.PI / 2);
+
+    return [latRad, lon];
+}
+
+
+
+
+// Function to fetch property IDs and coordinates
+async function fetchPropertyIdCoord() {
+    const url = 'http://localhost:8080/properties';
+
+    try {
+        const response = await fetch(url);
+        if (!response.ok) {
+            throw new Error('Network response was not ok');
+        }
+        const data = await response.json();
+
+        // Extract latitude and longitude coordinates from fetched data
+        const coordinates = data.map(property => property.coordinate);
+
+        // Calculate centroid
+        const centroid = calculateCentroid(coordinates);
+        console.log("Centroid:", centroid);
+
+        // Convert centroid coordinates from XY to latitude and longitude
+        const centroidLatLng = xyToLatLng(centroid.x, centroid.y);
+
+        console.log("Centroid LatLng:", centroidLatLng);
+        // Update map view to centroid
+        map.setView([centroid.latitude, centroid.longitude], 14);
+
+
+        // Fetch coordinates for each property ID
+        data.forEach(property => {
+            fetchCoordinates(property.id);
+        });
+
+    } catch (error) {
+        console.error('Error fetching property coordinates:', error);
+    }
+}
+
+// Function to fetch coordinates for a property ID
+async function fetchCoordinates(id) {
+    try {
+        const response = await fetch(`/property-details/${id}`);
+        if (!response.ok) {
+            throw new Error('Network response was not ok');
+        }
+        const property = await response.json();
+        const { latitude, longitude } = property.coordinate;
+        // Convert latitude and longitude to X and Y axis values
+        const { x, y } = latLngToXY(latitude, longitude);
+        console.log("X:", x, "Y:", y);
+        // Now you can use x and y values as needed
+    } catch (error) {
+        console.error('Error fetching property details:', error);
+    }
+}
+
+fetchPropertyIdCoord();
+
+
+
+
+
+
+
+function fetchAllProperties() {
         const url = 'http://localhost:8080/properties';
 
         fetch(url)
@@ -491,17 +599,12 @@ var geocoder = L.Control.Geocoder.nominatim();
                 // Extract property IDs and area IDs from fetched data
                 propertyIds = data.map(property => property.id);
 
-                console.log("idsss:::",propertyIds);
+<!--                console.log("idsss:::",propertyIds);-->
 
-                for(let i=0; i<propertyIds.length; i++)
-                {
-<!--                    fetchPropertyDetails(propertyIds[i]);-->
-                }
+
 
             })
     }
-
-
 var coordinatesArr=[];
     var tempCoordinates;
 var tempResult;
@@ -541,7 +644,7 @@ async function fetchPropertyDetails(id) {
         for (let i = 0; i < coordinatesArr.length; i++) {
             let x = 0;
             let y = 1;
-            console.log("aayo??:::", coordinatesArr[i]);
+<!--            console.log("aayo??:::", coordinatesArr[i]);-->
             var marker = L.marker([coordinatesArr[x], coordinatesArr[y]]).addTo(map);
             x += 2;
             y += 2;
@@ -607,16 +710,12 @@ function latLonToCartesian(lat, lon) {
     return { x, y };
 }
 
-//shortest distance
-function shortestDistance(x1, y1, x2, y2){
-        console.log("x1 value is  ",x1);
-        console.log("x2 value is  ",x2);
+function shortestDistance(x1, y1, x2, y2) {
+    const { x, y } = latLonToCartesian(x1 * Math.PI / 180, y1 * Math.PI / 180);
+    const { x: a, y: b } = latLonToCartesian(x2 * Math.PI / 180, y2 * Math.PI / 180);
 
-        const { x, y } = latLonToCartesian(x1 * Math.PI / 180, y1 * Math.PI / 180);
-        const { a, b } = latLonToCartesian(x2 * Math.PI / 180, y2 * Math.PI / 180);
-
-    let value = Math.sqrt(Math.pow((a - x), 2) + Math.pow((b - y), 2));
-    console.log("value is shortest distance that is ",value);
+    const value = Math.sqrt(Math.pow((a - x), 2) + Math.pow((b - y), 2));
+    console.log("value is shortest distance that is ", value);
     return value;
 }
 
