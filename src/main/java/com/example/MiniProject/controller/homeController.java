@@ -37,9 +37,9 @@ public class homeController {
         return "map-for-buyer"; // Return the name of your signup.html file
     }
 
-    @GetMapping("/newton-map-for-buyer")
-    public String mapForNewtonBuyer() {
-        return "newton-map-for-buyer"; // Return the name of your signup.html file
+    @GetMapping("/want-to-explore")
+    public String wantToExplore() {
+        return "want-to-explore"; // Return the name of your signup.html file
     }
 
 
