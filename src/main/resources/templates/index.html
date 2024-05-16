@@ -129,7 +129,7 @@
 
 
         .container {
-            color: #fff;
+            color: black;;
             display: none; /* Initially hide the container */
             position: fixed; /* Position the container relative to the viewport */
             top: 50%; /* Center vertically */
@@ -137,7 +137,7 @@
             transform: translate(-50%, -50%); /* Center the container */
             width: 300px;
             padding: 20px;
-            background-color: #04AA6D;
+            background-color: lightgray;
             border-radius: 10px;
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
             z-index: 9999;
@@ -472,7 +472,7 @@ h1{
 
 /* Apply the animation to the specified elements */
 #signUpForm {
-    background:#04AA6D;
+    background:lightgray;
   animation: fadeInFromTopToCenter 0.5s ease-in-out forwards;
   position: fixed;
   top: 17%;
@@ -481,6 +481,8 @@ h1{
   height: 625px;
   overflow:auto;
     width:500px;
+    border-style: solid;
+    border-color: darkgray;
 }
 
 #signInForm{
@@ -489,6 +491,8 @@ h1{
   top: 30%;
   left: 50%;
   transform: translate(-50%, -50%);
+  border-style:solid;
+  border-color: darkgray;
 }
 #subscribeForm {
   animation: fadeInFromTopToCenter 0.5s ease-in-out forwards;
@@ -522,7 +526,7 @@ h1{
 
         <!--added by sabin just to check -->
         <button id="map-for-buyers" onclick="mapForBuyers()">Map</button>
-        <button id="want-to-explore" onclick="wantToExplore()">Do you Want To Explore?</button>
+        <button style="align:left;"id="want-to-explore" onclick="wantToExplore()"> Explore More?</button>
     </div>
 </div>
 
