@@ -76,6 +76,8 @@
             align-items: center;
             width: 700px; /* Set fixed width */
             height: 50px; /* Set fixed height */
+            color: black;
+            background-color:white;
         }
 
   .user-name,
@@ -84,8 +86,8 @@
          #signout-btn,
          #sell-btn,
          #home-btn{
-       background-color: #04AA6D;
-          color: white;
+       background-color: white;
+          color: black;
           padding: 14px 20px;
           margin: 8px 0;
           border: 1px solid #ccc;
@@ -93,6 +95,11 @@
           height:100%;
           opacity: 0.9;
 
+        }
+
+        #home-btn:hover{
+        background:#A3C1AD;
+          transition:.5s;
         }
 
 
@@ -117,9 +124,9 @@
 
 
          button {
-          background-color: #04AA6D;
-          color: white;
-          padding: 14px 20px;
+          background-color: white;
+          color: black;
+          padding: 15px 20px;
           margin: 8px 0;
           border: 1px solid #ccc;
           cursor: pointer;
@@ -128,6 +135,8 @@
         }
 
         button:hover {
+        background:#A3C1AD;
+          transition:.5s;
           opacity: 1;
         }
 
@@ -367,7 +376,7 @@
         <button id="sell-btn" onclick="sellPage()">Want to Sell?</button>
         <button id="home-btn" onclick="homePage()">Home Page</button>
         <button id="nextbtn" onclick="nextCluster()">Next--></button>
-        <button id="prevbtn" onclick="prevCluster()"><--Previos</button>
+        <button id="prevbtn" onclick="prevCluster()"><--Previous</button>
 
     </div>
 </div>
