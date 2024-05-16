@@ -11,6 +11,7 @@
             font-family: Arial, sans-serif;
             margin: 0;
             padding: 0;
+            background-color: #eddbcd;
 
 
         }
@@ -360,36 +361,67 @@
     border-radius: 8px;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
     height: 400px;
-    max-width: 100%
+   max-width: 100%
     position: absolute;
-
 }
-/* Styling for imageContainer */
-#imageContainer {
+.mapContainer {
+display: inline-block;
+width: 950px;
+}
 
-    background-color: #E3DDD3;
-    border: 2px solid #A0AEC0;
-    padding: 20px;
+/* Styling for imageContainer */
+
+  #imageContainer {
+    background-color: #ffffff;
+
+    padding: 8px;
     border-radius: 8px; /* Rounded corners */
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); /* Drop shadow */
-    width:100px;
-    height
-}
+    width: 300px;
+    height: 300px;
+    display: inline-block;
+   }
 
 
 /* Styling for propertyDetails and DetailsContainer */
-#propertyDetails, .DetailsContainer {
+ #propertyDetails {
     background-color: #E3DDD3;
     border: 2px solid #D3D3D3;
     padding: 20px;
     border-radius: 8px;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    top-margin: 10px;
+
+}
+@keyframes slideInFromRight {
+    from {
+        transform: translateX(100%);
+    }
+    to {
+        transform: translateX(0);
+    }
+}
+.DetailsContainer{
+ background-color: #E3DDD3;
+    border: 2px solid #D3D3D3;
+    padding: 20px;
+    border-radius: 8px;
+    transition: all 0.3s ease;
+    height: 550px;
+    width: 250px;
+    display: inline-block;
+    animation: slideInFromRight 0.8s ease-out forwards;
+    top-margin: 10px;
 }
         @media only screen and (max-width: 600px) {
     /* Adjust padding for smaller screens */
-    #imageContainer, #map, #propertyDetails, .DetailsContainer {
+    #imageContainer, #map, #propertyDetails, .DetailsContainer, .horizontal {
         padding: 10px;
     }
+    #imageContainer,#map,#propertyDetails {
+    display: inline-block;
+}
+
 }
 
 
@@ -482,15 +514,12 @@
     </div>
 </div>
 
-<div id="imageContainer" >
+<div id="imageContainer"  ></div>
 
-</div>
-
-<div id="map" ></div>
+<div id="map" class="mapContainer" ></div>
 
 <div id="propertyDetails" class="DetailsContainer">
-    <!-- Property details will be displayed here -->
-</div>
+    <!-- Property details will be displayed here --></div>
 
 <script>
     var map = L.map('map').setView([28.3949, 84.1240], 18);
@@ -1227,8 +1256,10 @@ if (userId) {
             imageElement.src = `data:image/png;base64,${base64Content}`;
 
             // Set any additional attributes or styles as needed
-             imageElement.setAttribute('width', '250');
-             imageElement.setAttribute('height', '250');
+             imageElement.setAttribute('width', '300');
+             imageElement.setAttribute('height', '300');
+             imageElement.setAttribute('aspect-ratio', '1/1');
+
 
             const imageContainer = document.getElementById('imageContainer');
             imageContainer.innerHTML = '';
