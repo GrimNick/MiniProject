@@ -933,12 +933,9 @@ function showSubscribeList() {
     function SortNamechange(){
          SortName = document.getElementById("SortName");
         removePreviousCards();
-        fetchAllProperties();
-
-    }
-
+        fetchAllProperties()
     function SortAlgchange(){
-         SortAlg = document.getElementById("SortAlg");
+         SortAlg = document.getElementById("SortAlg").value;
         removePreviousCards();
         fetchAllProperties();
 
