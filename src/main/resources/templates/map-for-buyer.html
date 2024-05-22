@@ -477,15 +477,27 @@ map.on('click', function (e) {
 
 // Function to update the marker on the map
 function updateMarker(coordinates) {
+    // Check if the marker exists and remove it if it does
     if (marker) {
         map.removeLayer(marker);
     }
+    console.log("marker updated");
 
+    // Add the new marker to the map
     marker = L.marker(coordinates).addTo(map);
     marker.bindPopup("Marker at " + coordinates.lat.toFixed(4) + "° N, " + coordinates.lng.toFixed(4) + "° E");
 
-    document.getElementById('coordinates-box').textContent = "Coordinates: " + coordinates.lat.toFixed(4) + "° N, " + coordinates.lng.toFixed(4) + "° E";
+    // Get the coordinates-box element
+    var coordinatesBox = document.getElementById('coordinates-box');
+    if (coordinatesBox) {
+        // Update the text content if the element exists
+        coordinatesBox.textContent = "Coordinates: " + coordinates.lat.toFixed(4) + "° N, " + coordinates.lng.toFixed(4) + "° E";
+    } else {
+        // Log an error if the element is not found
+        console.error("Element with ID 'coordinates-box' not found.");
+    }
 }
+
 
 function calculateCentroid(coordinates) {
     // Extract latitude and longitude coordinates from fetched data
@@ -586,14 +598,7 @@ async function fetchCoordinates(id) {
         console.error('Error fetching property details:', error);
     }
 }
-
 fetchPropertyIdCoord();
-
-
-
-
-
-
 
 function fetchAllProperties() {
         const url = 'http://localhost:8080/properties';
