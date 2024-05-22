@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 
@@ -216,7 +217,7 @@
             font-size: 24px;
             font-weight: bold;
         }
-//newchange
+
         .signing-btn {
             background-color: #4CAF50;
             color: white;
@@ -646,28 +647,28 @@ h1{
 
 <div id="backgroundOverlay">
     <div class="manageByColumns">
-    <div class="dropdown-inputForSort">
-        <select id="SortName" onchange="SortNamechange()">
-            <option value="price" selected> Sort By Budget</option>
-<!--            <option value="areaSort">Sort By Area</option>-->
-        </select>
-    </div>
-    <div class="dropdown-inputForSort">
-        <select id="SortAlg" onchange="SortAlgchange()">
-            <option value="Asc" selected> Increasing</option>
-            <option value="Dsc">Decreasing </option>
-        </select>
-    </div>
-
         <div class="dropdown-inputForSort">
-        <button id="subscribe-btn" onclick="subscribePage()">Subscribe </button>
+            <select id="SortName" onchange="SortNamechange()">
+                <option value="price" selected> Sort By Budget</option>
+                <!--            <option value="areaSort">Sort By Area</option>-->
+            </select>
         </div>
         <div class="dropdown-inputForSort">
-        <button id="deleteSubscribe-btn" onclick="deleteSubscribePage()">Delete all Subscribe </button>
-            </div>
+            <select id="SortAlg" onchange="SortAlgchange()">
+                <option value="Asc" selected> Increasing</option>
+                <option value="Dsc">Decreasing </option>
+            </select>
+        </div>
 
         <div class="dropdown-inputForSort">
-        <button id="showSubscribeList-btn" onclick="showSubscribeList()">Subscribe List </button>
+            <button id="subscribe-btn" onclick="subscribePage()">Subscribe </button>
+        </div>
+        <div class="dropdown-inputForSort">
+            <button id="deleteSubscribe-btn" onclick="deleteSubscribePage()">Delete all Subscribe </button>
+        </div>
+
+        <div class="dropdown-inputForSort">
+            <button id="showSubscribeList-btn" onclick="showSubscribeList()">Subscribe List </button>
         </div>
     </div>
     <div class="container-box-main">
@@ -927,19 +928,20 @@ function showSubscribeList() {
     xhr.send(JSON.stringify({ email: email }));
     }
 
-    let SortName="price";
-    let SortAlg = "Asc";
+    let SortName = "price";
+let SortAlg = "Asc";
 
-    function SortNamechange(){
-         SortName = document.getElementById("SortName");
-        removePreviousCards();
-        fetchAllProperties()
-    function SortAlgchange(){
-         SortAlg = document.getElementById("SortAlg").value;
-        removePreviousCards();
-        fetchAllProperties();
+function SortNamechange(){
+    SortName = document.getElementById("SortName");
+    removePreviousCards();
+    fetchAllProperties();
+}
 
-    }
+function SortAlgchange(){
+    SortAlg = document.getElementById("SortAlg").value;
+    removePreviousCards();
+    fetchAllProperties();
+}
 
     function subscribePage(){
     if(userId!=null){
@@ -1945,3 +1947,5 @@ document.addEventListener("DOMContentLoaded", function() {
 </body>
 
 </html>
+index.html
+Displaying index.html.
