@@ -1,0 +1,5 @@
+{
+  "dependencies": {
+    "node-wordnet": "^0.1.12"
+  }
+}

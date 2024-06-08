@@ -11,8 +11,11 @@
             emailjs.init("ZQbWmERlu5g5VsOkV"); // Replace "your_public_key" with your actual Public Key
         })();
     </script>
+    <script src="https://unpkg.com/compromise"></script>
+
     <link rel="stylesheet" href="/static/styles.css">
     <title>Property Type Selector</title>
+
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -658,6 +661,14 @@ h1{
                 <option value="Asc" selected> Increasing</option>
                 <option value="Dsc">Decreasing </option>
             </select>
+        </div>
+
+        <div class="dropdown-inputForSort">
+            <input type="text" id="searchInput" placeholder="search...">
+        </div>
+
+        <div class="dropdown-inputForSort">
+            <button id="searchButton" onclick="Searching()">Search</button>
         </div>
 
         <div class="dropdown-inputForSort">
@@ -1789,6 +1800,7 @@ async function handleSubscriptionData(subscription) {
     // Append the card to the subscription container
     const subscribeContainer = document.getElementById("subscribeContainer");
     subscribeContainer.appendChild(card);
+
 }
 
 // Fetch subscription data
@@ -1937,7 +1949,35 @@ document.addEventListener("DOMContentLoaded", function() {
     fetchAllProperties();
 });
 
+        function Searching() {
+            const query = document.getElementById('searchInput').value;
+            alert('Searching for: ' + query);
+            getSynonyms(query);
 
+        }
+
+            // Function to get synonyms for a given word
+            async function getSynonyms(word) {
+              try {
+                const response = await fetch(`https://api.datamuse.com/words?rel_syn=${word}`);
+                const data = await response.json();
+                const synonyms = data.map(item => item.word);
+                console.log(`Synonyms for "${word}":`, synonyms);
+              } catch (error) {
+                console.error('Error fetching synonyms:', error);
+              }
+            }
+
+            // Example usage
+
+
+        // Add event listener for the Enter key press in the input field
+        document.getElementById('searchInput').addEventListener('keypress', function(event) {
+            if (event.key === 'Enter') {
+                event.preventDefault(); // Prevent the default action (if any)
+                Searching(); // Call the search function
+            }
+        });
 
 
     //window.onload = fetchAllProperties;
