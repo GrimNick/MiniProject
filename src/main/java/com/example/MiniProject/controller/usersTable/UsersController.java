@@ -2,9 +2,11 @@ package com.example.MiniProject.controller.usersTable;
 
 import com.example.MiniProject.controller.SignInRequest;
 import com.example.MiniProject.controller.SignInResponse;
+import jakarta.annotation.PostConstruct;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -12,15 +14,42 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import opennlp.tools.postag.POSModel;
+import opennlp.tools.postag.POSTaggerME;
+import opennlp.tools.tokenize.SimpleTokenizer;
+import opennlp.tools.tokenize.Tokenizer;
+
+
 @RestController
 public class UsersController {
     private static final Logger logger = LoggerFactory.getLogger(UsersController.class);
 
     private final UsersService usersService;
+    private POSModel posModel;
+    private POSTaggerME tagger;
+
+    @Value("${pos.model.path}")
+    private String posModelPath;
 
     @Autowired
     public UsersController(UsersService usersService) {
         this.usersService = usersService;
+    }
+    @PostConstruct
+    public void init() throws IOException {
+        // Load the pre-trained model for part-of-speech tagging
+        try (InputStream modelIn = new FileInputStream(posModelPath)) {
+            posModel = new POSModel(modelIn);
+            tagger = new POSTaggerME(posModel);
+        }
     }
 
     @PostMapping("/users")
@@ -106,6 +135,29 @@ public class UsersController {
         }
     }
 
+    @GetMapping("/tokenize/{sentence}")
+    public ResponseEntity<?> tokenizeSentence(@PathVariable String sentence) {
+    Tokenizer tokenizer = SimpleTokenizer.INSTANCE;
+    String[] tokens = tokenizer.tokenize(sentence);
 
+    // Tag parts of speech in the sentence
+    String[] tags = tagger.tag(tokens);
+
+        System.out.println("Token\tPOS");
+        for (int i = 0; i < tokens.length; i++) {
+            System.out.println(tokens[i] + "\t" + tags[i]);
+        }
+
+        // Extract and return adjectives
+    List<String> adjectives = new ArrayList<>();
+        for (int i = 0; i < tokens.length; i++) {
+        if ("ADJ".equals(tags[i]) || "NOUN".equals(tags[i]) || "JJS".equals(tags[i])) { // Common POS tags for adjectives
+            adjectives.add(tokens[i]);
+        }
+    }
+
+        return ResponseEntity.ok(adjectives);
+
+}
 
 }

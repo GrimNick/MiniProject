@@ -1439,6 +1439,7 @@ function fetchAllProperties() {
 
             }
 
+
                 if (ropani !== null) {
                     data = data.filter(property => {
                         if (property.area.ropani > ropani) {
@@ -1501,6 +1502,32 @@ function fetchAllProperties() {
                     propertyIds = data.map(property => property.id);
 
                 }
+            console.log("synonymsArray.length "+synonymsArray.length);
+            if(synonymsArray.length!=0){
+
+            
+<!--            var zloop;-->
+<!--            var j;-->
+<!--            var wordTaken;-->
+<!--            var toBreak = false;-->
+<!--            for( zloop=0;zloop<synonymsArray.length;zloop++){-->
+<!--            for(j=0;j<synonymsArray[zloop].length;j++){-->
+<!--            wordTaken = synonymsArray[zloop][j];-->
+<!--            console.log(wordTaken);-->
+<!--                if (data.some(property => property.location.address.toLowerCase().includes(wordTaken.toLowerCase()))) {-->
+<!--                    // If found, map the property ids and break from the loop-->
+<!--                    propertyIds = data.map(property => property.id);-->
+<!--                    toBreak = true;-->
+<!--                    break;-->
+
+<!--                }-->
+
+<!--            }-->
+<!--            if(toBreak) break;-->
+<!--            }-->
+<!--            }-->
+            console.log("etaaaA");
+
 
             let PriceArray = data.map(property => property.price);
 
@@ -1728,6 +1755,29 @@ function fetchUserDetails(userId) {
     xhr4.send();
 }
 
+function adjTokenizeSentence(sentence) {
+            return new Promise((resolve, reject) => {
+                var xhr5 = new XMLHttpRequest();
+                xhr5.open("GET", "/tokenize/" + sentence, true); // Properly concatenate userId
+                xhr5.setRequestHeader("Content-Type", "application/json");
+                xhr5.onreadystatechange = function() {
+                    if (xhr5.readyState === 4) {
+                        if (xhr5.status === 200) {
+                            // User details fetched successfully
+                            var responded = xhr5.responseText;
+                            console.log(responded);
+                            resolve(responded); // Resolve the promise with the response
+                        } else {
+                            console.error("Error fetching user details");
+                            reject("Error fetching user details"); // Reject the promise with an error message
+                        }
+                    }
+                };
+                xhr5.send();
+            });
+}
+
+
 // Check if userId is present in session storage
 var userId = localStorage.getItem('userId');
 var userKOEmail = localStorage.getItem('userEmail');
@@ -1949,20 +1999,44 @@ document.addEventListener("DOMContentLoaded", function() {
     fetchAllProperties();
 });
 
-        function Searching() {
+       async function Searching() {
             const query = document.getElementById('searchInput').value;
-            alert('Searching for: ' + query);
-            getSynonyms(query);
+            try {
+                console.log("yo query ho" + query);
+                const adjNoun = await adjTokenizeSentence(query); // Wait for adjTokenizeSentence to finish
+                const adjNounArray = JSON.parse(adjNoun); // Parse the string into an array
+
+                alert('Searching for: ' + query);
+
+            words = adjNounArray;
+                console.log("word is"+words);
+                if (words.length === 0) {
+                    console.log("here empty");
+                    getSynonyms(query);
+                } else {
+
+                    for (let i = 0; i < words.length; i++) {
+                        await getSynonyms(words[i]);
+                    }
+                }
+            } catch (error) {
+                console.error("Error in adjTokenizeSentence:", error);
+            }
+            console.log("searching done");
+        removePreviousCards();
+        fetchAllProperties();
+
 
         }
-
+        synonymsArray =[];
             // Function to get synonyms for a given word
             async function getSynonyms(word) {
               try {
                 const response = await fetch(`https://api.datamuse.com/words?rel_syn=${word}`);
                 const data = await response.json();
                 const synonyms = data.map(item => item.word);
-                console.log(`Synonyms for "${word}":`, synonyms);
+                synonymsArray.push(synonyms);
+                console.log(`Synonyms for "${word}":`, synonymsArray);
               } catch (error) {
                 console.error('Error fetching synonyms:', error);
               }
