@@ -1380,7 +1380,8 @@ if(propertyType=="favourite") {propertyTypeValue =4;}
 }
 let PropertyKOlocation=null;
 
-function fetchAllProperties() {
+
+async function waitingFetchAllProperties(){
     const url = 'http://localhost:8080/properties';
 
     fetch(url)
@@ -1503,9 +1504,9 @@ function fetchAllProperties() {
 
                 }
             console.log("synonymsArray.length "+synonymsArray.length);
-            if(synonymsArray.length!=0){
+<!--            if(synonymsArray.length!=0){-->
 
-            
+
 <!--            var zloop;-->
 <!--            var j;-->
 <!--            var wordTaken;-->
@@ -1603,6 +1604,15 @@ function fetchAllProperties() {
         .catch(error => {
             console.error('There was a problem with the fetch operation:', error);
         });
+
+}
+
+async function tempWaitFetchAllProperties(){
+    await waitingFetchAllProperties();
+}
+
+function fetchAllProperties() {
+    tempWaitFetchAllProperties();
 }
 
 
