@@ -1504,29 +1504,46 @@ async function waitingFetchAllProperties(){
 
                 }
             console.log("synonymsArray.length "+synonymsArray.length);
-<!--            if(synonymsArray.length!=0){-->
+            if(synonymsArray.length!=0){
+                console.log("inside array check of synonyms");
+
+            var zloop;
+            var j;
+            var wordTaken;
+            var toBreak = false;
+            for( zloop=0;zloop<synonymsArray.length;zloop++){
+            var lengthLooped = synonymsArray[zloop].length >3 ? 2 : synonymsArray[zloop].length;
+            for(j=0;j<(lengthLooped);j++){
+            wordTaken = synonymsArray[zloop][j];
+            console.log(wordTaken+" is the wordtaken for comparision");
+                if (data.some(property => property.location.address.toLowerCase().includes(wordTaken.toLowerCase())) ) {
+                    // If found, map the property ids and break from the loop
+                                    data = data.filter(property => property.location.address.toLowerCase().includes(wordTaken.toLowerCase()));
+                propertyIds = data.map(property => property.id);
+
+                    console.log("match found from matching location");
+                    propertyIds = data.map(property => property.id);
+                    toBreak = true;
+                    break;
+                }
+                                if (data.some(property => property.description.toLowerCase().includes(wordTaken.toLowerCase())) ) {
+                    // If found, map the property ids and break from the loop
+                                    data = data.filter(property => property.description.toLowerCase().includes(wordTaken.toLowerCase()));
+                propertyIds = data.map(property => property.id);
+
+                    console.log("match found from matching description");
+                    propertyIds = data.map(property => property.id);
+                    toBreak = true;
+                    break;
 
 
-<!--            var zloop;-->
-<!--            var j;-->
-<!--            var wordTaken;-->
-<!--            var toBreak = false;-->
-<!--            for( zloop=0;zloop<synonymsArray.length;zloop++){-->
-<!--            for(j=0;j<synonymsArray[zloop].length;j++){-->
-<!--            wordTaken = synonymsArray[zloop][j];-->
-<!--            console.log(wordTaken);-->
-<!--                if (data.some(property => property.location.address.toLowerCase().includes(wordTaken.toLowerCase()))) {-->
-<!--                    // If found, map the property ids and break from the loop-->
-<!--                    propertyIds = data.map(property => property.id);-->
-<!--                    toBreak = true;-->
-<!--                    break;-->
+                }
 
-<!--                }-->
 
-<!--            }-->
-<!--            if(toBreak) break;-->
-<!--            }-->
-<!--            }-->
+            }
+            if(toBreak) break;
+            }
+            }
             console.log("etaaaA");
 
 
@@ -1609,6 +1626,7 @@ async function waitingFetchAllProperties(){
 
 async function tempWaitFetchAllProperties(){
     await waitingFetchAllProperties();
+
 }
 
 function fetchAllProperties() {
