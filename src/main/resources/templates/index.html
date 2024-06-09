@@ -2014,6 +2014,7 @@ document.addEventListener("DOMContentLoaded", function() {
                     console.log("here empty");
                     getSynonyms(query);
                 } else {
+                synonymsArray.push(words);
 
                     for (let i = 0; i < words.length; i++) {
                         await getSynonyms(words[i]);
